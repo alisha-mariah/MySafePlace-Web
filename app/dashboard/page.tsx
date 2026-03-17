@@ -1,8 +1,10 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import ProtectedRoute from "@/src/components/ProtectedRoute";
 import { useAuth } from "@/src/context/AuthContext";
+import { logoutUser } from "@/src/services/authService";
 
 const navCards = [
   {
@@ -45,6 +47,12 @@ const navCards = [
 
 function DashboardContent() {
   const { user } = useAuth();
+  const router = useRouter();
+
+  async function handleLogout() {
+    await logoutUser();
+    router.replace("/login");
+  }
 
   return (
     <div className="min-h-screen" style={{ backgroundColor: "#E6F4EA" }}>
@@ -59,6 +67,13 @@ function DashboardContent() {
         <p className="mt-2 text-sm" style={{ color: "#3D8B6E" }}>
           {user?.email ? `Welcome, ${user.email}` : "Welcome"}
         </p>
+        <button
+          onClick={handleLogout}
+          className="mt-4 rounded-lg px-4 py-2 text-sm font-medium"
+          style={{ backgroundColor: "#2D6A4F", color: "#ffffff" }}
+        >
+          Log out
+        </button>
       </header>
 
       {/* Nav Cards */}
@@ -87,5 +102,9 @@ function DashboardContent() {
 }
 
 export default function DashboardPage() {
-  return <DashboardContent />;
+  return (
+    <ProtectedRoute>
+      <DashboardContent />
+    </ProtectedRoute>
+  );
 }
