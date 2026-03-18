@@ -14,7 +14,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "My Safe Place",
+  title: "MySafePlace",
   description: "A safe space for you",
 };
 
