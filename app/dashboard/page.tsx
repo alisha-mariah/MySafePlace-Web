@@ -7,13 +7,64 @@ import { useAuth } from "@/src/context/AuthContext";
 import { logoutUser } from "@/src/services/authService";
 
 const navCards = [
-  { label: "Journal", icon: "📓", description: "Write your thoughts", href: "/journal" },
-  { label: "Mood Tracker", icon: "🌿", description: "Track how you feel", href: "/mood" },
-  { label: "Resources", icon: "📚", description: "Find helpful guides", href: "/resources" },
-  { label: "Videos", icon: "🎬", description: "Watch calming content", href: "/videos" },
-  { label: "Emergency Contacts", icon: "🫂", description: "People who care", href: "/emergency" },
-  { label: "Profile", icon: "🌱", description: "Your account settings", href: "/profile" },
+  { label: "Journal",            description: "Write your thoughts",   href: "/journal",   bg: "#E6F4EA" },
+  { label: "Mood Tracker",       description: "Track how you feel",    href: "/mood",      bg: "#E0EFEB" },
+  { label: "Resources",          description: "Find helpful guides",   href: "/resources", bg: "#F2EDE4" },
+  { label: "Videos",             description: "Watch calming content", href: "/videos",    bg: "#ECE4F2" },
+  { label: "Emergency Contacts", description: "People who care",       href: "/emergency", bg: "#F2E6EA" },
+  { label: "Profile",            description: "Your account settings", href: "/profile",   bg: "#E4EEE8" },
 ];
+
+function CardIcon({ label }: { label: string }) {
+  const c = "#2D6A4F";
+  const p = { width: 22, height: 22, viewBox: "0 0 24 24", fill: "none", strokeWidth: 1.7, strokeLinecap: "round" as const, strokeLinejoin: "round" as const, stroke: c };
+  switch (label) {
+    case "Journal":
+      return (
+        <svg {...p}>
+          <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5Z" />
+          <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
+          <path d="M8 7h8M8 11h5" />
+        </svg>
+      );
+    case "Mood Tracker":
+      return (
+        <svg {...p}>
+          <circle cx="12" cy="12" r="10" opacity=".25" strokeWidth={1.4} />
+          <path d="M3 12h3l3-6 3 12 3-6h6" />
+        </svg>
+      );
+    case "Resources":
+      return (
+        <svg {...p}>
+          <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" />
+          <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
+        </svg>
+      );
+    case "Videos":
+      return (
+        <svg {...p}>
+          <circle cx="12" cy="12" r="10" />
+          <path d="M10 8l6 4-6 4V8z" fill={c} stroke="none" />
+        </svg>
+      );
+    case "Emergency Contacts":
+      return (
+        <svg {...p}>
+          <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" />
+        </svg>
+      );
+    case "Profile":
+      return (
+        <svg {...p}>
+          <circle cx="12" cy="8" r="4" />
+          <path d="M20 21a8 8 0 0 0-16 0" />
+        </svg>
+      );
+    default:
+      return null;
+  }
+}
 
 /* ── Header nature decoration – left branches ── */
 function HeaderLeavesLeft() {
@@ -265,12 +316,9 @@ function DashboardContent() {
               {/* Icon container */}
               <div
                 className="flex h-12 w-12 items-center justify-center rounded-2xl"
-                style={{
-                  background: "linear-gradient(135deg, rgba(168,213,186,0.30) 0%, rgba(200,230,201,0.18) 100%)",
-                  border: "1px solid rgba(168,213,186,0.40)",
-                }}
+                style={{ backgroundColor: card.bg }}
               >
-                <span className="text-2xl">{card.icon}</span>
+                <CardIcon label={card.label} />
               </div>
 
               <span className="text-sm font-semibold" style={{ color: "#1E4D38" }}>

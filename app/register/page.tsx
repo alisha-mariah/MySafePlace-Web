@@ -172,7 +172,6 @@ export default function RegisterPage() {
             {/* Heading */}
             <div className="animate-fade-in-up-1 mb-7">
               <div className="mb-2 flex items-center gap-2">
-                <span className="text-lg">🌺</span>
                 <span
                   className="text-xs font-semibold uppercase tracking-widest"
                   style={{ color: "#A8D5B5" }}

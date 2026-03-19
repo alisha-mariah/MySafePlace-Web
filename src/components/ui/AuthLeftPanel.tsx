@@ -206,7 +206,6 @@ export default function AuthLeftPanel() {
             >
               MySafePlace
             </span>
-            <span className="ml-2 text-2xl">🪷</span>
           </h1>
           <p
             className="relative mt-4 text-[15px] leading-relaxed"
@@ -233,7 +232,6 @@ export default function AuthLeftPanel() {
             className="mb-3 flex items-center gap-1.5 text-xs font-semibold uppercase tracking-widest"
             style={{ color: "#A8D5B5", letterSpacing: "0.10em" }}
           >
-            <span>🌸</span>
             About MySafePlace
           </p>
           <div
@@ -250,7 +248,7 @@ export default function AuthLeftPanel() {
               and do something kind for yourself.
             </p>
             <p style={{ color: "rgba(168,213,181,0.92)" }}>
-              Because you deserve it. 🌿🪷
+              Because you deserve it. 🌿
             </p>
           </div>
         </div>

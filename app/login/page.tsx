@@ -230,7 +230,6 @@ export default function LoginPage() {
             {/* Heading */}
             <div className="mb-8 animate-fade-in-up-1">
               <div className="mb-2.5 flex items-center gap-2">
-                <span className="text-lg">🌸</span>
                 <span
                   className="text-xs font-semibold uppercase tracking-widest"
                   style={{ color: "#8DC9A8", letterSpacing: "0.11em" }}
