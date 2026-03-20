@@ -8,7 +8,7 @@ import { logoutUser } from "@/src/services/authService";
 
 const navCards = [
   { label: "Journal",            description: "Write your thoughts",   href: "/journal",   bg: "#E6F4EA" },
-  { label: "Mood Tracker",       description: "Track how you feel",    href: "/mood",      bg: "#E0EFEB" },
+  { label: "Mood Tracker",       description: "Track how you feel",    href: "/dashboard/mood",      bg: "#E0EFEB" },
   { label: "Resources",          description: "Find helpful guides",   href: "/resources", bg: "#F2EDE4" },
   { label: "Videos",             description: "Watch calming content", href: "/videos",    bg: "#ECE4F2" },
   { label: "Emergency Contacts", description: "People who care",       href: "/emergency", bg: "#F2E6EA" },
