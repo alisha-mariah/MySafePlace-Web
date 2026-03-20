@@ -1,36 +1,57 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# MySafePlace
 
-## Getting Started
+MySafePlace is a web-based wellness application designed to help users slow down, reflect, and take care of their mental and emotional wellbeing in a simple, structured environment.
 
-First, run the development server:
+This project is being developed as part of the CSC 460 Capstone Project by a team of three Computer Science students. The application is being built in collaboration with a student entrepreneur, who is developing this idea as part of an entrepreneurship course.
+
+---
+
+## Project Overview
+
+MySafePlace provides users with a centralized space to:
+- Track their mood over time
+- Reflect through journaling
+- Access curated wellness resources
+- Maintain important personal and emergency contacts
+
+The goal of this application is to create an experience that is not only functional, but also calming, intuitive, and meaningful for the user.
+
+---
+
+## Features
+
+- User authentication (Firebase Authentication)
+- Mood tracking system (create, edit, delete mood entries)
+- Journal functionality for personal reflection
+- Resource library with curated wellness videos (e.g., yoga, meditation)
+- Emergency contact management
+- Protected routes to ensure secure access
+- Clean, nature-inspired user interface
+
+---
+
+## Tech Stack
+
+- Next.js (App Router)
+- TypeScript
+- Firebase (Authentication and Firestore)
+- Tailwind CSS
+- Vercel (Deployment)
+- GitHub Actions (CI)
+
+---
+
+## Development Setup
+
+To run this project locally:
 
 ```bash
+git clone <repository-url>
+cd MySafePlace-Web
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+open http://localhost:3000
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Development Notes
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+AI-assisted tools were used during development to support code generation, debugging, and ideation. All code was reviewed, tested, and integrated by the development team to ensure correctness and alignment with project requirements.
