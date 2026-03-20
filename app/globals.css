@@ -1,19 +1,8 @@
 @import "tailwindcss";
 
 :root {
-  --background: #F2F8F3;
+  --background: #F0F7F2;
   --foreground: #1A3D2B;
-  --forest-dark: #1A3D2B;
-  --forest: #2D6A4F;
-  --forest-light: #3D8B6E;
-  --sage: #4A9E7A;
-  --mint: #A8D5BA;
-  --pale-mint: #C8E6C9;
-  --very-pale-mint: #E6F4EA;
-  --cream: #F7FBF7;
-  --petal: #F5D0D8;
-  --golden: #E8C97A;
-  --glow: rgba(168, 213, 186, 0.4);
 }
 
 @theme inline {
@@ -23,6 +12,7 @@
   --font-mono: var(--font-geist-mono);
 }
 
+/* ── Base ── */
 body {
   background: var(--background);
   color: var(--foreground);
@@ -31,94 +21,249 @@ body {
   text-rendering: optimizeLegibility;
 }
 
-/* ─────────────────────────────────────────
-   AUTH INPUTS
-───────────────────────────────────────── */
+/* Smooth page transitions */
+main, .page-transition {
+  animation: pageIn 0.35s ease-out both;
+}
+@keyframes pageIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* Better selection color */
+::selection {
+  background: rgba(125, 184, 146, 0.20);
+  color: #1A3D2B;
+}
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* ── Focus styles — accessible and pretty ── */
+*:focus-visible {
+  outline: 2px solid #7DB892;
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* ── Inputs ── */
 .auth-input {
-  transition: border-color 0.22s ease,
-              box-shadow 0.22s ease,
-              background-color 0.22s ease;
-  box-shadow: inset 0 2px 5px rgba(45, 106, 79, 0.05);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+  min-height: 48px; /* Good touch target */
 }
 .auth-input:focus {
-  border-color: #52AB84 !important;
-  box-shadow:
-    0 0 0 3.5px rgba(82, 171, 132, 0.18),
-    inset 0 2px 5px rgba(45, 106, 79, 0.04);
+  border-color: #7DB892 !important;
+  box-shadow: 0 0 0 3px rgba(125, 184, 146, 0.15);
   outline: none;
-  background-color: #FAFFFC !important;
+  background-color: #FFFFFF !important;
+}
+.auth-input:hover:not(:focus) {
+  border-color: #A8D5BA !important;
 }
 .auth-input::placeholder {
-  color: #9ABFAE;
+  color: #A4B8AC;
 }
 
-/* ─────────────────────────────────────────
-   NATURE BUTTON (gradient + scale)
-───────────────────────────────────────── */
+/* ── Buttons ── */
 .nature-btn {
-  transition: background 0.22s ease,
-              transform 0.18s cubic-bezier(0.16, 1, 0.3, 1),
-              box-shadow 0.22s ease;
-  will-change: transform;
+  transition: background-color 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease, opacity 0.2s ease;
+  min-height: 48px; /* Good touch target */
+  cursor: pointer;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
 }
 .nature-btn:hover:not(:disabled) {
-  transform: translateY(-2px) scale(1.016);
+  filter: brightness(1.08);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(93, 168, 138, 0.25);
 }
 .nature-btn:active:not(:disabled) {
-  transform: translateY(0px) scale(0.988);
+  transform: translateY(0) scale(0.98);
+}
+.nature-btn:disabled {
+  cursor: not-allowed;
+  filter: grayscale(0.3);
 }
 
-/* ─────────────────────────────────────────
-   DASHBOARD CARDS
-───────────────────────────────────────── */
+/* ── Cards ── */
 .nature-card {
-  transition: transform     0.28s cubic-bezier(0.16, 1, 0.3, 1),
-              box-shadow    0.28s ease,
-              border-color  0.22s ease;
+  transition: transform 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
 }
 .nature-card:hover {
-  transform: translateY(-7px) !important;
-  box-shadow:
-    0 20px 45px rgba(45, 106, 79, 0.13),
-    0 6px  14px rgba(45, 106, 79, 0.07) !important;
-  border-color: rgba(168, 213, 186, 0.85) !important;
+  transform: translateY(-3px);
+  box-shadow: 0 8px 28px rgba(125, 184, 146, 0.12), 0 4px 12px rgba(242, 196, 206, 0.08);
+  border-color: #B8D8C4 !important;
+}
+.nature-card:active {
+  transform: translateY(-1px) scale(0.98);
 }
 
-/* ─────────────────────────────────────────
-   PAGE-LOAD FADE-IN ANIMATIONS
-───────────────────────────────────────── */
+/* ── Links — subtle hover feedback ── */
+a {
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* ── Page-load animations ── */
 @keyframes fadeInUp {
-  from { opacity: 0; transform: translateY(22px); }
+  from { opacity: 0; transform: translateY(14px); }
   to   { opacity: 1; transform: translateY(0); }
 }
+.animate-fade-in-up   { animation: fadeInUp 0.4s ease-out both; }
+.animate-fade-in-up-1 { animation: fadeInUp 0.4s ease-out 0.06s both; }
+.animate-fade-in-up-2 { animation: fadeInUp 0.4s ease-out 0.12s both; }
+.animate-fade-in-up-3 { animation: fadeInUp 0.4s ease-out 0.2s both; }
 
-.animate-fade-in-up   { animation: fadeInUp 0.60s cubic-bezier(0.16, 1, 0.3, 1) both; }
-.animate-fade-in-up-1 { animation: fadeInUp 0.60s cubic-bezier(0.16, 1, 0.3, 1) 0.08s  both; }
-.animate-fade-in-up-2 { animation: fadeInUp 0.60s cubic-bezier(0.16, 1, 0.3, 1) 0.17s  both; }
-.animate-fade-in-up-3 { animation: fadeInUp 0.60s cubic-bezier(0.16, 1, 0.3, 1) 0.27s  both; }
+/* ── Nature animations ── */
 
-/* ─────────────────────────────────────────
-   NATURE DECORATIVE ANIMATIONS
-───────────────────────────────────────── */
-@keyframes leafFloat {
-  0%, 100% { transform: translateY(0px)   rotate(0deg); }
-  33%       { transform: translateY(-7px)  rotate(1.8deg); }
-  66%       { transform: translateY(-3px)  rotate(-1.2deg); }
-}
-
-@keyframes birdGlide {
-  0%, 100% { transform: translateX(0px)  translateY(0px); }
-  50%       { transform: translateX(5px)  translateY(-4px); }
-}
-
+/* Floating petal drift */
 @keyframes petalDrift {
-  0%   { transform: translateY(0px)   translateX(0px)  rotate(0deg);  opacity: 0.55; }
-  50%  { transform: translateY(-11px) translateX(5px)  rotate(9deg);  opacity: 0.80; }
-  100% { transform: translateY(0px)   translateX(0px)  rotate(0deg);  opacity: 0.55; }
+  0%   { transform: translateY(0) rotate(0deg); opacity: 0.55; }
+  50%  { transform: translateY(-10px) rotate(6deg); opacity: 0.8; }
+  100% { transform: translateY(0) rotate(0deg); opacity: 0.55; }
+}
+.petal-drift   { animation: petalDrift 4s ease-in-out infinite; }
+.petal-drift-1 { animation: petalDrift 5s ease-in-out 0.8s infinite; }
+.petal-drift-2 { animation: petalDrift 4.5s ease-in-out 1.5s infinite; }
+
+/* Butterfly float */
+@keyframes butterflyPath {
+  0%   { transform: translate(0, 0) rotate(0deg); }
+  25%  { transform: translate(4px, -6px) rotate(3deg); }
+  50%  { transform: translate(-1px, -3px) rotate(-2deg); }
+  75%  { transform: translate(-4px, -7px) rotate(2deg); }
+  100% { transform: translate(0, 0) rotate(0deg); }
+}
+.butterfly-anim   { animation: butterflyPath 6s ease-in-out infinite; }
+.butterfly-anim-1 { animation: butterflyPath 7s ease-in-out 1s infinite; }
+
+/* Gentle bob */
+@keyframes gentleBob {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-4px); }
+}
+.gentle-bob { animation: gentleBob 3s ease-in-out infinite; }
+
+/* Sound toggle pulse */
+@keyframes soundPulse {
+  0%, 100% { box-shadow: 0 4px 14px rgba(125,184,146,0.20); }
+  50%      { box-shadow: 0 4px 14px rgba(125,184,146,0.20), 0 0 0 8px rgba(125,184,146,0.08); }
+}
+.sound-active { animation: soundPulse 2s ease-in-out infinite; }
+
+/* ── Volume slider ── */
+.nature-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 6px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #C8E6D0 0%, #E8F0EA 100%);
+  outline: none;
+  cursor: pointer;
+}
+.nature-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #7DB892 0%, #5EA88A 100%);
+  box-shadow: 0 2px 8px rgba(93,168,138,0.30);
+  border: 2.5px solid white;
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+.nature-slider::-webkit-slider-thumb:hover {
+  transform: scale(1.2);
+  box-shadow: 0 3px 12px rgba(93,168,138,0.40);
+}
+.nature-slider::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #7DB892 0%, #5EA88A 100%);
+  box-shadow: 0 2px 8px rgba(93,168,138,0.30);
+  border: 2.5px solid white;
+  cursor: pointer;
 }
 
-.nature-float      { animation: leafFloat   7s  ease-in-out infinite; }
-.nature-float-slow { animation: leafFloat  11s  ease-in-out infinite; animation-delay: -4s; }
-.bird-glide        { animation: birdGlide   6s  ease-in-out infinite; }
-.bird-glide-2      { animation: birdGlide   9s  ease-in-out infinite; animation-delay: -3s; }
-.petal-drift       { animation: petalDrift 12s  ease-in-out infinite; }
+/* ── Pill button (back, logout, etc.) ── */
+.pill-btn {
+  transition: all 0.2s ease;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+}
+.pill-btn:hover {
+  box-shadow: 0 2px 10px rgba(45,106,79,0.08);
+  transform: translateY(-1px);
+}
+.pill-btn:active {
+  transform: translateY(0) scale(0.97);
+}
+
+/* ── Tooltip ── */
+[title] {
+  position: relative;
+}
+
+/* ── Loading float (used by ProtectedRoute) ── */
+@keyframes leafFloat {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-5px); }
+}
+.nature-float { animation: leafFloat 2s ease-in-out infinite; }
+
+/* ── Mood selector buttons ── */
+.mood-btn {
+  transition: all 0.18s ease;
+  -webkit-tap-highlight-color: transparent;
+  cursor: pointer;
+  user-select: none;
+  min-height: 44px; /* Touch-friendly */
+}
+.mood-btn:hover {
+  transform: scale(1.06);
+}
+.mood-btn:active {
+  transform: scale(0.97);
+}
+
+/* ── Scrollbar ── */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(168,213,186,0.3);
+  border-radius: 999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(168,213,186,0.5);
+}
+
+/* ── Mobile improvements ── */
+@media (max-width: 640px) {
+  .nature-card:hover {
+    transform: translateY(-2px);
+  }
+  .nature-card:active {
+    transform: scale(0.97);
+  }
+}
+
+/* ── Reduced motion ── */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  html {
+    scroll-behavior: auto;
+  }
+}
