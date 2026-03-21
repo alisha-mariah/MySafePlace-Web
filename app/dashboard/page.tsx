@@ -165,7 +165,7 @@ function DashboardContent() {
       <DashboardNatureBg />
 
       {/* Top bar */}
-      <nav className="relative z-10 mx-auto flex max-w-6xl items-center justify-between px-8 pt-7 pb-2">
+      <nav className="relative z-10 mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-3 px-8 pr-48 pt-7 pb-2 sm:pr-52">
         <div className="flex items-center gap-2.5">
           <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
             <ellipse cx="10" cy="6" rx="3" ry="4" fill="#F2C4CE" opacity="0.6" />
