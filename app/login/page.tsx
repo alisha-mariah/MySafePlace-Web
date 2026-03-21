@@ -14,118 +14,106 @@ function getFirebaseError(error: unknown): string {
       case "auth/user-not-found":
       case "auth/invalid-credential":
       case "auth/wrong-password":
-        return "Invalid email or password. Please try again.";
+        return "Invalid email or password.";
       case "auth/invalid-email":
         return "Please enter a valid email address.";
       case "auth/too-many-requests":
-        return "Too many failed attempts. Please try again later.";
+        return "Too many attempts. Try again later.";
       case "auth/user-disabled":
-        return "This account has been disabled. Please contact support.";
+        return "This account has been disabled.";
     }
   }
   if (error instanceof Error) return error.message;
   return "Something went wrong. Please try again.";
 }
 
-/* ─────────────────────────────────────────────
-   CORNER NATURE DECORATIONS (unchanged visually, kept intact)
-───────────────────────────────────────────── */
+/* Corner decoration — top right */
 function TopRightDecor() {
   return (
-    <div className="pointer-events-none absolute right-0 top-0 overflow-hidden" style={{ width: 260, height: 260 }}>
-      <svg viewBox="0 0 260 260" fill="none" xmlns="http://www.w3.org/2000/svg" className="h-full w-full">
-        <path d="M260 0 C210 52 168 110 128 178" stroke="#B8DEC9" strokeWidth="1.7" strokeLinecap="round" />
-        <path d="M260 0 C230 32 220 72 228 118" stroke="#B8DEC9" strokeWidth="1.1" strokeLinecap="round" opacity="0.55" />
-        <g transform="translate(200,54) rotate(33)">
-          <path d="M0,-20 C8,-12 8,12 0,20 C-8,12 -8,-12 0,-20 Z" fill="#C8E6C9" opacity="0.60" />
-          <line x1="0" y1="-16" x2="0" y2="16" stroke="#A8D5B5" strokeWidth="0.8" opacity="0.74" />
+    <div className="pointer-events-none absolute right-0 top-0" style={{ width: 220, height: 220 }}>
+      <svg viewBox="0 0 220 220" fill="none" className="h-full w-full">
+        {/* Branch */}
+        <path d="M220 0 C175 50 135 95 85 150" stroke="#B8D8C4" strokeWidth="1.4" strokeLinecap="round" opacity="0.6" />
+        <path d="M220 0 C200 30 195 65 200 105" stroke="#B8D8C4" strokeWidth="1" strokeLinecap="round" opacity="0.35" />
+        {/* Leaves */}
+        <g transform="translate(165,52) rotate(30)">
+          <path d="M0,-14 C6,-8 6,8 0,14 C-6,8 -6,-8 0,-14 Z" fill="#C8E6D0" opacity="0.50" />
+          <line x1="0" y1="-10" x2="0" y2="10" stroke="#A8D5BA" strokeWidth="0.6" opacity="0.55" />
         </g>
-        <g transform="translate(177,95) rotate(20)">
-          <path d="M0,-16 C7,-9 7,9 0,16 C-7,9 -7,-9 0,-16 Z" fill="#C8E6C9" opacity="0.50" />
-          <line x1="0" y1="-12" x2="0" y2="12" stroke="#A8D5B5" strokeWidth="0.7" opacity="0.64" />
+        <g transform="translate(130,95) rotate(15)">
+          <path d="M0,-11 C5,-6 5,6 0,11 C-5,6 -5,-6 0,-11 Z" fill="#C8E6D0" opacity="0.40" />
         </g>
-        <g transform="translate(150,138) rotate(9)">
-          <path d="M0,-14 C6,-8 6,8 0,14 C-6,8 -6,-8 0,-14 Z" fill="#C8E6C9" opacity="0.42" />
+        {/* Cherry blossom */}
+        <g transform="translate(195,35)">
+          <ellipse cx="0" cy="-5" rx="3.5" ry="5" fill="#F2C4CE" opacity="0.60" />
+          <ellipse cx="0" cy="5" rx="3.5" ry="5" fill="#F2C4CE" opacity="0.60" />
+          <ellipse cx="-5" cy="0" rx="5" ry="3.5" fill="#F2C4CE" opacity="0.58" />
+          <ellipse cx="5" cy="0" rx="5" ry="3.5" fill="#F2C4CE" opacity="0.58" />
+          <circle cx="0" cy="0" r="2.5" fill="#E8CA7A" opacity="0.70" />
         </g>
-        <g transform="translate(238,82) rotate(58)">
-          <path d="M0,-13 C5,-7 5,7 0,13 C-5,7 -5,-7 0,-13 Z" fill="#C8E6C9" opacity="0.40" />
+        <g transform="translate(155,78)">
+          <ellipse cx="0" cy="-4" rx="2.8" ry="4" fill="#F2C4CE" opacity="0.45" />
+          <ellipse cx="0" cy="4" rx="2.8" ry="4" fill="#F2C4CE" opacity="0.45" />
+          <ellipse cx="-4" cy="0" rx="4" ry="2.8" fill="#F2C4CE" opacity="0.42" />
+          <ellipse cx="4" cy="0" rx="4" ry="2.8" fill="#F2C4CE" opacity="0.42" />
+          <circle cx="0" cy="0" r="2" fill="#E8CA7A" opacity="0.55" />
         </g>
-        <g transform="translate(222,32) rotate(22)">
-          <path d="M0,-9 C4,-5 4,5 0,9 C-4,5 -4,-5 0,-9 Z" fill="#C8E6C9" opacity="0.36" />
+        {/* Butterfly */}
+        <g transform="translate(105,42) rotate(-20)" className="butterfly-anim">
+          <path d="M0,0 C-5,-8 -11,-6 -8,0 C-11,6 -5,8 0,0" fill="#F2C4CE" opacity="0.45" />
+          <path d="M0,0 C5,-8 11,-6 8,0 C11,6 5,8 0,0" fill="#EDB8C8" opacity="0.40" />
+          <line x1="0" y1="-3" x2="0" y2="3" stroke="#D4A0B4" strokeWidth="0.6" opacity="0.4" />
         </g>
-        <g transform="translate(232,22)">
-          <ellipse cx="0"  cy="-8"   rx="4.5" ry="8"   fill="#F5D0D8" opacity="0.80" />
-          <ellipse cx="0"  cy="8"    rx="4.5" ry="8"   fill="#F5D0D8" opacity="0.80" />
-          <ellipse cx="-8" cy="0"    rx="8"   ry="4.5" fill="#F5D0D8" opacity="0.80" />
-          <ellipse cx="8"  cy="0"    rx="8"   ry="4.5" fill="#F5D0D8" opacity="0.80" />
-          <ellipse cx="-5.5" cy="-5.5" rx="4.5" ry="7" fill="#F5D0D8" opacity="0.60" transform="rotate(45 -5.5 -5.5)" />
-          <ellipse cx="5.5"  cy="-5.5" rx="4.5" ry="7" fill="#F5D0D8" opacity="0.60" transform="rotate(-45 5.5 -5.5)" />
-          <circle  cx="0"    cy="0"  r="4" fill="#E8C97A" opacity="0.92" />
-        </g>
-        <g transform="translate(248,88)">
-          <ellipse cx="0"    cy="-5.5" rx="3.2" ry="5.5" fill="#F5D0D8" opacity="0.65" />
-          <ellipse cx="0"    cy="5.5"  rx="3.2" ry="5.5" fill="#F5D0D8" opacity="0.65" />
-          <ellipse cx="-5.5" cy="0"    rx="5.5" ry="3.2" fill="#F5D0D8" opacity="0.65" />
-          <ellipse cx="5.5"  cy="0"    rx="5.5" ry="3.2" fill="#F5D0D8" opacity="0.65" />
-          <circle  cx="0"    cy="0"    r="2.8"             fill="#E8C97A" opacity="0.84" />
-        </g>
-        <path d="M65 35  C71 29 78 29 84 35"  stroke="#B8DEC9" strokeWidth="1.4" strokeLinecap="round" opacity="0.62" />
-        <path d="M86 22  C91 17 97 17 102 22" stroke="#B8DEC9" strokeWidth="1.2" strokeLinecap="round" opacity="0.52" />
-        <path d="M48 50  C52 45 57 45 61 50"  stroke="#B8DEC9" strokeWidth="1.0" strokeLinecap="round" opacity="0.42" />
+        {/* Birds */}
+        <path d="M60 28 C65 23 71 23 76 28" stroke="#B8D8C4" strokeWidth="1.1" strokeLinecap="round" opacity="0.45" />
+        <path d="M80 16 C83 12 88 12 91 16" stroke="#B8D8C4" strokeWidth="0.9" strokeLinecap="round" opacity="0.32" />
+        {/* Floating petals */}
+        <ellipse cx="45" cy="60" rx="2" ry="3.5" fill="#F2C4CE" opacity="0.30" transform="rotate(25 45 60)" />
+        <ellipse cx="120" cy="140" rx="1.8" ry="3" fill="#F2C4CE" opacity="0.25" transform="rotate(-30 120 140)" />
       </svg>
     </div>
   );
 }
 
+/* Corner decoration — bottom left */
 function BottomLeftDecor() {
   return (
-    <div className="pointer-events-none absolute bottom-0 left-0 overflow-hidden" style={{ width: 200, height: 200 }}>
-      <svg viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg" className="h-full w-full">
-        <path d="M0 200 C56 148 104 106 170 58" stroke="#B8DEC9" strokeWidth="1.5" strokeLinecap="round" />
-        <path d="M0 200 C32 168 60 148 98 134" stroke="#B8DEC9" strokeWidth="1" strokeLinecap="round" opacity="0.52" />
-        <g transform="translate(56,148) rotate(-44)">
-          <path d="M0,-17 C7,-10 7,10 0,17 C-7,10 -7,-10 0,-17 Z" fill="#C8E6C9" opacity="0.58" />
-          <line x1="0" y1="-13" x2="0" y2="13" stroke="#A8D5B5" strokeWidth="0.8" opacity="0.70" />
+    <div className="pointer-events-none absolute bottom-0 left-0" style={{ width: 180, height: 180 }}>
+      <svg viewBox="0 0 180 180" fill="none" className="h-full w-full">
+        {/* Branch */}
+        <path d="M0 180 C40 135 78 92 130 45" stroke="#B8D8C4" strokeWidth="1.3" strokeLinecap="round" opacity="0.50" />
+        {/* Leaves */}
+        <g transform="translate(45,132) rotate(-40)">
+          <path d="M0,-13 C6,-7 6,7 0,13 C-6,7 -6,-7 0,-13 Z" fill="#C8E6D0" opacity="0.45" />
+          <line x1="0" y1="-9" x2="0" y2="9" stroke="#A8D5BA" strokeWidth="0.6" opacity="0.50" />
         </g>
-        <g transform="translate(100,114) rotate(-58)">
-          <path d="M0,-15 C6,-9 6,9 0,15 C-6,9 -6,-9 0,-15 Z" fill="#C8E6C9" opacity="0.48" />
-          <line x1="0" y1="-11" x2="0" y2="11" stroke="#A8D5B5" strokeWidth="0.7" opacity="0.60" />
+        <g transform="translate(82,90) rotate(-55)">
+          <path d="M0,-10 C4,-6 4,6 0,10 C-4,6 -4,-6 0,-10 Z" fill="#C8E6D0" opacity="0.35" />
         </g>
-        <g transform="translate(144,78) rotate(-68)">
-          <path d="M0,-13 C5,-7 5,7 0,13 C-5,7 -5,-7 0,-13 Z" fill="#C8E6C9" opacity="0.40" />
+        {/* Small flower */}
+        <g transform="translate(22,155)">
+          <ellipse cx="0" cy="-4" rx="3" ry="4" fill="#F2C4CE" opacity="0.48" />
+          <ellipse cx="0" cy="4" rx="3" ry="4" fill="#F2C4CE" opacity="0.48" />
+          <ellipse cx="-4" cy="0" rx="4" ry="3" fill="#F2C4CE" opacity="0.45" />
+          <ellipse cx="4" cy="0" rx="4" ry="3" fill="#F2C4CE" opacity="0.45" />
+          <circle cx="0" cy="0" r="1.8" fill="#E8CA7A" opacity="0.60" />
         </g>
-        <g transform="translate(74,150) rotate(-28)">
-          <path d="M0,-11 C4,-6 4,6 0,11 C-4,6 -4,-6 0,-11 Z" fill="#C8E6C9" opacity="0.37" />
-        </g>
-        <g transform="translate(24,172)">
-          <ellipse cx="0"  cy="-7" rx="4"  ry="7"  fill="#F5D0D8" opacity="0.70" />
-          <ellipse cx="0"  cy="7"  rx="4"  ry="7"  fill="#F5D0D8" opacity="0.70" />
-          <ellipse cx="-7" cy="0"  rx="7"  ry="4"  fill="#F5D0D8" opacity="0.70" />
-          <ellipse cx="7"  cy="0"  rx="7"  ry="4"  fill="#F5D0D8" opacity="0.70" />
-          <circle  cx="0"  cy="0"  r="3.2"          fill="#E8C97A" opacity="0.88" />
-        </g>
-        <g transform="translate(118,105)">
-          <ellipse cx="0"  cy="-5" rx="3" ry="5" fill="#F5D0D8" opacity="0.56" />
-          <ellipse cx="0"  cy="5"  rx="3" ry="5" fill="#F5D0D8" opacity="0.56" />
-          <ellipse cx="-5" cy="0"  rx="5" ry="3" fill="#F5D0D8" opacity="0.56" />
-          <ellipse cx="5"  cy="0"  rx="5" ry="3" fill="#F5D0D8" opacity="0.56" />
-          <circle  cx="0"  cy="0"  r="2.4"        fill="#E8C97A" opacity="0.76" />
-        </g>
+        {/* Bird */}
+        <path d="M110 55 C115 48 122 48 127 55" stroke="#B8D8C4" strokeWidth="1" strokeLinecap="round" opacity="0.35" />
+        {/* Petal */}
+        <ellipse cx="70" cy="155" rx="2" ry="3" fill="#F2C4CE" opacity="0.28" transform="rotate(40 70 155)" />
       </svg>
     </div>
   );
 }
 
-/* ═══════════════════════════════════════════
-   LOGIN PAGE
-═══════════════════════════════════════════ */
 export default function LoginPage() {
   const router = useRouter();
   const { user, loading: authLoading } = useAuth();
-  const [email,    setEmail]    = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error,    setError]    = useState<string | null>(null);
-  const [loading,  setLoading]  = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (!authLoading && user) router.replace("/dashboard");
@@ -133,17 +121,8 @@ export default function LoginPage() {
 
   if (authLoading) {
     return (
-      <div
-        className="flex min-h-screen items-center justify-center"
-        style={{
-          background:
-            "radial-gradient(ellipse 70% 50% at 50% 0%, rgba(168,213,186,0.18) 0%, transparent 65%), #EFF8F2",
-        }}
-      >
-        <div className="flex flex-col items-center gap-3">
-          <span className="text-2xl nature-float">🌿</span>
-          <p className="text-sm font-medium" style={{ color: "#3D8B6E" }}>Loading…</p>
-        </div>
+      <div className="flex min-h-screen items-center justify-center" style={{ background: "linear-gradient(135deg, #EFF7F1 0%, #FFF5F7 100%)" }}>
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" className="nature-float"><path d="M6 3 C10 7 12 13 10 19 C8 19 2 17 1 13 C-1 9 2 5 6 3 Z" fill="#7DB892" opacity="0.6" /><path d="M6 3 C5 9 5 15 10 19" stroke="#5EA88A" strokeWidth="0.8" fill="none" opacity="0.4" /></svg>
       </div>
     );
   }
@@ -166,94 +145,67 @@ export default function LoginPage() {
 
   return (
     <main className="flex min-h-screen flex-col md:flex-row">
-      {/* ── Left panel ── */}
+      {/* Left panel */}
       <div className="md:w-[45%] md:flex-shrink-0">
         <AuthLeftPanel />
       </div>
 
-      {/* ── Right panel ── */}
+      {/* Right — sign in form */}
       <div
-        className="relative flex flex-1 flex-col items-center justify-center overflow-hidden px-5 py-10 md:px-8"
-        style={{ backgroundColor: "#EFF8F2" }}
+        className="relative flex flex-1 flex-col items-center justify-center overflow-hidden px-6 py-12 md:px-10"
+        style={{ background: "linear-gradient(135deg, #EFF7F1 0%, #FFF5F7 100%)" }}
       >
-        {/* ── Depth: blurred organic blobs ── */}
+        {/* Background blobs */}
         <div
           className="pointer-events-none absolute"
           style={{
-            bottom: -90, left: -90,
-            width: 380, height: 380,
+            bottom: "-70px",
+            left: "-70px",
+            width: 340,
+            height: 340,
             borderRadius: "50%",
-            background: "rgba(168,213,186,0.24)",
-            filter: "blur(75px)",
-          }}
-        />
-        <div
-          className="pointer-events-none absolute"
-          style={{
-            top: -60, right: -60,
-            width: 320, height: 320,
-            borderRadius: "50%",
-            background: "rgba(245,208,216,0.18)",
-            filter: "blur(65px)",
-          }}
-        />
-        <div
-          className="pointer-events-none absolute"
-          style={{
-            top: "20%", left: "35%",
-            width: 260, height: 200,
-            borderRadius: "50%",
-            background: "rgba(168,213,186,0.10)",
+            background: "radial-gradient(circle, rgba(168,213,186,0.18) 0%, transparent 70%)",
             filter: "blur(50px)",
           }}
         />
+        <div
+          className="pointer-events-none absolute"
+          style={{
+            top: "-50px",
+            right: "-50px",
+            width: 280,
+            height: 280,
+            borderRadius: "50%",
+            background: "radial-gradient(circle, rgba(242,196,206,0.16) 0%, transparent 70%)",
+            filter: "blur(45px)",
+          }}
+        />
 
-        {/* SVG corner nature accents */}
         <TopRightDecor />
         <BottomLeftDecor />
 
-        {/* ── Auth card ── */}
-        <div className="relative w-full max-w-[420px] animate-fade-in-up">
+        {/* Form container */}
+        <div className="relative z-10 w-full max-w-[400px] animate-fade-in-up">
           <div
-            className="rounded-3xl px-8 py-10"
+            className="rounded-2xl bg-white px-8 py-9"
             style={{
-              backgroundColor: "rgba(255,255,255,0.72)",
-              backdropFilter: "blur(22px)",
-              WebkitBackdropFilter: "blur(22px)",
-              border: "1px solid rgba(255,255,255,0.60)",
-              boxShadow:
-                "0 24px 64px rgba(45,106,79,0.12), " +
-                "0 6px 20px rgba(45,106,79,0.07), " +
-                "inset 0 1px 0 rgba(255,255,255,0.90)",
+              boxShadow: "0 8px 32px rgba(45,106,79,0.06), 0 2px 8px rgba(45,106,79,0.03)",
+              border: "1px solid rgba(200,230,209,0.50)",
             }}
           >
-            {/* Heading */}
-            <div className="mb-8 animate-fade-in-up-1">
-              <div className="mb-2.5 flex items-center gap-2">
-                <span className="text-lg">🌸</span>
-                <span
-                  className="text-xs font-semibold uppercase tracking-widest"
-                  style={{ color: "#8DC9A8", letterSpacing: "0.11em" }}
-                >
-                  welcome back
-                </span>
-              </div>
-              <h2
-                className="text-[1.65rem] font-bold tracking-tight"
-                style={{ color: "#1A3D2B", lineHeight: 1.2 }}
-              >
-                Sign in to MySafePlace
-              </h2>
-              <p className="mt-2 text-sm leading-relaxed" style={{ color: "#5A8A72" }}>
-                Your journey continues here.
+            <div className="mb-7 animate-fade-in-up-1">
+              <p className="mb-2 text-[12px] font-semibold uppercase tracking-[0.1em]" style={{ color: "#8DBFA5" }}>
+                Welcome back
               </p>
+              <h2 className="text-[22px] font-bold tracking-tight" style={{ color: "#1A3D2B" }}>
+                Sign in
+              </h2>
             </div>
 
             <form onSubmit={handleSubmit} className="flex flex-col gap-5 animate-fade-in-up-2">
-              {/* Email */}
-              <div className="flex flex-col gap-1.5">
-                <label htmlFor="email" className="text-sm font-semibold" style={{ color: "#2D6A4F" }}>
-                  Email address
+              <div>
+                <label htmlFor="email" className="mb-1.5 block text-[13px] font-medium" style={{ color: "#2D6A4F" }}>
+                  Email
                 </label>
                 <input
                   id="email"
@@ -263,22 +215,17 @@ export default function LoginPage() {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="you@example.com"
-                  className="auth-input w-full rounded-xl border px-4 py-3.5 text-sm"
-                  style={{ borderColor: "#B8DFC8", backgroundColor: "#FDFFFE", color: "#1A3D2B" }}
+                  className="auth-input w-full rounded-xl border px-4 py-3 text-[14px]"
+                  style={{ borderColor: "#C8DDD0", backgroundColor: "#FAFDFB", color: "#1A3D2B" }}
                 />
               </div>
 
-              {/* Password */}
-              <div className="flex flex-col gap-1.5">
-                <div className="flex items-center justify-between">
-                  <label htmlFor="password" className="text-sm font-semibold" style={{ color: "#2D6A4F" }}>
+              <div>
+                <div className="mb-1.5 flex items-center justify-between">
+                  <label htmlFor="password" className="text-[13px] font-medium" style={{ color: "#2D6A4F" }}>
                     Password
                   </label>
-                  <Link
-                    href="/forgot-password"
-                    className="text-xs font-medium transition-opacity hover:opacity-70"
-                    style={{ color: "#3D8B6E" }}
-                  >
+                  <Link href="/forgot-password" className="text-[12px] transition-opacity hover:opacity-70" style={{ color: "#6B9E85" }}>
                     Forgot password?
                   </Link>
                 </div>
@@ -290,67 +237,38 @@ export default function LoginPage() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="Your password"
-                  className="auth-input w-full rounded-xl border px-4 py-3.5 text-sm"
-                  style={{ borderColor: "#B8DFC8", backgroundColor: "#FDFFFE", color: "#1A3D2B" }}
+                  className="auth-input w-full rounded-xl border px-4 py-3 text-[14px]"
+                  style={{ borderColor: "#C8DDD0", backgroundColor: "#FAFDFB", color: "#1A3D2B" }}
                 />
               </div>
 
-              {/* Error */}
               {error && (
-                <div
-                  className="rounded-xl px-4 py-3 text-sm"
-                  style={{ backgroundColor: "#FFF4F4", color: "#C0392B", border: "1px solid #F5C6C6" }}
-                >
-                  {error}
-                </div>
+                <p className="text-[13px]" style={{ color: "#D44040" }}>{error}</p>
               )}
 
-              {/* Submit */}
               <button
                 type="submit"
                 disabled={loading}
-                className="nature-btn mt-1 w-full rounded-xl px-4 py-3.5 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:opacity-60"
+                className="nature-btn mt-1 w-full rounded-xl py-3 text-[14px] font-semibold text-white disabled:cursor-not-allowed disabled:opacity-50"
                 style={{
-                  background: "linear-gradient(135deg, #52AB84 0%, #2D6A4F 100%)",
-                  boxShadow: "0 4px 16px rgba(45,106,79,0.30), 0 1px 4px rgba(45,106,79,0.18)",
-                }}
-                onMouseEnter={(e) => {
-                  if (!loading) {
-                    (e.currentTarget as HTMLButtonElement).style.background =
-                      "linear-gradient(135deg, #3D9B72 0%, #1E4D38 100%)";
-                    (e.currentTarget as HTMLButtonElement).style.boxShadow =
-                      "0 6px 22px rgba(45,106,79,0.42), 0 2px 6px rgba(45,106,79,0.22)";
-                  }
-                }}
-                onMouseLeave={(e) => {
-                  if (!loading) {
-                    (e.currentTarget as HTMLButtonElement).style.background =
-                      "linear-gradient(135deg, #52AB84 0%, #2D6A4F 100%)";
-                    (e.currentTarget as HTMLButtonElement).style.boxShadow =
-                      "0 4px 16px rgba(45,106,79,0.30), 0 1px 4px rgba(45,106,79,0.18)";
-                  }
+                  background: "linear-gradient(135deg, #7DB892 0%, #5EA88A 50%, #4A9474 100%)",
+                  boxShadow: "0 4px 14px rgba(93,168,138,0.25)",
                 }}
               >
-                {loading ? "Signing in…" : "Sign in"}
+                {loading ? "Signing in..." : "Sign in"}
               </button>
             </form>
 
-            {/* Divider */}
             <div className="my-6 flex items-center gap-3 animate-fade-in-up-3">
-              <div className="flex-1 border-t" style={{ borderColor: "#D8EEE2" }} />
-              <span className="text-sm" style={{ color: "#C8E6C9" }}>🍃</span>
-              <div className="flex-1 border-t" style={{ borderColor: "#D8EEE2" }} />
+              <div className="flex-1 border-t" style={{ borderColor: "#E2EDE6" }} />
+              <span className="text-[10px]" style={{ color: "#C8DDD0" }}>🌸</span>
+              <div className="flex-1 border-t" style={{ borderColor: "#E2EDE6" }} />
             </div>
 
-            {/* Footer link */}
-            <p className="text-center text-sm animate-fade-in-up-3" style={{ color: "#5A8A72" }}>
+            <p className="text-center text-[13px] animate-fade-in-up-3" style={{ color: "#6B9E85" }}>
               Don&apos;t have an account?{" "}
-              <Link
-                href="/register"
-                className="font-semibold underline-offset-2 transition-opacity hover:opacity-75 hover:underline"
-                style={{ color: "#2D6A4F" }}
-              >
-                Create one
+              <Link href="/register" className="font-semibold transition-opacity hover:opacity-70" style={{ color: "#2D6A4F" }}>
+                Sign up
               </Link>
             </p>
           </div>

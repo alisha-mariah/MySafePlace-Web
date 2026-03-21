@@ -3,277 +3,280 @@
 export default function AuthLeftPanel() {
   return (
     <div
-      className="relative flex min-h-[300px] flex-col justify-between overflow-hidden px-8 py-10 md:min-h-screen md:px-12 md:py-14"
+      className="relative flex min-h-[320px] flex-col justify-between overflow-hidden px-9 py-9 md:min-h-screen md:px-12 md:py-12"
       style={{
-        background:
-          "linear-gradient(175deg, #9DC9AF 0%, #7BBD9E 9%, #52AB84 20%, #3D8B6E 36%, #2D6A4F 54%, #1E4D38 70%, #132A1A 86%, #0A1A10 100%)",
+        background: "linear-gradient(165deg, #A0D4B4 0%, #7EC09C 35%, #5EAC86 65%, #4A9874 100%)",
       }}
     >
-      {/* ═══════════════════════════════════════
-          LAYERED NATURE ILLUSTRATION
-      ═══════════════════════════════════════ */}
-      <div className="pointer-events-none absolute inset-0 overflow-hidden">
-        <svg
-          viewBox="0 0 480 760"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-          className="absolute inset-0 h-full w-full"
-          preserveAspectRatio="xMidYMid slice"
-        >
+      {/* Illustration layer */}
+      <div className="pointer-events-none absolute inset-0">
+        <svg viewBox="0 0 480 800" fill="none" className="absolute inset-0 h-full w-full" preserveAspectRatio="xMidYMid slice">
+          {/* Sun glow */}
           <defs>
-            <radialGradient id="sunGlow" cx="58%" cy="16%" r="52%" gradientUnits="userSpaceOnUse">
-              <stop offset="0%"   stopColor="rgba(255,245,200,0.26)" />
-              <stop offset="45%"  stopColor="rgba(255,228,150,0.10)" />
-              <stop offset="100%" stopColor="rgba(255,255,255,0)" />
-            </radialGradient>
-            <radialGradient id="mistLeft" cx="12%" cy="48%" r="38%" gradientUnits="userSpaceOnUse">
-              <stop offset="0%"   stopColor="rgba(200,232,215,0.16)" />
-              <stop offset="100%" stopColor="rgba(200,232,215,0)" />
-            </radialGradient>
-            <radialGradient id="mistRight" cx="88%" cy="35%" r="32%" gradientUnits="userSpaceOnUse">
-              <stop offset="0%"   stopColor="rgba(190,225,208,0.12)" />
-              <stop offset="100%" stopColor="rgba(190,225,208,0)" />
+            <radialGradient id="sun" cx="75%" cy="6%" r="35%">
+              <stop offset="0%" stopColor="rgba(255,245,200,0.30)" />
+              <stop offset="100%" stopColor="rgba(255,245,200,0)" />
             </radialGradient>
           </defs>
+          <rect width="480" height="800" fill="url(#sun)" />
 
-          {/* ── LAYER 1: Atmospheric light ── */}
-          <ellipse cx="278" cy="122" rx="230" ry="188" fill="url(#sunGlow)" />
-          <ellipse cx="58"  cy="364" rx="178" ry="288" fill="url(#mistLeft)" />
-          <ellipse cx="422" cy="266" rx="152" ry="220" fill="url(#mistRight)" />
+          {/* Topographic contour lines */}
+          <path d="M-20 120 Q110 90 240 115 Q370 140 500 105" stroke="rgba(255,255,255,0.07)" strokeWidth="1" />
+          <path d="M-20 200 Q130 175 260 195 Q390 215 500 185" stroke="rgba(255,255,255,0.06)" strokeWidth="1" />
+          <path d="M-20 280 Q80 255 200 275 Q340 300 500 260" stroke="rgba(255,255,255,0.07)" strokeWidth="1" />
+          <path d="M-20 360 Q140 335 270 355 Q400 375 500 345" stroke="rgba(255,255,255,0.06)" strokeWidth="1" />
+          <path d="M-20 440 Q90 415 220 435 Q370 455 500 420" stroke="rgba(255,255,255,0.065)" strokeWidth="1" />
+          <path d="M-20 520 Q100 498 230 515 Q380 535 500 505" stroke="rgba(255,255,255,0.055)" strokeWidth="1" />
+          <path d="M-20 600 Q130 580 270 595 Q410 615 500 590" stroke="rgba(255,255,255,0.05)" strokeWidth="1" />
+          <path d="M-20 680 Q90 660 210 675 Q360 695 500 665" stroke="rgba(255,255,255,0.045)" strokeWidth="1" />
 
-          {/* ── LAYER 2: Distant tree silhouettes ── */}
-          <path d="M0 760 C0 610 -14 465 24 358 C52 272 40 215 62 155 C84 95 56 52 34 0 L0 0 Z"
-            fill="rgba(5,15,9,0.33)" />
-          <path d="M480 760 C480 610 494 465 456 358 C428 272 440 215 418 155 C396 95 424 52 446 0 L480 0 Z"
-            fill="rgba(5,15,9,0.28)" />
+          {/* Right vine */}
+          <path d="M480 790 C440 680 405 560 385 460 C370 380 372 300 388 190" stroke="rgba(255,255,255,0.14)" strokeWidth="2" strokeLinecap="round" />
+          <path d="M385 460 C352 430 310 415 265 425" stroke="rgba(255,255,255,0.10)" strokeWidth="1.5" strokeLinecap="round" />
+          <path d="M390 320 C415 298 445 260 458 228" stroke="rgba(255,255,255,0.09)" strokeWidth="1.3" strokeLinecap="round" />
+          <path d="M392 245 C412 235 435 215 445 190" stroke="rgba(255,255,255,0.08)" strokeWidth="1.1" strokeLinecap="round" />
 
-          {/* ── LAYER 3: Mid-distance tree canopies ── */}
-          <ellipse cx="62"  cy="295" rx="72"  ry="102" fill="rgba(8,22,13,0.20)" />
-          <ellipse cx="30"  cy="205" rx="50"  ry="82"  fill="rgba(8,22,13,0.16)" />
-          <ellipse cx="418" cy="275" rx="82"  ry="112" fill="rgba(8,22,13,0.18)" />
-          <ellipse cx="452" cy="180" rx="56"  ry="90"  fill="rgba(8,22,13,0.14)" />
+          {/* Left vine */}
+          <path d="M-10 790 C35 695 65 590 82 490 C95 410 98 340 92 270" stroke="rgba(255,255,255,0.10)" strokeWidth="1.8" strokeLinecap="round" />
+          <path d="M82 490 C112 465 142 452 172 458" stroke="rgba(255,255,255,0.08)" strokeWidth="1.2" strokeLinecap="round" />
+          <path d="M88 370 C62 350 42 320 32 290" stroke="rgba(255,255,255,0.07)" strokeWidth="1.1" strokeLinecap="round" />
 
-          {/* ── LAYER 4: Branch system ── */}
-          <path d="M-20 780 C60 640 170 520 290 370 C380 250 440 162 500 62"
-            stroke="rgba(255,255,255,0.16)" strokeWidth="3.2" strokeLinecap="round" />
-          <path d="M232 462 C292 412 374 388 452 362"
-            stroke="rgba(255,255,255,0.10)" strokeWidth="2.2" strokeLinecap="round" />
-          <path d="M178 514 C132 462 92 412 55 354"
-            stroke="rgba(255,255,255,0.09)" strokeWidth="1.9" strokeLinecap="round" />
-
-          {/* ── LAYER 5: Leaves ── */}
-          <g transform="translate(74,692) rotate(-48)">
-            <path d="M0,-26 C12,-16 12,16 0,26 C-12,16 -12,-16 0,-26 Z" fill="rgba(168,213,181,0.48)" />
-            <line x1="0" y1="-22" x2="0" y2="22" stroke="rgba(168,213,181,0.62)" strokeWidth="0.9" />
+          {/* Right vine leaves */}
+          <g transform="translate(372,392) rotate(-55)">
+            <path d="M0,-18 C8,-11 8,11 0,18 C-8,11 -8,-11 0,-18 Z" fill="rgba(140,200,168,0.40)" stroke="rgba(255,255,255,0.20)" strokeWidth="0.7" />
+            <line x1="0" y1="-14" x2="0" y2="14" stroke="rgba(255,255,255,0.15)" strokeWidth="0.5" />
           </g>
-          <g transform="translate(150,595) rotate(-62)">
-            <path d="M0,-22 C10,-13 10,13 0,22 C-10,13 -10,-13 0,-22 Z" fill="rgba(168,213,181,0.40)" />
-            <line x1="0" y1="-18" x2="0" y2="18" stroke="rgba(168,213,181,0.54)" strokeWidth="0.8" />
+          <g transform="translate(402,285) rotate(-68)">
+            <path d="M0,-16 C7,-10 7,10 0,16 C-7,10 -7,-10 0,-16 Z" fill="rgba(140,200,168,0.35)" stroke="rgba(255,255,255,0.16)" strokeWidth="0.7" />
+            <line x1="0" y1="-12" x2="0" y2="12" stroke="rgba(255,255,255,0.12)" strokeWidth="0.5" />
           </g>
-          <g transform="translate(222,482) rotate(-72)">
-            <path d="M0,-24 C11,-15 11,15 0,24 C-11,15 -11,-15 0,-24 Z" fill="rgba(168,213,181,0.50)" />
-            <line x1="0" y1="-20" x2="0" y2="20" stroke="rgba(168,213,181,0.62)" strokeWidth="0.8" />
+          <g transform="translate(445,238) rotate(-38)">
+            <path d="M0,-13 C6,-7 6,7 0,13 C-6,7 -6,-7 0,-13 Z" fill="rgba(140,200,168,0.32)" stroke="rgba(255,255,255,0.14)" strokeWidth="0.6" />
           </g>
-          <g transform="translate(312,392) rotate(-80)">
-            <path d="M0,-20 C9,-12 9,12 0,20 C-9,12 -9,-12 0,-20 Z" fill="rgba(168,213,181,0.38)" />
-            <line x1="0" y1="-16" x2="0" y2="16" stroke="rgba(168,213,181,0.52)" strokeWidth="0.7" />
+          <g transform="translate(275,438) rotate(-18)">
+            <path d="M0,-14 C6,-8 6,8 0,14 C-6,8 -6,-8 0,-14 Z" fill="rgba(140,200,168,0.30)" stroke="rgba(255,255,255,0.12)" strokeWidth="0.6" />
+            <line x1="0" y1="-10" x2="0" y2="10" stroke="rgba(255,255,255,0.10)" strokeWidth="0.5" />
           </g>
-          <g transform="translate(312,418) rotate(-22)">
-            <path d="M0,-17 C7,-10 7,10 0,17 C-7,10 -7,-10 0,-17 Z" fill="rgba(168,213,181,0.32)" />
+          <g transform="translate(420,520) rotate(-42)">
+            <path d="M0,-16 C7,-10 7,10 0,16 C-7,10 -7,-10 0,-16 Z" fill="rgba(140,200,168,0.38)" stroke="rgba(255,255,255,0.18)" strokeWidth="0.7" />
+            <line x1="0" y1="-12" x2="0" y2="12" stroke="rgba(255,255,255,0.12)" strokeWidth="0.5" />
           </g>
-          <g transform="translate(392,382) rotate(-38)">
-            <path d="M0,-15 C6,-9 6,9 0,15 C-6,9 -6,-9 0,-15 Z" fill="rgba(168,213,181,0.28)" />
-          </g>
-          <g transform="translate(107,443) rotate(24)">
-            <path d="M0,-16 C7,-10 7,10 0,16 C-7,10 -7,-10 0,-16 Z" fill="rgba(168,213,181,0.29)" />
+          <g transform="translate(442,640) rotate(-52)">
+            <path d="M0,-13 C6,-7 6,7 0,13 C-6,7 -6,-7 0,-13 Z" fill="rgba(140,200,168,0.28)" stroke="rgba(255,255,255,0.12)" strokeWidth="0.6" />
           </g>
 
-          {/* ── LAYER 6: Cherry blossom flowers ── */}
-          <g transform="translate(297,380)">
-            <ellipse cx="0"  cy="-10" rx="6.5" ry="10" fill="rgba(245,208,216,0.75)" />
-            <ellipse cx="0"  cy="10"  rx="6.5" ry="10" fill="rgba(245,208,216,0.75)" />
-            <ellipse cx="-10" cy="0"  rx="10"  ry="6.5" fill="rgba(245,208,216,0.75)" />
-            <ellipse cx="10"  cy="0"  rx="10"  ry="6.5" fill="rgba(245,208,216,0.75)" />
-            <ellipse cx="-7" cy="-7" rx="6" ry="9" fill="rgba(245,208,216,0.58)" transform="rotate(45 -7 -7)" />
-            <ellipse cx="7"  cy="-7" rx="6" ry="9" fill="rgba(245,208,216,0.58)" transform="rotate(-45 7 -7)" />
-            <circle  cx="0"  cy="0"  r="5"  fill="rgba(232,201,122,0.94)" />
+          {/* Left vine leaves */}
+          <g transform="translate(72,450) rotate(30)">
+            <path d="M0,-16 C7,-10 7,10 0,16 C-7,10 -7,-10 0,-16 Z" fill="rgba(140,200,168,0.38)" stroke="rgba(255,255,255,0.18)" strokeWidth="0.7" />
+            <line x1="0" y1="-12" x2="0" y2="12" stroke="rgba(255,255,255,0.12)" strokeWidth="0.5" />
           </g>
-          <g transform="translate(165,508)">
-            <ellipse cx="0"  cy="-8" rx="5" ry="8" fill="rgba(245,208,216,0.64)" />
-            <ellipse cx="0"  cy="8"  rx="5" ry="8" fill="rgba(245,208,216,0.64)" />
-            <ellipse cx="-8" cy="0"  rx="8" ry="5" fill="rgba(245,208,216,0.64)" />
-            <ellipse cx="8"  cy="0"  rx="8" ry="5" fill="rgba(245,208,216,0.64)" />
-            <circle  cx="0"  cy="0"  r="4"  fill="rgba(232,201,122,0.87)" />
+          <g transform="translate(92,355) rotate(48)">
+            <path d="M0,-14 C6,-8 6,8 0,14 C-6,8 -6,-8 0,-14 Z" fill="rgba(140,200,168,0.32)" stroke="rgba(255,255,255,0.14)" strokeWidth="0.6" />
+            <line x1="0" y1="-10" x2="0" y2="10" stroke="rgba(255,255,255,0.10)" strokeWidth="0.5" />
           </g>
-          <g transform="translate(438,364)">
-            <ellipse cx="0"  cy="-6" rx="4" ry="6" fill="rgba(245,208,216,0.54)" />
-            <ellipse cx="0"  cy="6"  rx="4" ry="6" fill="rgba(245,208,216,0.54)" />
-            <ellipse cx="-6" cy="0"  rx="6" ry="4" fill="rgba(245,208,216,0.54)" />
-            <ellipse cx="6"  cy="0"  rx="6" ry="4" fill="rgba(245,208,216,0.54)" />
-            <circle  cx="0"  cy="0"  r="3"  fill="rgba(232,201,122,0.77)" />
+          <g transform="translate(38,300) rotate(22)">
+            <path d="M0,-12 C5,-7 5,7 0,12 C-5,7 -5,-7 0,-12 Z" fill="rgba(140,200,168,0.28)" stroke="rgba(255,255,255,0.12)" strokeWidth="0.6" />
           </g>
-          <g transform="translate(90,675)">
-            <ellipse cx="0"    cy="-5.5" rx="3.2" ry="5.5" fill="rgba(245,208,216,0.48)" />
-            <ellipse cx="0"    cy="5.5"  rx="3.2" ry="5.5" fill="rgba(245,208,216,0.48)" />
-            <ellipse cx="-5.5" cy="0"    rx="5.5" ry="3.2" fill="rgba(245,208,216,0.48)" />
-            <ellipse cx="5.5"  cy="0"    rx="5.5" ry="3.2" fill="rgba(245,208,216,0.48)" />
-            <circle  cx="0"    cy="0"    r="2.8"             fill="rgba(232,201,122,0.70)" />
+          <g transform="translate(165,462) rotate(10)">
+            <path d="M0,-11 C5,-6 5,6 0,11 C-5,6 -5,-6 0,-11 Z" fill="rgba(140,200,168,0.25)" stroke="rgba(255,255,255,0.10)" strokeWidth="0.6" />
+          </g>
+          <g transform="translate(58,565) rotate(40)">
+            <path d="M0,-15 C7,-9 7,9 0,15 C-7,9 -7,-9 0,-15 Z" fill="rgba(140,200,168,0.34)" stroke="rgba(255,255,255,0.14)" strokeWidth="0.7" />
+            <line x1="0" y1="-11" x2="0" y2="11" stroke="rgba(255,255,255,0.10)" strokeWidth="0.5" />
           </g>
 
-          {/* ── LAYER 7: Birds ── */}
-          <path d="M338 138 C349 127 363 127 374 138" stroke="rgba(255,255,255,0.85)" strokeWidth="2.2" strokeLinecap="round" />
-          <path d="M384 110 C393 102 403 102 412 110" stroke="rgba(255,255,255,0.70)" strokeWidth="1.9" strokeLinecap="round" />
-          <path d="M416 157 C423 150 431 150 438 157" stroke="rgba(255,255,255,0.60)" strokeWidth="1.5" strokeLinecap="round" />
-          <path d="M360 168 C365 163 371 163 376 168" stroke="rgba(255,255,255,0.46)" strokeWidth="1.2" strokeLinecap="round" />
-          <path d="M428 126 C432 122 437 122 441 126" stroke="rgba(255,255,255,0.36)" strokeWidth="1.1" strokeLinecap="round" />
+          {/* ═══ FLOWERS (vivid pink) ═══ */}
 
-          {/* ── LAYER 8: Meadow ground ── */}
-          <path d="M0 724 Q80 704 180 712 Q290 722 400 708 Q440 703 480 708 L480 760 L0 760 Z"
-            fill="rgba(32,60,38,0.45)" />
-          <path d="M0 740 Q100 727 220 732 Q340 737 480 724 L480 760 L0 760 Z"
-            fill="rgba(48,86,56,0.35)" />
+          {/* Hero bloom — upper right */}
+          <g transform="translate(388,190)">
+            <ellipse cx="0" cy="-12" rx="8" ry="12" fill="rgba(242,175,200,0.62)" stroke="rgba(255,255,255,0.30)" strokeWidth="0.7" />
+            <ellipse cx="0" cy="12" rx="8" ry="12" fill="rgba(242,175,200,0.62)" stroke="rgba(255,255,255,0.30)" strokeWidth="0.7" />
+            <ellipse cx="-12" cy="0" rx="12" ry="8" fill="rgba(242,175,200,0.60)" stroke="rgba(255,255,255,0.28)" strokeWidth="0.7" />
+            <ellipse cx="12" cy="0" rx="12" ry="8" fill="rgba(242,175,200,0.60)" stroke="rgba(255,255,255,0.28)" strokeWidth="0.7" />
+            <ellipse cx="-8" cy="-8" rx="7" ry="10" fill="rgba(242,175,200,0.45)" stroke="rgba(255,255,255,0.22)" strokeWidth="0.6" transform="rotate(45 -8 -8)" />
+            <ellipse cx="8" cy="-8" rx="7" ry="10" fill="rgba(242,175,200,0.45)" stroke="rgba(255,255,255,0.22)" strokeWidth="0.6" transform="rotate(-45 8 -8)" />
+            <circle cx="0" cy="0" r="5.5" fill="rgba(232,195,100,0.75)" stroke="rgba(255,255,255,0.35)" strokeWidth="0.6" />
+            <circle cx="-1.5" cy="-1.5" r="1" fill="rgba(255,255,255,0.40)" />
+            <circle cx="1.5" cy="0.5" r="0.8" fill="rgba(255,255,255,0.30)" />
+          </g>
 
-          {/* ── LAYER 9: Grass blades ── */}
-          <path d="M34 760 Q38 738 32 712"  stroke="rgba(168,213,181,0.52)" strokeWidth="1.8" strokeLinecap="round" fill="none" />
-          <path d="M48 760 Q43 742 50 717"  stroke="rgba(168,213,181,0.44)" strokeWidth="1.5" strokeLinecap="round" fill="none" />
-          <path d="M63 760 Q68 745 61 722"  stroke="rgba(168,213,181,0.46)" strokeWidth="1.6" strokeLinecap="round" fill="none" />
-          <path d="M79 760 Q75 747 82 724"  stroke="rgba(168,213,181,0.38)" strokeWidth="1.4" strokeLinecap="round" fill="none" />
-          <path d="M398 760 Q402 738 397 714" stroke="rgba(168,213,181,0.48)" strokeWidth="1.7" strokeLinecap="round" fill="none" />
-          <path d="M414 760 Q410 742 416 718" stroke="rgba(168,213,181,0.40)" strokeWidth="1.4" strokeLinecap="round" fill="none" />
-          <path d="M430 760 Q435 745 429 722" stroke="rgba(168,213,181,0.44)" strokeWidth="1.5" strokeLinecap="round" fill="none" />
-          <path d="M192 760 Q196 743 191 720" stroke="rgba(168,213,181,0.32)" strokeWidth="1.3" strokeLinecap="round" fill="none" />
-          <path d="M282 760 Q278 746 284 724" stroke="rgba(168,213,181,0.30)" strokeWidth="1.2" strokeLinecap="round" fill="none" />
+          {/* Left bloom */}
+          <g transform="translate(100,300)">
+            <ellipse cx="0" cy="-10" rx="7" ry="10" fill="rgba(242,175,200,0.55)" stroke="rgba(255,255,255,0.26)" strokeWidth="0.7" />
+            <ellipse cx="0" cy="10" rx="7" ry="10" fill="rgba(242,175,200,0.55)" stroke="rgba(255,255,255,0.26)" strokeWidth="0.7" />
+            <ellipse cx="-10" cy="0" rx="10" ry="7" fill="rgba(242,175,200,0.52)" stroke="rgba(255,255,255,0.24)" strokeWidth="0.7" />
+            <ellipse cx="10" cy="0" rx="10" ry="7" fill="rgba(242,175,200,0.52)" stroke="rgba(255,255,255,0.24)" strokeWidth="0.7" />
+            <circle cx="0" cy="0" r="4.5" fill="rgba(232,195,100,0.65)" stroke="rgba(255,255,255,0.28)" strokeWidth="0.6" />
+          </g>
 
-          {/* ── LAYER 10: Floating petals / pollen ── */}
-          <ellipse cx="130" cy="308" rx="4.5" ry="7.5" fill="rgba(245,208,216,0.42)" transform="rotate(22 130 308)" />
-          <ellipse cx="344" cy="432" rx="3.5" ry="6"   fill="rgba(245,208,216,0.34)" transform="rotate(-18 344 432)" />
-          <ellipse cx="84"  cy="462" rx="3"   ry="5.5" fill="rgba(245,208,216,0.32)" transform="rotate(35 84 462)" />
-          <ellipse cx="410" cy="282" rx="4"   ry="7"   fill="rgba(245,208,216,0.28)" transform="rotate(-28 410 282)" />
-          <circle cx="108" cy="542" r="2.4" fill="rgba(168,213,181,0.46)" />
-          <circle cx="262" cy="492" r="1.8" fill="rgba(168,213,181,0.36)" />
-          <circle cx="364" cy="332" r="2.1" fill="rgba(168,213,181,0.40)" />
-          <circle cx="204" cy="592" r="1.6" fill="rgba(245,208,216,0.50)" />
-          <circle cx="458" cy="212" r="1.6" fill="rgba(245,208,216,0.37)" />
-          <circle cx="142" cy="464" r="1.3" fill="rgba(245,208,216,0.42)" />
-          <circle cx="424" cy="292" r="1.9" fill="rgba(168,213,181,0.32)" />
+          {/* Mid bloom */}
+          <g transform="translate(270,430)">
+            <ellipse cx="0" cy="-8.5" rx="6" ry="8.5" fill="rgba(242,175,200,0.50)" stroke="rgba(255,255,255,0.22)" strokeWidth="0.6" />
+            <ellipse cx="0" cy="8.5" rx="6" ry="8.5" fill="rgba(242,175,200,0.50)" stroke="rgba(255,255,255,0.22)" strokeWidth="0.6" />
+            <ellipse cx="-8.5" cy="0" rx="8.5" ry="6" fill="rgba(242,175,200,0.48)" stroke="rgba(255,255,255,0.20)" strokeWidth="0.6" />
+            <ellipse cx="8.5" cy="0" rx="8.5" ry="6" fill="rgba(242,175,200,0.48)" stroke="rgba(255,255,255,0.20)" strokeWidth="0.6" />
+            <circle cx="0" cy="0" r="3.5" fill="rgba(232,195,100,0.55)" stroke="rgba(255,255,255,0.22)" strokeWidth="0.6" />
+          </g>
+
+          {/* Small bloom — lower right */}
+          <g transform="translate(430,565)">
+            <ellipse cx="0" cy="-7" rx="5" ry="7" fill="rgba(242,175,200,0.45)" stroke="rgba(255,255,255,0.18)" strokeWidth="0.6" />
+            <ellipse cx="0" cy="7" rx="5" ry="7" fill="rgba(242,175,200,0.45)" stroke="rgba(255,255,255,0.18)" strokeWidth="0.6" />
+            <ellipse cx="-7" cy="0" rx="7" ry="5" fill="rgba(242,175,200,0.42)" stroke="rgba(255,255,255,0.16)" strokeWidth="0.6" />
+            <ellipse cx="7" cy="0" rx="7" ry="5" fill="rgba(242,175,200,0.42)" stroke="rgba(255,255,255,0.16)" strokeWidth="0.6" />
+            <circle cx="0" cy="0" r="3" fill="rgba(232,195,100,0.50)" strokeWidth="0.5" />
+          </g>
+
+          {/* Tiny bloom — left vine */}
+          <g transform="translate(58,530)">
+            <ellipse cx="0" cy="-5.5" rx="4" ry="5.5" fill="rgba(242,175,200,0.40)" stroke="rgba(255,255,255,0.16)" strokeWidth="0.5" />
+            <ellipse cx="0" cy="5.5" rx="4" ry="5.5" fill="rgba(242,175,200,0.40)" stroke="rgba(255,255,255,0.16)" strokeWidth="0.5" />
+            <ellipse cx="-5.5" cy="0" rx="5.5" ry="4" fill="rgba(242,175,200,0.38)" stroke="rgba(255,255,255,0.14)" strokeWidth="0.5" />
+            <ellipse cx="5.5" cy="0" rx="5.5" ry="4" fill="rgba(242,175,200,0.38)" stroke="rgba(255,255,255,0.14)" strokeWidth="0.5" />
+            <circle cx="0" cy="0" r="2.2" fill="rgba(232,195,100,0.42)" strokeWidth="0.5" />
+          </g>
+
+          {/* ═══ BUTTERFLIES ═══ */}
+
+          {/* Butterfly 1 */}
+          <g transform="translate(195,245) rotate(-15)">
+            <path d="M0,0 C-7,-12 -16,-9 -11,0 C-16,9 -7,12 0,0" fill="rgba(242,180,210,0.50)" stroke="rgba(255,255,255,0.24)" strokeWidth="0.5" />
+            <path d="M0,0 C7,-12 16,-9 11,0 C16,9 7,12 0,0" fill="rgba(235,165,195,0.45)" stroke="rgba(255,255,255,0.20)" strokeWidth="0.5" />
+            <line x1="0" y1="-5" x2="0" y2="5" stroke="rgba(200,150,170,0.50)" strokeWidth="1" />
+            <path d="M0,-5 C-3,-9 -4,-10 -5,-9" stroke="rgba(200,150,170,0.35)" strokeWidth="0.5" fill="none" />
+            <path d="M0,-5 C3,-9 4,-10 5,-9" stroke="rgba(200,150,170,0.35)" strokeWidth="0.5" fill="none" />
+          </g>
+
+          {/* Butterfly 2 */}
+          <g transform="translate(340,495) rotate(12)">
+            <path d="M0,0 C-6,-10 -13,-7 -9,0 C-13,7 -6,10 0,0" fill="rgba(190,170,220,0.42)" stroke="rgba(255,255,255,0.20)" strokeWidth="0.5" />
+            <path d="M0,0 C6,-10 13,-7 9,0 C13,7 6,10 0,0" fill="rgba(180,160,210,0.38)" stroke="rgba(255,255,255,0.16)" strokeWidth="0.5" />
+            <line x1="0" y1="-4" x2="0" y2="4" stroke="rgba(170,150,195,0.45)" strokeWidth="0.8" />
+            <path d="M0,-4 C-2,-7 -3,-8 -4,-7" stroke="rgba(170,150,195,0.28)" strokeWidth="0.4" fill="none" />
+            <path d="M0,-4 C2,-7 3,-8 4,-7" stroke="rgba(170,150,195,0.28)" strokeWidth="0.4" fill="none" />
+          </g>
+
+          {/* ═══ LADYBUG on right vine leaf ═══ */}
+          <g transform="translate(378,380) rotate(25)">
+            <ellipse cx="0" cy="0" rx="4.5" ry="5.5" fill="rgba(210,90,85,0.55)" stroke="rgba(170,65,65,0.28)" strokeWidth="0.5" />
+            <line x1="0" y1="-5.5" x2="0" y2="5.5" stroke="rgba(40,25,25,0.28)" strokeWidth="0.5" />
+            <circle cx="-1.5" cy="-1.5" r="0.8" fill="rgba(40,25,25,0.25)" />
+            <circle cx="1.5" cy="0" r="0.7" fill="rgba(40,25,25,0.22)" />
+            <circle cx="-1" cy="2.5" r="0.6" fill="rgba(40,25,25,0.20)" />
+            <circle cx="0" cy="-6.8" r="2" fill="rgba(40,25,25,0.28)" />
+          </g>
+
+          {/* ═══ DRAGONFLY ═══ */}
+          <g transform="translate(155,135) rotate(-20)">
+            <line x1="0" y1="-10" x2="0" y2="10" stroke="rgba(100,175,140,0.42)" strokeWidth="1.2" strokeLinecap="round" />
+            <ellipse cx="-7" cy="-2" rx="8" ry="2.5" fill="rgba(195,225,215,0.30)" stroke="rgba(255,255,255,0.15)" strokeWidth="0.4" transform="rotate(-10 -7 -2)" />
+            <ellipse cx="7" cy="-2" rx="8" ry="2.5" fill="rgba(195,225,215,0.30)" stroke="rgba(255,255,255,0.15)" strokeWidth="0.4" transform="rotate(10 7 -2)" />
+            <ellipse cx="-5.5" cy="3" rx="6" ry="2" fill="rgba(195,225,215,0.24)" stroke="rgba(255,255,255,0.10)" strokeWidth="0.4" />
+            <ellipse cx="5.5" cy="3" rx="6" ry="2" fill="rgba(195,225,215,0.24)" stroke="rgba(255,255,255,0.10)" strokeWidth="0.4" />
+            <circle cx="0" cy="-11.5" r="2.2" fill="rgba(100,175,140,0.38)" />
+          </g>
+
+          {/* ═══ BIRDS ═══ */}
+          <path d="M295 72 C308 56 325 56 338 72" stroke="rgba(255,255,255,0.35)" strokeWidth="1.6" strokeLinecap="round" fill="none" />
+          <path d="M355 48 C364 37 377 37 386 48" stroke="rgba(255,255,255,0.26)" strokeWidth="1.4" strokeLinecap="round" fill="none" />
+          <path d="M400 68 C406 60 415 60 421 68" stroke="rgba(255,255,255,0.18)" strokeWidth="1.1" strokeLinecap="round" fill="none" />
+          <path d="M215 95 C222 86 232 86 239 95" stroke="rgba(255,255,255,0.15)" strokeWidth="1" strokeLinecap="round" fill="none" />
+
+          {/* ═══ FLOATING PETALS ═══ */}
+          <ellipse cx="200" cy="160" rx="3.5" ry="5.5" fill="rgba(242,175,200,0.38)" transform="rotate(30 200 160)" />
+          <ellipse cx="320" cy="275" rx="3" ry="5" fill="rgba(242,175,200,0.30)" transform="rotate(-25 320 275)" />
+          <ellipse cx="148" cy="415" rx="2.5" ry="4.5" fill="rgba(242,175,200,0.28)" transform="rotate(45 148 415)" />
+          <ellipse cx="438" cy="455" rx="2.5" ry="4" fill="rgba(242,175,200,0.25)" transform="rotate(-15 438 455)" />
+          <ellipse cx="210" cy="565" rx="2" ry="3.5" fill="rgba(242,175,200,0.22)" transform="rotate(35 210 565)" />
+          <ellipse cx="348" cy="148" rx="2" ry="3.5" fill="rgba(242,175,200,0.32)" transform="rotate(-40 348 148)" />
+          <ellipse cx="125" cy="220" rx="2.5" ry="4" fill="rgba(242,175,200,0.25)" transform="rotate(20 125 220)" />
+          <ellipse cx="410" cy="340" rx="2" ry="3.5" fill="rgba(242,175,200,0.22)" transform="rotate(55 410 340)" />
+
+          {/* ═══ POLLEN ═══ */}
+          <circle cx="248" cy="195" r="2" fill="rgba(255,255,255,0.14)" />
+          <circle cx="178" cy="335" r="1.8" fill="rgba(242,175,200,0.22)" />
+          <circle cx="338" cy="365" r="1.5" fill="rgba(255,255,255,0.12)" />
+          <circle cx="418" cy="128" r="1.6" fill="rgba(242,175,200,0.20)" />
+          <circle cx="128" cy="515" r="1.4" fill="rgba(168,213,186,0.18)" />
+          <circle cx="298" cy="495" r="1.3" fill="rgba(242,175,200,0.17)" />
+          <circle cx="58" cy="395" r="1.5" fill="rgba(255,255,255,0.10)" />
+          <circle cx="458" cy="305" r="1.2" fill="rgba(242,175,200,0.16)" />
+
+          {/* ═══ MEADOW ═══ */}
+          <path d="M0 752 Q80 735 200 745 Q330 755 480 738 L480 800 L0 800 Z" fill="rgba(20,55,35,0.22)" />
+          <path d="M0 770 Q120 760 260 768 Q400 776 480 762 L480 800 L0 800 Z" fill="rgba(25,60,38,0.16)" />
+          <path d="M30 800 Q34 768 28 738" stroke="rgba(140,200,168,0.24)" strokeWidth="1.3" strokeLinecap="round" />
+          <path d="M50 800 Q46 772 52 742" stroke="rgba(140,200,168,0.20)" strokeWidth="1.1" strokeLinecap="round" />
+          <path d="M70 800 Q74 776 68 748" stroke="rgba(140,200,168,0.22)" strokeWidth="1.2" strokeLinecap="round" />
+          <path d="M195 800 Q200 778 194 755" stroke="rgba(140,200,168,0.16)" strokeWidth="1" strokeLinecap="round" />
+          <path d="M275 800 Q272 780 278 758" stroke="rgba(140,200,168,0.14)" strokeWidth="0.9" strokeLinecap="round" />
+          <path d="M385 800 Q390 770 384 742" stroke="rgba(140,200,168,0.22)" strokeWidth="1.3" strokeLinecap="round" />
+          <path d="M435 800 Q440 778 434 752" stroke="rgba(140,200,168,0.16)" strokeWidth="1" strokeLinecap="round" />
+          <path d="M455 800 Q452 780 458 756" stroke="rgba(140,200,168,0.14)" strokeWidth="0.9" strokeLinecap="round" />
+
+          {/* Small meadow flowers */}
+          <g transform="translate(120,758)">
+            <ellipse cx="0" cy="-4" rx="3" ry="4" fill="rgba(242,175,200,0.35)" />
+            <ellipse cx="0" cy="4" rx="3" ry="4" fill="rgba(242,175,200,0.35)" />
+            <ellipse cx="-4" cy="0" rx="4" ry="3" fill="rgba(242,175,200,0.32)" />
+            <ellipse cx="4" cy="0" rx="4" ry="3" fill="rgba(242,175,200,0.32)" />
+            <circle cx="0" cy="0" r="1.8" fill="rgba(232,195,100,0.40)" />
+          </g>
+          <g transform="translate(345,752)">
+            <ellipse cx="0" cy="-3.5" rx="2.5" ry="3.5" fill="rgba(242,175,200,0.30)" />
+            <ellipse cx="0" cy="3.5" rx="2.5" ry="3.5" fill="rgba(242,175,200,0.30)" />
+            <ellipse cx="-3.5" cy="0" rx="3.5" ry="2.5" fill="rgba(242,175,200,0.28)" />
+            <ellipse cx="3.5" cy="0" rx="3.5" ry="2.5" fill="rgba(242,175,200,0.28)" />
+            <circle cx="0" cy="0" r="1.5" fill="rgba(232,195,100,0.35)" />
+          </g>
         </svg>
       </div>
 
-      {/* ═══════════════════════════════════════
-          BRAND MARK
-      ═══════════════════════════════════════ */}
-      <div className="relative">
-        <span
-          className="inline-flex items-center gap-1.5 rounded-full px-4 py-1.5 text-xs font-semibold uppercase tracking-widest"
-          style={{
-            backgroundColor: "rgba(255,255,255,0.10)",
-            color: "#B8E0C8",
-            border: "1px solid rgba(255,255,255,0.18)",
-            letterSpacing: "0.12em",
-          }}
-        >
-          <span>🌿</span>
+      {/* Dark overlay for text readability */}
+      <div
+        className="pointer-events-none absolute inset-x-0 bottom-0 h-[50%]"
+        style={{
+          background: "linear-gradient(to top, rgba(20,45,30,0.48) 0%, rgba(20,45,30,0.15) 50%, transparent 100%)",
+        }}
+      />
+
+      {/* Brand */}
+      <div className="relative z-10 flex items-center gap-2.5">
+        <div className="h-2 w-2 rounded-full" style={{ backgroundColor: "rgba(255,255,255,0.55)" }} />
+        <span className="text-[12px] font-semibold uppercase tracking-[0.14em]" style={{ color: "rgba(255,255,255,0.75)" }}>
           MySafePlace
         </span>
       </div>
 
-      {/* ═══════════════════════════════════════
-          MAIN CONTENT
-      ═══════════════════════════════════════ */}
-      <div className="relative flex flex-col gap-7 py-4">
-        <div className="relative">
-          {/* Soft glow behind heading text */}
-          <div
-            className="pointer-events-none absolute"
-            style={{
-              top: -16, left: -24,
-              width: 340, height: 130,
-              borderRadius: "50%",
-              background: "rgba(168,213,186,0.22)",
-              filter: "blur(38px)",
-            }}
-          />
-          <h1
-            className="relative text-3xl font-bold leading-tight tracking-tight text-white md:text-[2.7rem] md:leading-[1.15]"
-          >
-            Welcome to
-            <br />
+      {/* Main content */}
+      <div className="relative z-10">
+        <h1 className="font-bold leading-[1.12] tracking-tight text-white" style={{ fontSize: "clamp(2rem, 4.5vw, 3rem)" }}>
+          A space that&apos;s
+          <br />
+          just yours.
+        </h1>
+        <p className="mt-5 max-w-[280px] text-[14px] leading-[1.75]" style={{ color: "rgba(255,255,255,0.65)" }}>
+          Track how you feel, write what&apos;s on your mind, and find what helps you grow — at your own pace.
+        </p>
+        <div className="mt-8 flex flex-wrap gap-2">
+          {["Mood tracking", "Journaling", "Resources"].map((f) => (
             <span
-              style={{
-                color: "#A8D5B5",
-                textShadow: "0 0 30px rgba(168,213,181,0.35)",
-              }}
+              key={f}
+              className="rounded-full px-3.5 py-1.5 text-[11px] font-medium"
+              style={{ color: "rgba(255,255,255,0.65)", backgroundColor: "rgba(255,255,255,0.12)", border: "1px solid rgba(255,255,255,0.18)" }}
             >
-              MySafePlace
+              {f}
             </span>
-            <span className="ml-2 text-2xl">🪷</span>
-          </h1>
-          <p
-            className="relative mt-4 text-[15px] leading-relaxed"
-            style={{ color: "#B8DEC9" }}
-          >
-            Your personal wellness companion,
-            <br className="hidden md:block" />
-            anytime, anywhere.
-          </p>
-        </div>
-
-        {/* About card — glass morphism */}
-        <div
-          className="rounded-2xl p-5"
-          style={{
-            backgroundColor: "rgba(255,255,255,0.08)",
-            border: "1px solid rgba(255,255,255,0.14)",
-            backdropFilter: "blur(8px)",
-            WebkitBackdropFilter: "blur(8px)",
-            boxShadow: "inset 0 1px 0 rgba(255,255,255,0.12)",
-          }}
-        >
-          <p
-            className="mb-3 flex items-center gap-1.5 text-xs font-semibold uppercase tracking-widest"
-            style={{ color: "#A8D5B5", letterSpacing: "0.10em" }}
-          >
-            <span>🌸</span>
-            About MySafePlace
-          </p>
-          <div
-            className="flex flex-col gap-2.5 text-sm leading-relaxed"
-            style={{ color: "rgba(255,255,255,0.86)" }}
-          >
-            <p>
-              You don&apos;t know where to start to take care of yourself?
-              You&apos;re in the right place.
-            </p>
-            <p>
-              MySafePlace is a gentle pause in your day — a corner just for
-              you. Come here whenever you need a break, to breathe, recharge,
-              and do something kind for yourself.
-            </p>
-            <p style={{ color: "rgba(168,213,181,0.92)" }}>
-              Because you deserve it. 🌿🪷
-            </p>
-          </div>
+          ))}
         </div>
       </div>
 
-      {/* ═══════════════════════════════════════
-          FOOTER ACCENT
-      ═══════════════════════════════════════ */}
-      <div className="relative flex items-center gap-3">
-        <div
-          className="h-px flex-1 rounded-full"
-          style={{ backgroundColor: "rgba(168,213,181,0.28)" }}
-        />
-        <p
-          className="text-xs font-medium uppercase tracking-widest"
-          style={{ color: "rgba(168,213,181,0.65)", letterSpacing: "0.12em" }}
-        >
-          Start your journey
+      {/* Footer */}
+      <div className="relative z-10">
+        <div className="h-px" style={{ backgroundColor: "rgba(255,255,255,0.10)" }} />
+        <p className="mt-4 text-[11px]" style={{ color: "rgba(255,255,255,0.38)" }}>
+          You deserve a safe space.
         </p>
-        <div
-          className="h-px flex-1 rounded-full"
-          style={{ backgroundColor: "rgba(168,213,181,0.28)" }}
-        />
       </div>
     </div>
   );

@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { AuthProvider } from "@/src/context/AuthContext";
+import { NatureSoundProvider } from "@/src/context/NatureSoundContext";
+import NatureSoundWidget from "@/src/components/ui/NatureSoundWidget";
 import "./globals.css";
 import { Analytics } from "@vercel/analytics/next";
 
@@ -29,7 +31,12 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <AuthProvider>{children}</AuthProvider>
+        <AuthProvider>
+          <NatureSoundProvider>
+            {children}
+            <NatureSoundWidget />
+          </NatureSoundProvider>
+        </AuthProvider>
       </body>
     </html>
   );
