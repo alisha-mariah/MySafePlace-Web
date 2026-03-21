@@ -9,7 +9,7 @@ import { logoutUser } from "@/src/services/authService";
 const navCards = [
   { label: "Journal", icon: "📓", description: "Write your thoughts", href: "/journal" },
   { label: "Mood Tracker", icon: "🌿", description: "Track how you feel", href: "/mood" },
-  { label: "Resources", icon: "📚", description: "Find helpful guides", href: "/resources" },
+  { label: "Resources", icon: "📚", description: "Find helpful guides", href: "/dashboard/resources" },
   { label: "Videos", icon: "🎬", description: "Watch calming content", href: "/videos" },
   { label: "Emergency Contacts", icon: "🫂", description: "People who care", href: "/emergency" },
   { label: "Profile", icon: "🌱", description: "Your account settings", href: "/profile" },
