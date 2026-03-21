@@ -13,24 +13,60 @@ import {
 } from "@/src/services/moodService";
 
 const MOODS = [
-  { name: "happy",     color: "#D4A017" },
-  { name: "calm",      color: "#5EA88A" },
-  { name: "grateful",  color: "#C27888" },
-  { name: "motivated", color: "#3F9468" },
-  { name: "sad",       color: "#6E94AE" },
-  { name: "anxious",   color: "#B88A3E" },
-  { name: "stressed",  color: "#B47058" },
-  { name: "angry",     color: "#AE5B5B" },
-  { name: "tired",     color: "#7E929A" },
-  { name: "lonely",    color: "#8A72A0" },
+  { name: "happy",       color: "#D4A017" },
+  { name: "calm",        color: "#5EA88A" },
+  { name: "relaxed",     color: "#9B8EC4" },
+  { name: "grateful",    color: "#D4789A" },
+  { name: "motivated",   color: "#2E9E6A" },
+  { name: "sad",         color: "#5B8DB8" },
+  { name: "anxious",     color: "#CC8C35" },
+  { name: "stressed",    color: "#C46050" },
+  { name: "angry",       color: "#C04848" },
+  { name: "lonely",      color: "#8A6AAE" },
+  { name: "overwhelmed", color: "#4A8A8A" },
+  { name: "tired",       color: "#708898" },
+  { name: "insecure",    color: "#A87890" },
+  { name: "frustrated",  color: "#B87A3E" },
+  { name: "bored",       color: "#7A946A" },
 ];
 
 function moodColor(mood: string) {
   return MOODS.find((m) => m.name === mood)?.color ?? "#5EA88A";
 }
 
-function formatDate(date: Date) {
-  return date.toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric", hour: "numeric", minute: "2-digit" });
+function formatTime(date: Date) {
+  return date.toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" });
+}
+
+function getDateLabel(date: Date): string {
+  const now = new Date();
+  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  const yesterday = new Date(today);
+  yesterday.setDate(yesterday.getDate() - 1);
+  const entryDay = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+
+  if (entryDay.getTime() === today.getTime()) return "Today";
+  if (entryDay.getTime() === yesterday.getTime()) return "Yesterday";
+  const sameYear = date.getFullYear() === now.getFullYear();
+  return date.toLocaleDateString("en-US", {
+    weekday: "long", month: "long", day: "numeric",
+    ...(sameYear ? {} : { year: "numeric" }),
+  });
+}
+
+function groupEntries(entries: MoodEntry[]): { label: string; entries: MoodEntry[] }[] {
+  const groups: { label: string; entries: MoodEntry[] }[] = [];
+  let currentLabel = "";
+  for (const entry of entries) {
+    const label = getDateLabel(entry.createdAt);
+    if (label !== currentLabel) {
+      groups.push({ label, entries: [entry] });
+      currentLabel = label;
+    } else {
+      groups[groups.length - 1].entries.push(entry);
+    }
+  }
+  return groups;
 }
 
 /* ── Mood face SVGs ── */
@@ -42,25 +78,50 @@ function MoodFace({ mood, size = 28 }: { mood: string; size?: number }) {
 
   switch (mood) {
     case "happy":
-      return (<svg width={size} height={size} viewBox="0 0 28 28" fill="none">{head}<path d="M8.5 12.5 Q10 10.5 11.5 12.5" stroke={c} strokeWidth={sw} strokeLinecap="round" /><path d="M16.5 12.5 Q18 10.5 19.5 12.5" stroke={c} strokeWidth={sw} strokeLinecap="round" /><path d="M8.5 16.5 Q14 21.5 19.5 16.5" stroke={c} strokeWidth={sw} strokeLinecap="round" /></svg>);
+      // Squinted happy eyes (^_^), big wide grin
+      return (<svg width={size} height={size} viewBox="0 0 28 28" fill="none">{head}<path d="M8 12 Q10 10 12 12" stroke={c} strokeWidth={sw} strokeLinecap="round" /><path d="M16 12 Q18 10 20 12" stroke={c} strokeWidth={sw} strokeLinecap="round" /><path d="M8 17 Q14 22 20 17" stroke={c} strokeWidth={sw} strokeLinecap="round" /></svg>);
     case "calm":
-      return (<svg width={size} height={size} viewBox="0 0 28 28" fill="none">{head}<path d="M8.5 13 Q10 14.5 11.5 13" stroke={c} strokeWidth={sw} strokeLinecap="round" /><path d="M16.5 13 Q18 14.5 19.5 13" stroke={c} strokeWidth={sw} strokeLinecap="round" /><path d="M10.5 17 Q14 19 17.5 17" stroke={c} strokeWidth={sw} strokeLinecap="round" /></svg>);
+      // Zen closed eyes (flat lines), tiny serene smile
+      return (<svg width={size} height={size} viewBox="0 0 28 28" fill="none">{head}<path d="M8 12.5 L12 12.5" stroke={c} strokeWidth={sw} strokeLinecap="round" /><path d="M16 12.5 L20 12.5" stroke={c} strokeWidth={sw} strokeLinecap="round" /><path d="M11 17.5 Q14 19 17 17.5" stroke={c} strokeWidth={sw} strokeLinecap="round" /></svg>);
+    case "relaxed":
+      // Soft droopy half-lid eyes, loose easy smile
+      return (<svg width={size} height={size} viewBox="0 0 28 28" fill="none">{head}<circle cx="10" cy="12.5" r="1.2" fill={c} /><path d="M7.5 11 L12.5 11" stroke={c} strokeWidth={sw} strokeLinecap="round" /><circle cx="18" cy="12.5" r="1.2" fill={c} /><path d="M15.5 11 L20.5 11" stroke={c} strokeWidth={sw} strokeLinecap="round" /><path d="M10 17.5 Q14 20 18 17.5" stroke={c} strokeWidth={sw} strokeLinecap="round" /></svg>);
     case "grateful":
-      return (<svg width={size} height={size} viewBox="0 0 28 28" fill="none">{head}<circle cx="10" cy="12.5" r="1.2" fill={c} /><circle cx="18" cy="12.5" r="1.2" fill={c} /><path d="M9 16.5 Q14 21 19 16.5" stroke={c} strokeWidth={sw} strokeLinecap="round" /><path d="M21.5 6.5 Q21.5 5 23 5 Q24.5 5 24.5 6.5 Q24.5 8.5 23 9.5 Q21.5 8.5 21.5 6.5 Z" fill={c} opacity="0.5" /></svg>);
+      // Smiling closed eyes, warm smile, rosy cheeks
+      return (<svg width={size} height={size} viewBox="0 0 28 28" fill="none">{head}<path d="M8 13 Q10 11 12 13" stroke={c} strokeWidth={sw} strokeLinecap="round" /><path d="M16 13 Q18 11 20 13" stroke={c} strokeWidth={sw} strokeLinecap="round" /><path d="M9 17 Q14 21 19 17" stroke={c} strokeWidth={sw} strokeLinecap="round" /><circle cx="7" cy="15" r="1.8" fill={c} opacity="0.25" /><circle cx="21" cy="15" r="1.8" fill={c} opacity="0.25" /></svg>);
     case "motivated":
-      return (<svg width={size} height={size} viewBox="0 0 28 28" fill="none">{head}<circle cx="10" cy="12.5" r="1.3" fill={c} /><circle cx="18" cy="12.5" r="1.3" fill={c} /><path d="M9 16 Q14 21 19 16" stroke={c} strokeWidth={sw} strokeLinecap="round" /><path d="M23 8 L23.8 5.5 L22 7.2 L24 7.2 L22.2 5.5 Z" fill={c} opacity="0.5" /></svg>);
+      // Determined thick dot eyes, confident D-shaped grin
+      return (<svg width={size} height={size} viewBox="0 0 28 28" fill="none">{head}<circle cx="10" cy="12" r="1.5" fill={c} /><circle cx="18" cy="12" r="1.5" fill={c} /><path d="M9 16 L19 16 Q19 20.5 14 20.5 Q9 20.5 9 16 Z" stroke={c} strokeWidth={sw} fill={c + "20"} strokeLinejoin="round" /></svg>);
     case "sad":
-      return (<svg width={size} height={size} viewBox="0 0 28 28" fill="none">{head}<circle cx="10" cy="12" r="1.2" fill={c} /><circle cx="18" cy="12" r="1.2" fill={c} /><path d="M9.5 19 Q14 15.5 18.5 19" stroke={c} strokeWidth={sw} strokeLinecap="round" /><path d="M19 13.5 Q19.5 15.5 19 16.5 Q18.5 15.5 19 13.5 Z" fill={c} opacity="0.55" /></svg>);
+      // Sad inner-raised brows, dot eyes, deep frown, teardrop
+      return (<svg width={size} height={size} viewBox="0 0 28 28" fill="none">{head}<path d="M8 10 L11.5 9" stroke={c} strokeWidth="1.4" strokeLinecap="round" /><path d="M20 10 L16.5 9" stroke={c} strokeWidth="1.4" strokeLinecap="round" /><circle cx="10" cy="12.5" r="1.2" fill={c} /><circle cx="18" cy="12.5" r="1.2" fill={c} /><path d="M9.5 19 Q14 16 18.5 19" stroke={c} strokeWidth={sw} strokeLinecap="round" /><circle cx="20" cy="16" r="1.2" fill={c} /></svg>);
     case "anxious":
-      return (<svg width={size} height={size} viewBox="0 0 28 28" fill="none">{head}<circle cx="10" cy="12.5" r="2" stroke={c} strokeWidth="1.2" fill="none" /><circle cx="10" cy="12.5" r="0.8" fill={c} /><circle cx="18" cy="12.5" r="2" stroke={c} strokeWidth="1.2" fill="none" /><circle cx="18" cy="12.5" r="0.8" fill={c} /><path d="M9.5 18 Q12 16 14 18 Q16 20 18.5 18" stroke={c} strokeWidth={sw} strokeLinecap="round" fill="none" /><path d="M21 8 Q21.5 10 21 11.5 Q20.5 10 21 8 Z" fill={c} opacity="0.45" /></svg>);
+      // Wide open eyes, wobbly mouth, sweat drop
+      return (<svg width={size} height={size} viewBox="0 0 28 28" fill="none">{head}<circle cx="10" cy="12" r="2.2" stroke={c} strokeWidth="1.2" fill="none" /><circle cx="10" cy="12" r="0.9" fill={c} /><circle cx="18" cy="12" r="2.2" stroke={c} strokeWidth="1.2" fill="none" /><circle cx="18" cy="12" r="0.9" fill={c} /><path d="M9 18 Q11 16.5 14 18 Q17 19.5 19 18" stroke={c} strokeWidth={sw} strokeLinecap="round" fill="none" /><path d="M21.5 7.5 Q22 9.5 21.5 11 Q21 9.5 21.5 7.5 Z" fill={c} /></svg>);
     case "stressed":
-      return (<svg width={size} height={size} viewBox="0 0 28 28" fill="none">{head}<path d="M8.5 11.5 L11.5 13.5" stroke={c} strokeWidth={sw} strokeLinecap="round" /><path d="M11.5 11.5 L8.5 13.5" stroke={c} strokeWidth={sw} strokeLinecap="round" /><path d="M16.5 11.5 L19.5 13.5" stroke={c} strokeWidth={sw} strokeLinecap="round" /><path d="M19.5 11.5 L16.5 13.5" stroke={c} strokeWidth={sw} strokeLinecap="round" /><path d="M8.5 18 L11 16.5 L14 18 L17 16.5 L19.5 18" stroke={c} strokeWidth={sw} strokeLinecap="round" strokeLinejoin="round" fill="none" /></svg>);
+      // X eyes, zigzag mouth
+      return (<svg width={size} height={size} viewBox="0 0 28 28" fill="none">{head}<path d="M8.5 11 L11.5 13.5" stroke={c} strokeWidth={sw} strokeLinecap="round" /><path d="M11.5 11 L8.5 13.5" stroke={c} strokeWidth={sw} strokeLinecap="round" /><path d="M16.5 11 L19.5 13.5" stroke={c} strokeWidth={sw} strokeLinecap="round" /><path d="M19.5 11 L16.5 13.5" stroke={c} strokeWidth={sw} strokeLinecap="round" /><path d="M8.5 18 L11 16.5 L14 18 L17 16.5 L19.5 18" stroke={c} strokeWidth={sw} strokeLinecap="round" strokeLinejoin="round" fill="none" /></svg>);
     case "angry":
-      return (<svg width={size} height={size} viewBox="0 0 28 28" fill="none">{head}<path d="M7.5 10 L12 12" stroke={c} strokeWidth={sw} strokeLinecap="round" /><path d="M20.5 10 L16 12" stroke={c} strokeWidth={sw} strokeLinecap="round" /><circle cx="10" cy="13.5" r="1.2" fill={c} /><circle cx="18" cy="13.5" r="1.2" fill={c} /><path d="M9.5 19.5 Q14 16 18.5 19.5" stroke={c} strokeWidth={sw} strokeLinecap="round" fill="none" /></svg>);
-    case "tired":
-      return (<svg width={size} height={size} viewBox="0 0 28 28" fill="none">{head}<path d="M8 13 L12 13" stroke={c} strokeWidth={sw} strokeLinecap="round" /><path d="M8.5 11.5 Q10 13 11.5 11.5" stroke={c} strokeWidth="1" strokeLinecap="round" fill="none" /><path d="M16 13 L20 13" stroke={c} strokeWidth={sw} strokeLinecap="round" /><path d="M16.5 11.5 Q18 13 19.5 11.5" stroke={c} strokeWidth="1" strokeLinecap="round" fill="none" /><ellipse cx="14" cy="18" rx="2.5" ry="2" stroke={c} strokeWidth={sw} fill="none" /><path d="M21 9 L23 9 L21 11 L23 11" stroke={c} strokeWidth="0.8" strokeLinecap="round" fill="none" opacity="0.5" /><path d="M23.5 6 L25 6 L23.5 7.5 L25 7.5" stroke={c} strokeWidth="0.7" strokeLinecap="round" fill="none" opacity="0.35" /></svg>);
+      // Thick V brows, sharp eyes, clenched teeth
+      return (<svg width={size} height={size} viewBox="0 0 28 28" fill="none">{head}<path d="M7 9.5 L12 11.5" stroke={c} strokeWidth="1.8" strokeLinecap="round" /><path d="M21 9.5 L16 11.5" stroke={c} strokeWidth="1.8" strokeLinecap="round" /><circle cx="10" cy="13.5" r="1.3" fill={c} /><circle cx="18" cy="13.5" r="1.3" fill={c} /><rect x="9" y="17" width="10" height="3" rx="0.5" stroke={c} strokeWidth="1.3" fill="none" /><path d="M12 17 L12 20" stroke={c} strokeWidth="1" /><path d="M15.5 17 L15.5 20" stroke={c} strokeWidth="1" /></svg>);
     case "lonely":
-      return (<svg width={size} height={size} viewBox="0 0 28 28" fill="none">{head}<circle cx="9" cy="12.5" r="1.2" fill={c} /><circle cx="17" cy="12.5" r="1.2" fill={c} /><path d="M10 18 Q14 16 18 18" stroke={c} strokeWidth={sw} strokeLinecap="round" fill="none" /><path d="M19 14 Q19.5 15.8 19 16.8 Q18.5 15.8 19 14 Z" fill={c} opacity="0.4" /></svg>);
+      // Small dot eyes looking down, gentle frown, empty feeling
+      return (<svg width={size} height={size} viewBox="0 0 28 28" fill="none">{head}<circle cx="10" cy="13" r="1" fill={c} /><circle cx="18" cy="13" r="1" fill={c} /><path d="M11 18 Q14 16.5 17 18" stroke={c} strokeWidth={sw} strokeLinecap="round" /></svg>);
+    case "overwhelmed":
+      // Wide shocked eyes, raised brows, open O mouth
+      return (<svg width={size} height={size} viewBox="0 0 28 28" fill="none">{head}<path d="M7.5 9 L12.5 9" stroke={c} strokeWidth="1.4" strokeLinecap="round" /><path d="M15.5 9 L20.5 9" stroke={c} strokeWidth="1.4" strokeLinecap="round" /><circle cx="10" cy="12.5" r="2.3" stroke={c} strokeWidth="1.3" fill="none" /><circle cx="10" cy="12.5" r="1" fill={c} /><circle cx="18" cy="12.5" r="2.3" stroke={c} strokeWidth="1.3" fill="none" /><circle cx="18" cy="12.5" r="1" fill={c} /><ellipse cx="14" cy="19" rx="2.2" ry="2" stroke={c} strokeWidth={sw} fill="none" /></svg>);
+    case "tired":
+      // Droopy crescent eyes, open yawn, thin Z's trailing out
+      return (<svg width={size} height={size} viewBox="0 0 28 28" fill="none">{head}<path d="M8 13 Q10 11.5 12 13" stroke={c} strokeWidth="1.8" strokeLinecap="round" fill="none" /><path d="M16 13 Q18 11.5 20 13" stroke={c} strokeWidth="1.8" strokeLinecap="round" fill="none" /><ellipse cx="14" cy="19" rx="2.5" ry="2" stroke={c} strokeWidth={sw} fill={c + "15"} /><path d="M18 7 L20.5 7 L18 9.5 L20.5 9.5" stroke={c} strokeWidth="1.1" strokeLinecap="round" strokeLinejoin="round" fill="none" /><path d="M24 1.5 L26.5 1.5 L24 3.5 L26.5 3.5" stroke={c} strokeWidth="1" strokeLinecap="round" strokeLinejoin="round" fill="none" /></svg>);
+    case "insecure":
+      // >< scrunched eyes, wobbly uncertain mouth
+      return (<svg width={size} height={size} viewBox="0 0 28 28" fill="none">{head}<path d="M8 11 L10.5 12.5 L8 14" stroke={c} strokeWidth={sw} strokeLinecap="round" strokeLinejoin="round" fill="none" /><path d="M20 11 L17.5 12.5 L20 14" stroke={c} strokeWidth={sw} strokeLinecap="round" strokeLinejoin="round" fill="none" /><path d="M10 17.5 Q12 18.5 14 17.5 Q16 16.8 18 17.8" stroke={c} strokeWidth={sw} strokeLinecap="round" fill="none" /></svg>);
+    case "frustrated":
+      // Asymmetric angry brows, frown, puff clouds
+      return (<svg width={size} height={size} viewBox="0 0 28 28" fill="none">{head}<path d="M8 9 L12 10.5" stroke={c} strokeWidth="1.6" strokeLinecap="round" /><path d="M20 10 L16.5 11" stroke={c} strokeWidth="1.6" strokeLinecap="round" /><circle cx="10" cy="13" r="1.3" fill={c} /><circle cx="18" cy="13" r="1.3" fill={c} /><path d="M9 19.5 Q14 16 19 19.5" stroke={c} strokeWidth={sw} strokeLinecap="round" fill="none" /><circle cx="4.5" cy="14" r="1.8" fill={c + "30"} /><circle cx="3.5" cy="12" r="1.2" fill={c + "25"} /><circle cx="23.5" cy="14" r="1.8" fill={c + "30"} /><circle cx="24.5" cy="12" r="1.2" fill={c + "25"} /></svg>);
+    case "bored":
+      // Eyes rolled up (pupils at top), flat mouth
+      return (<svg width={size} height={size} viewBox="0 0 28 28" fill="none">{head}<circle cx="10" cy="12" r="2" stroke={c} strokeWidth="1.2" fill="none" /><circle cx="10" cy="11.2" r="0.9" fill={c} /><circle cx="18" cy="12" r="2" stroke={c} strokeWidth="1.2" fill="none" /><circle cx="18" cy="11.2" r="0.9" fill={c} /><path d="M10.5 18 L17.5 18" stroke={c} strokeWidth={sw} strokeLinecap="round" /></svg>);
     default:
       return (<svg width={size} height={size} viewBox="0 0 28 28" fill="none">{head}<circle cx="10" cy="12.5" r="1.2" fill={c} /><circle cx="18" cy="12.5" r="1.2" fill={c} /><path d="M10 17 L18 17" stroke={c} strokeWidth={sw} strokeLinecap="round" /></svg>);
   }
@@ -267,8 +328,13 @@ function MoodContent() {
             </div>
 
             <div className="mt-5 flex items-center gap-3">
-              <button type="submit" disabled={!selectedMood || submitting} className="nature-btn rounded-lg px-6 py-2.5 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:opacity-50" style={{ background: "linear-gradient(135deg, #7DB892 0%, #5EA88A 50%, #4A9474 100%)", boxShadow: "0 4px 14px rgba(93,168,138,0.25)" }}>
-                {submitting ? "Saving..." : editingId ? "Save changes" : "Log mood"}
+              <button type="submit" disabled={!selectedMood || submitting} className="cta-glow nature-btn flex items-center justify-center gap-2 rounded-xl px-8 py-3.5 text-[15px] font-bold text-white tracking-wide disabled:cursor-not-allowed disabled:opacity-50" style={{ background: "linear-gradient(135deg, #6DC09A 0%, #5EA88A 40%, #4A9474 100%)", boxShadow: "0 4px 14px rgba(93,168,138,0.25)", minWidth: 170 }}>
+                {submitting ? "Saving..." : editingId ? "Save changes" : (
+                  <>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><path d="M12 5v14M5 12h14" /></svg>
+                    Log mood
+                  </>
+                )}
               </button>
               {editingId && (
                 <button type="button" onClick={handleCancelEdit} className="text-sm font-medium transition-opacity hover:opacity-70" style={{ color: "#6B8B78" }}>Cancel</button>
@@ -292,27 +358,44 @@ function MoodContent() {
               <p className="text-sm" style={{ color: "#8DBFA5" }}>No entries yet. Log your first mood above.</p>
             </div>
           ) : (
-            <div className="flex flex-col gap-2.5">
-              {entries.map((entry, i) => (
-                <div key={entry.id} className={`animate-fade-in-up${i < 3 ? `-${i + 1}` : "-3"} group rounded-xl border px-5 py-4 transition-all`} style={{ background: "linear-gradient(135deg, rgba(255,255,255,0.75) 0%, rgba(255,255,255,0.55) 100%)", borderColor: "rgba(200,230,208,0.40)", backdropFilter: "blur(8px)" }}>
-                  <div className="flex items-center gap-3">
-                    <MoodFace mood={entry.mood} size={24} />
-                    <div className="min-w-0 flex-1">
-                      <span className="text-sm font-semibold capitalize" style={{ color: "#1A3D2B" }}>{entry.mood}</span>
-                      <p className="text-[11px]" style={{ color: "#8DBFA5" }}>{formatDate(entry.createdAt)}</p>
-                    </div>
-                    <div className="flex items-center gap-1 opacity-40 transition-opacity group-hover:opacity-100">
-                      <button onClick={() => handleEdit(entry)} className="rounded-lg p-2 transition-all hover:bg-white/60 hover:scale-110 active:scale-95" aria-label="Edit entry">
-                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#6B8B78" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M17 3a2.83 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z" /></svg>
-                      </button>
-                      <button onClick={() => handleDelete(entry.id)} className="rounded-lg p-2 transition-all hover:bg-red-50/60 hover:scale-110 active:scale-95" aria-label="Delete entry">
-                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#C07070" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 6h18" /><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6" /><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" /></svg>
-                      </button>
-                    </div>
+            <div className="flex flex-col gap-5">
+              {groupEntries(entries).map((group) => (
+                <div key={group.label}>
+                  {/* Date group label */}
+                  <div className="mb-2.5 flex items-center gap-3">
+                    <span className="text-[12px] font-bold tracking-wide" style={{ color: group.label === "Today" ? "#2D6A4F" : "#6B9E85" }}>
+                      {group.label}
+                    </span>
+                    <span className="rounded-full px-2 py-0.5 text-[10px] font-semibold" style={{ backgroundColor: "rgba(200,230,208,0.3)", color: "#6B9E85" }}>
+                      {group.entries.length}
+                    </span>
+                    <div className="h-px flex-1" style={{ background: "linear-gradient(90deg, rgba(200,230,208,0.5) 0%, transparent 100%)" }} />
                   </div>
-                  {entry.note && (
-                    <p className="mt-2 pl-9 text-sm leading-relaxed" style={{ color: "#4A6B5A" }}>{entry.note}</p>
-                  )}
+
+                  <div className="flex flex-col gap-2.5">
+                    {group.entries.map((entry, i) => (
+                      <div key={entry.id} className={`animate-fade-in-up${i < 3 ? `-${i + 1}` : "-3"} group rounded-xl border px-5 py-4 transition-all`} style={{ background: "linear-gradient(135deg, rgba(255,255,255,0.75) 0%, rgba(255,255,255,0.55) 100%)", borderColor: "rgba(200,230,208,0.40)", backdropFilter: "blur(8px)" }}>
+                        <div className="flex items-center gap-3">
+                          <MoodFace mood={entry.mood} size={24} />
+                          <div className="min-w-0 flex-1">
+                            <span className="text-sm font-semibold capitalize" style={{ color: "#1A3D2B" }}>{entry.mood}</span>
+                            <p className="text-[11px]" style={{ color: "#8DBFA5" }}>{formatTime(entry.createdAt)}</p>
+                          </div>
+                          <div className="flex items-center gap-1 opacity-40 transition-opacity group-hover:opacity-100">
+                            <button onClick={() => handleEdit(entry)} className="rounded-lg p-2 transition-all hover:bg-white/60 hover:scale-110 active:scale-95" aria-label="Edit entry">
+                              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#6B8B78" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M17 3a2.83 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z" /></svg>
+                            </button>
+                            <button onClick={() => handleDelete(entry.id)} className="rounded-lg p-2 transition-all hover:bg-red-50/60 hover:scale-110 active:scale-95" aria-label="Delete entry">
+                              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#C07070" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 6h18" /><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6" /><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" /></svg>
+                            </button>
+                          </div>
+                        </div>
+                        {entry.note && (
+                          <p className="mt-2 pl-9 text-sm leading-relaxed" style={{ color: "#4A6B5A" }}>{entry.note}</p>
+                        )}
+                      </div>
+                    ))}
+                  </div>
                 </div>
               ))}
             </div>
