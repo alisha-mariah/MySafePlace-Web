@@ -200,11 +200,10 @@ function JournalContent() {
   }
 
   return (
-    <div className="relative min-h-screen" style={{ background: "linear-gradient(135deg, #EFF7F1 0%, #FFF5F7 50%, #F0F7F2 100%)" }}>
-      <JournalBg />
+    <div className="relative min-h-screen">
 
       {/* Header */}
-      <header className="relative z-10 mx-auto max-w-3xl px-6 pt-8 pb-2">
+      <header className="relative z-10 mx-auto max-w-5xl px-6 pt-8 pb-2">
         <Link
           href="/dashboard"
           className="mb-5 inline-flex items-center gap-1.5 rounded-full px-3.5 py-2 text-xs font-medium transition-all"
@@ -249,7 +248,7 @@ function JournalContent() {
       </header>
 
       {/* Content */}
-      <div className="relative z-10 mx-auto max-w-3xl px-5 py-6">
+      <div className="relative z-10 mx-auto max-w-5xl px-5 py-6">
         {/* Form */}
         <form onSubmit={handleSubmit}>
           <div
@@ -429,9 +428,5 @@ function JournalContent() {
 }
 
 export default function JournalPage() {
-  return (
-    <ProtectedRoute>
-      <JournalContent />
-    </ProtectedRoute>
-  );
+  return <JournalContent />;
 }

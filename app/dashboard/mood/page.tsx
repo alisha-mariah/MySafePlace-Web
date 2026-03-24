@@ -272,11 +272,10 @@ function MoodContent() {
   }
 
   return (
-    <div className="relative min-h-screen" style={{ background: "linear-gradient(135deg, #EFF7F1 0%, #FFF5F7 50%, #F0F7F2 100%)" }}>
-      <MoodNatureBg />
+    <div className="relative min-h-screen">
 
       {/* Header */}
-      <header className="relative z-10 mx-auto max-w-xl px-6 pt-8 pb-2">
+      <header className="relative z-10 mx-auto max-w-5xl px-6 pt-8 pb-2">
         <Link href="/dashboard" className="pill-btn mb-5 inline-flex items-center gap-1.5 rounded-full px-3.5 py-2 text-xs font-medium" style={{ color: "#6B9E85", backgroundColor: "rgba(255,255,255,0.7)", border: "1px solid rgba(200,230,208,0.5)", backdropFilter: "blur(8px)" }}>
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M15 18l-6-6 6-6" /></svg>
           Dashboard
@@ -300,7 +299,7 @@ function MoodContent() {
       </header>
 
       {/* Content */}
-      <div className="relative z-10 mx-auto max-w-xl px-4 py-6">
+      <div className="relative z-10 mx-auto max-w-5xl px-4 py-6">
         {/* Form */}
         <form onSubmit={handleSubmit}>
           <div className="animate-fade-in-up-1 rounded-2xl border p-6" style={{ background: "linear-gradient(135deg, rgba(255,255,255,0.80) 0%, rgba(255,255,255,0.60) 100%)", borderColor: "rgba(200,230,208,0.45)", boxShadow: "0 2px 8px rgba(45,106,79,0.04), 0 8px 24px rgba(45,106,79,0.04)", backdropFilter: "blur(8px)" }}>
@@ -423,9 +422,5 @@ function MoodContent() {
 }
 
 export default function MoodPage() {
-  return (
-    <ProtectedRoute>
-      <MoodContent />
-    </ProtectedRoute>
-  );
+  return <MoodContent />;
 }
