@@ -65,9 +65,16 @@ export default function ResourcePreview() {
   }, []);
 
   return (
-    <div>
+    <div
+      className="rounded-2xl border p-5"
+      style={{
+        backgroundColor: "white",
+        borderColor: "rgba(200,230,208,0.5)",
+        boxShadow: "0 1px 4px rgba(45,106,79,0.04)",
+      }}
+    >
       <div className="mb-4 flex items-center justify-between">
-        <h2 className="text-[16px] font-bold" style={{ color: "#1A3D2B" }}>Explore resources</h2>
+        <h2 className="text-[14px] font-bold" style={{ color: "#1A3D2B" }}>Explore resources</h2>
         <Link
           href="/dashboard/resources"
           className="text-[12px] font-semibold transition-colors hover:underline"

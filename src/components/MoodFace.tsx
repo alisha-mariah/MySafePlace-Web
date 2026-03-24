@@ -1,32 +1,15 @@
-"use client";
+const MOOD_COLORS: Record<string, string> = {
+  happy: "#D4A017", calm: "#5EA88A", relaxed: "#9B8EC4", grateful: "#D4789A",
+  motivated: "#2E9E6A", sad: "#5B8DB8", anxious: "#CC8C35", stressed: "#C46050",
+  angry: "#C04848", lonely: "#8A6AAE", overwhelmed: "#4A8A8A", tired: "#708898",
+  insecure: "#A87890", frustrated: "#B87A3E", bored: "#7A946A",
+};
 
-import { useState } from "react";
-import { useAuth } from "@/src/context/AuthContext";
-import { addMoodEntry } from "@/src/services/moodService";
-
-const MOODS = [
-  { name: "happy",       color: "#D4A017" },
-  { name: "calm",        color: "#5EA88A" },
-  { name: "relaxed",     color: "#9B8EC4" },
-  { name: "grateful",    color: "#D4789A" },
-  { name: "motivated",   color: "#2E9E6A" },
-  { name: "sad",         color: "#5B8DB8" },
-  { name: "anxious",     color: "#CC8C35" },
-  { name: "stressed",    color: "#C46050" },
-  { name: "angry",       color: "#C04848" },
-  { name: "lonely",      color: "#8A6AAE" },
-  { name: "overwhelmed", color: "#4A8A8A" },
-  { name: "tired",       color: "#708898" },
-  { name: "insecure",    color: "#A87890" },
-  { name: "frustrated",  color: "#B87A3E" },
-  { name: "bored",       color: "#7A946A" },
-];
-
-function moodColor(mood: string) {
-  return MOODS.find((m) => m.name === mood)?.color ?? "#5EA88A";
+export function moodColor(mood: string) {
+  return MOOD_COLORS[mood] ?? "#5EA88A";
 }
 
-function MoodFace({ mood, size = 28 }: { mood: string; size?: number }) {
+export default function MoodFace({ mood, size = 28 }: { mood: string; size?: number }) {
   const c = moodColor(mood);
   const sw = 1.5;
   const head = <circle cx="14" cy="14" r="11.5" stroke={c} strokeWidth={sw} fill={c + "15"} />;
@@ -65,121 +48,4 @@ function MoodFace({ mood, size = 28 }: { mood: string; size?: number }) {
     default:
       return (<svg width={size} height={size} viewBox="0 0 28 28" fill="none">{head}<circle cx="10" cy="12.5" r="1.2" fill={c} /><circle cx="18" cy="12.5" r="1.2" fill={c} /><path d="M10 17 L18 17" stroke={c} strokeWidth={sw} strokeLinecap="round" /></svg>);
   }
-}
-
-export default function MoodTracker() {
-  const { user } = useAuth();
-  const [selectedMood, setSelectedMood] = useState<string | null>(null);
-  const [note, setNote] = useState("");
-  const [submitting, setSubmitting] = useState(false);
-  const [saved, setSaved] = useState(false);
-
-  async function handleSave() {
-    if (!selectedMood || !user) return;
-    setSubmitting(true);
-    try {
-      await addMoodEntry(user.uid, selectedMood, note);
-      setSaved(true);
-      setSelectedMood(null);
-      setNote("");
-    } catch (err) {
-      console.error("Failed to save mood:", err);
-    } finally {
-      setSubmitting(false);
-    }
-  }
-
-  if (saved) {
-    return (
-      <div
-        className="rounded-2xl border p-6 text-center"
-        style={{
-          backgroundColor: "white",
-          borderColor: "rgba(200,230,208,0.5)",
-          boxShadow: "0 1px 4px rgba(45,106,79,0.04)",
-        }}
-      >
-        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#4A9474" strokeWidth="2" strokeLinecap="round" className="mx-auto mb-3">
-          <path d="M20 6L9 17l-5-5" />
-        </svg>
-        <p className="text-[15px] font-semibold" style={{ color: "#1A3D2B" }}>Check-in saved!</p>
-        <p className="mt-1 text-[13px]" style={{ color: "#6B9E85" }}>Thanks for checking in today.</p>
-        <button
-          onClick={() => setSaved(false)}
-          className="mt-4 text-[12px] font-medium underline"
-          style={{ color: "#8DBFA5" }}
-        >
-          Log another
-        </button>
-      </div>
-    );
-  }
-
-  return (
-    <div
-      className="rounded-2xl border p-5"
-      style={{
-        backgroundColor: "white",
-        borderColor: "rgba(200,230,208,0.5)",
-        boxShadow: "0 1px 4px rgba(45,106,79,0.04)",
-      }}
-    >
-      <h2 className="mb-1 text-[14px] font-bold" style={{ color: "#1A3D2B" }}>
-        How are you feeling today?
-      </h2>
-      <p className="mb-4 text-[12px]" style={{ color: "#8DBFA5" }}>Select a mood to check in</p>
-
-      <div className="grid grid-cols-5 gap-2">
-        {MOODS.map((m) => {
-          const active = selectedMood === m.name;
-          return (
-            <button
-              key={m.name}
-              type="button"
-              onClick={() => setSelectedMood(m.name)}
-              className="mood-btn flex flex-col items-center gap-1.5 rounded-xl py-2.5"
-              style={{
-                backgroundColor: active ? moodColor(m.name) + "18" : "rgba(245,249,246,0.8)",
-                border: `1.5px solid ${active ? moodColor(m.name) : "rgba(200,230,208,0.4)"}`,
-                color: active ? "#1A3D2B" : "#8A9E92",
-                transform: active ? "scale(1.06)" : "scale(1)",
-              }}
-            >
-              <MoodFace mood={m.name} size={28} />
-              <span className="text-[10px] font-semibold capitalize leading-tight">{m.name}</span>
-            </button>
-          );
-        })}
-      </div>
-
-      {/* Note */}
-      <div className="mt-5">
-        <textarea
-          value={note}
-          onChange={(e) => setNote(e.target.value)}
-          placeholder="Add a note (optional)"
-          rows={2}
-          className="auth-input w-full resize-none rounded-xl border px-4 py-3 text-[13px]"
-          style={{
-            borderColor: "rgba(200,230,208,0.5)",
-            backgroundColor: "rgba(245,249,246,0.6)",
-            color: "#1A3D2B",
-          }}
-        />
-      </div>
-
-      {/* Save */}
-      <button
-        onClick={handleSave}
-        disabled={!selectedMood || submitting}
-        className="cta-glow nature-btn mt-4 flex items-center justify-center gap-2 rounded-xl px-6 py-3 text-[13px] font-bold text-white disabled:cursor-not-allowed disabled:opacity-50"
-        style={{
-          background: "linear-gradient(135deg, #6DC09A 0%, #5EA88A 40%, #4A9474 100%)",
-          boxShadow: "0 4px 14px rgba(93,168,138,0.25)",
-        }}
-      >
-        {submitting ? "Saving..." : "Save check-in"}
-      </button>
-    </div>
-  );
 }

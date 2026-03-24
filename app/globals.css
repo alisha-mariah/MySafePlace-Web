@@ -14,7 +14,8 @@
 
 /* ── Base ── */
 body {
-  background: var(--background);
+  background: linear-gradient(160deg, #EEF6F0 0%, #F2F8F3 20%, #F8F4F6 40%, #FBF2F4 55%, #F8F4F6 70%, #F2F8F3 85%, #EEF6F0 100%);
+  min-height: 100vh;
   color: var(--foreground);
   font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -106,6 +107,23 @@ html {
 a {
   -webkit-tap-highlight-color: transparent;
 }
+
+/* ── Page transition ── */
+@keyframes pageSlideIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* ── Card stagger drop-in ── */
+@keyframes cardDrop {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.card-drop      { animation: cardDrop 0.25s ease-out both; }
+.card-drop-1    { animation: cardDrop 0.25s ease-out 0.06s both; }
+.card-drop-2    { animation: cardDrop 0.25s ease-out 0.12s both; }
+.card-drop-3    { animation: cardDrop 0.25s ease-out 0.18s both; }
+.card-drop-4    { animation: cardDrop 0.25s ease-out 0.24s both; }
 
 /* ── Page-load animations ── */
 @keyframes fadeInUp {

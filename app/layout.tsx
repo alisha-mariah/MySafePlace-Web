@@ -4,6 +4,7 @@ import { AuthProvider } from "@/src/context/AuthContext";
 import { NatureSoundProvider } from "@/src/context/NatureSoundContext";
 import "./globals.css";
 import { Analytics } from "@vercel/analytics/next";
+import FloatingPetals from "@/src/components/FloatingPetals";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -32,6 +33,7 @@ export default function RootLayout({
       >
         <AuthProvider>
           <NatureSoundProvider>
+            <FloatingPetals />
             {children}
           </NatureSoundProvider>
         </AuthProvider>

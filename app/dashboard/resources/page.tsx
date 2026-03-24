@@ -108,6 +108,7 @@ function ResourceCard({ resource }: { resource: Resource }) {
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
             allowFullScreen
             className="absolute inset-0 h-full w-full"
+            loading="lazy"
           />
         ) : thumbnail ? (
           <button
@@ -118,18 +119,20 @@ function ResourceCard({ resource }: { resource: Resource }) {
             <img
               src={thumbnail}
               alt={resource.title}
+              loading="lazy"
+              decoding="async"
               className="h-full w-full object-cover transition-transform duration-300 group-hover/play:scale-105"
             />
             {/* Play button overlay */}
             <div className="absolute inset-0 flex items-center justify-center bg-black/10 transition-colors group-hover/play:bg-black/20">
               <div
-                className="flex h-14 w-14 items-center justify-center rounded-full transition-transform group-hover/play:scale-110"
+                className="flex h-12 w-12 items-center justify-center rounded-full transition-transform group-hover/play:scale-110"
                 style={{
                   background: "rgba(255,255,255,0.92)",
                   boxShadow: "0 4px 20px rgba(0,0,0,0.15)",
                 }}
               >
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="#2D6A4F">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="#2D6A4F">
                   <path d="M8 5v14l11-7z" />
                 </svg>
               </div>
@@ -147,16 +150,23 @@ function ResourceCard({ resource }: { resource: Resource }) {
 
       {/* Info */}
       <div className="p-5">
-        {/* Category tag */}
-        <span
-          className="mb-2 inline-block rounded-full px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider"
-          style={{
-            backgroundColor: "rgba(168,213,186,0.20)",
-            color: "#3D8B6E",
-          }}
-        >
-          {resource.category}
-        </span>
+        {/* Tags */}
+        <div className="mb-2 flex flex-wrap items-center gap-1.5">
+          <span
+            className="inline-block rounded-full px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider"
+            style={{ backgroundColor: "rgba(168,213,186,0.20)", color: "#3D8B6E" }}
+          >
+            {resource.category}
+          </span>
+          {resource.type && (
+            <span
+              className="inline-block rounded-full px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider"
+              style={{ backgroundColor: "rgba(242,196,206,0.20)", color: "#A8607A" }}
+            >
+              {resource.type}
+            </span>
+          )}
+        </div>
 
         <h3 className="mt-1 text-[15px] font-bold leading-snug" style={{ color: "#1A3D2B" }}>
           {resource.title}
@@ -199,11 +209,10 @@ function ResourcesContent() {
   const filtered = activeCategory === "All" ? resources : resources.filter((r) => r.category === activeCategory);
 
   return (
-    <div className="relative min-h-screen" style={{ background: "linear-gradient(135deg, #EFF7F1 0%, #FFF5F7 50%, #F0F7F2 100%)" }}>
-      <ResourcesBg />
+    <div className="relative min-h-screen">
 
       {/* Header */}
-      <header className="relative z-10 mx-auto max-w-6xl px-6 pt-8 pb-2">
+      <header className="relative z-10 mx-auto max-w-5xl px-6 pt-8 pb-2">
         <Link
           href="/dashboard"
           className="mb-5 inline-flex items-center gap-1.5 rounded-full px-3.5 py-2 text-xs font-medium transition-all"
@@ -252,7 +261,7 @@ function ResourcesContent() {
       </header>
 
       {/* Content */}
-      <div className="relative z-10 mx-auto max-w-6xl px-6 py-6">
+      <div className="relative z-10 mx-auto max-w-5xl px-6 py-6">
         {/* Category filters */}
         {categories.length > 1 && (
           <div className="animate-fade-in-up-1 mb-6 flex flex-wrap gap-2">
@@ -296,11 +305,43 @@ function ResourcesContent() {
             </p>
           </div>
         ) : (
-          /* Resource grid */
-          <div className="animate-fade-in-up-2 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            {filtered.map((resource) => (
-              <ResourceCard key={resource.id} resource={resource} />
-            ))}
+          /* Resources grouped by subcategory */
+          <div className="animate-fade-in-up-2 space-y-8">
+            {(() => {
+              // Group filtered resources by subcategory
+              const groups: { label: string; items: Resource[] }[] = [];
+              const seen = new Set<string>();
+              for (const r of filtered) {
+                const key = r.subcategory || "General";
+                if (!seen.has(key)) {
+                  seen.add(key);
+                  groups.push({ label: key, items: filtered.filter((x) => (x.subcategory || "General") === key) });
+                }
+              }
+              return groups.map((group) => (
+                <div
+                  key={group.label}
+                  className="rounded-2xl border p-5"
+                  style={{
+                    backgroundColor: "white",
+                    borderColor: "rgba(200,230,208,0.5)",
+                    boxShadow: "0 1px 4px rgba(45,106,79,0.04)",
+                  }}
+                >
+                  <div className="mb-4 flex items-center gap-3">
+                    <span className="text-[14px] font-bold" style={{ color: "#1A3D2B" }}>{group.label}</span>
+                    <span className="rounded-full px-2 py-0.5 text-[10px] font-semibold" style={{ backgroundColor: "rgba(200,230,208,0.3)", color: "#6B9E85" }}>
+                      {group.items.length}
+                    </span>
+                  </div>
+                  <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                    {group.items.map((resource) => (
+                      <ResourceCard key={resource.id} resource={resource} />
+                    ))}
+                  </div>
+                </div>
+              ));
+            })()}
           </div>
         )}
 
