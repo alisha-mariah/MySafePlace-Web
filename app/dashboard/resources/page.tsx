@@ -325,9 +325,5 @@ function ResourcesContent() {
 }
 
 export default function ResourcesPage() {
-  return (
-    <ProtectedRoute>
-      <ResourcesContent />
-    </ProtectedRoute>
-  );
+  return <ResourcesContent />;
 }

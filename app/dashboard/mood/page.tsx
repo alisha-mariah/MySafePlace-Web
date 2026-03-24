@@ -423,9 +423,5 @@ function MoodContent() {
 }
 
 export default function MoodPage() {
-  return (
-    <ProtectedRoute>
-      <MoodContent />
-    </ProtectedRoute>
-  );
+  return <MoodContent />;
 }

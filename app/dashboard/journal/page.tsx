@@ -429,9 +429,5 @@ function JournalContent() {
 }
 
 export default function JournalPage() {
-  return (
-    <ProtectedRoute>
-      <JournalContent />
-    </ProtectedRoute>
-  );
+  return <JournalContent />;
 }
