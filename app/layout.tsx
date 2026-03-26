@@ -35,6 +35,7 @@ export default function RootLayout({
           <NatureSoundProvider>
             <FloatingPetals />
             {children}
+            <Analytics />
           </NatureSoundProvider>
         </AuthProvider>
       </body>

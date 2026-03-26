@@ -2,7 +2,6 @@
 
 import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
-import ProtectedRoute from "@/src/components/ProtectedRoute";
 import { useAuth } from "@/src/context/AuthContext";
 import {
   addJournalEntry,
@@ -50,83 +49,6 @@ function groupEntries(entries: JournalEntry[]): { label: string; entries: Journa
 }
 
 /* ── Nature background ── */
-
-function JournalBg() {
-  return (
-    <div className="pointer-events-none fixed inset-0 z-0 overflow-hidden">
-      <svg viewBox="0 0 1400 900" fill="none" className="absolute inset-0 h-full w-full" preserveAspectRatio="xMidYMid slice">
-        <circle cx="1200" cy="100" r="260" fill="rgba(168,213,186,0.05)" />
-        <circle cx="120" cy="750" r="200" fill="rgba(242,196,206,0.045)" />
-        <circle cx="700" cy="450" r="300" fill="rgba(168,213,186,0.025)" />
-
-        <path d="M0 130 Q350 100 700 125 Q1050 150 1400 115" stroke="rgba(168,213,186,0.06)" strokeWidth="1" />
-        <path d="M0 330 Q400 305 750 325 Q1100 345 1400 315" stroke="rgba(168,213,186,0.045)" strokeWidth="1" />
-        <path d="M0 560 Q300 540 650 555 Q1000 570 1400 550" stroke="rgba(168,213,186,0.035)" strokeWidth="1" />
-
-        {/* Top-right branch */}
-        <path d="M1400 0 C1330 80 1260 160 1180 250" stroke="#C8E6D0" strokeWidth="1.3" strokeLinecap="round" opacity="0.18" />
-        <g transform="translate(1310,85) rotate(30)">
-          <path d="M0,-13 C5,-7 5,7 0,13 C-5,7 -5,-7 0,-13 Z" fill="#C8E6D0" opacity="0.16" />
-        </g>
-        <g transform="translate(1340,45)">
-          <ellipse cx="0" cy="-4.5" rx="3.5" ry="5" fill="#F2C4CE" opacity="0.22" />
-          <ellipse cx="0" cy="4.5" rx="3.5" ry="5" fill="#F2C4CE" opacity="0.22" />
-          <ellipse cx="-5" cy="0" rx="5" ry="3.5" fill="#F2C4CE" opacity="0.20" />
-          <ellipse cx="5" cy="0" rx="5" ry="3.5" fill="#F2C4CE" opacity="0.20" />
-          <circle cx="0" cy="0" r="2.2" fill="#E8CA7A" opacity="0.28" />
-        </g>
-
-        {/* Bottom-left branch */}
-        <path d="M0 900 C80 810 170 720 270 630" stroke="#C8E6D0" strokeWidth="1.3" strokeLinecap="round" opacity="0.16" />
-        <g transform="translate(110,780) rotate(-35)">
-          <path d="M0,-12 C5,-7 5,7 0,12 C-5,7 -5,-7 0,-12 Z" fill="#C8E6D0" opacity="0.15" />
-        </g>
-        <g transform="translate(50,840)">
-          <ellipse cx="0" cy="-4" rx="3" ry="4.5" fill="#F2C4CE" opacity="0.18" />
-          <ellipse cx="0" cy="4" rx="3" ry="4.5" fill="#F2C4CE" opacity="0.18" />
-          <ellipse cx="-4.5" cy="0" rx="4.5" ry="3" fill="#F2C4CE" opacity="0.16" />
-          <ellipse cx="4.5" cy="0" rx="4.5" ry="3" fill="#F2C4CE" opacity="0.16" />
-          <circle cx="0" cy="0" r="1.8" fill="#E8CA7A" opacity="0.24" />
-        </g>
-
-        {/* Birds */}
-        <g className="bird-glide">
-          <path d="M350 90 C360 75 375 75 385 90" stroke="#B8D8C4" strokeWidth="1.3" strokeLinecap="round" fill="none" opacity="0.17" />
-        </g>
-        <g className="bird-glide-2">
-          <path d="M420 65 C427 57 436 57 443 65" stroke="#B8D8C4" strokeWidth="1" strokeLinecap="round" fill="none" opacity="0.12" />
-        </g>
-        <g className="bird-glide">
-          <path d="M900 110 C908 100 918 100 926 110" stroke="#B8D8C4" strokeWidth="1.1" strokeLinecap="round" fill="none" opacity="0.10" />
-        </g>
-
-        {/* Butterflies */}
-        <g transform="translate(300,200) rotate(-12)" className="butterfly-anim">
-          <path d="M0,0 C-5,-9 -11,-7 -8,0 C-11,7 -5,9 0,0" fill="#F2C4CE" opacity="0.18" />
-          <path d="M0,0 C5,-9 11,-7 8,0 C11,7 5,9 0,0" fill="#EDB8C8" opacity="0.15" />
-          <line x1="0" y1="-3" x2="0" y2="3" stroke="#D4A0B4" strokeWidth="0.5" opacity="0.16" />
-        </g>
-        <g transform="translate(1050,400) rotate(8)" className="butterfly-anim-1">
-          <path d="M0,0 C-4,-7 -9,-5 -6,0 C-9,5 -4,7 0,0" fill="#F2C4CE" opacity="0.14" />
-          <path d="M0,0 C4,-7 9,-5 6,0 C9,5 4,7 0,0" fill="#EDB8C8" opacity="0.12" />
-          <line x1="0" y1="-2" x2="0" y2="2" stroke="#D4A0B4" strokeWidth="0.5" opacity="0.12" />
-        </g>
-
-        {/* Floating petals */}
-        <ellipse cx="400" cy="300" rx="2.5" ry="4" fill="#F2C4CE" opacity="0.12" transform="rotate(25 400 300)" className="petal-drift" />
-        <ellipse cx="950" cy="200" rx="2" ry="3.5" fill="#F2C4CE" opacity="0.10" transform="rotate(-30 950 200)" className="petal-drift-1" />
-        <ellipse cx="600" cy="650" rx="2.5" ry="4" fill="#F2C4CE" opacity="0.09" transform="rotate(40 600 650)" className="petal-drift-2" />
-        <ellipse cx="200" cy="500" rx="2" ry="3.5" fill="#F2C4CE" opacity="0.08" transform="rotate(15 200 500)" className="petal-drift" />
-        <ellipse cx="1100" cy="600" rx="2.5" ry="4" fill="#F2C4CE" opacity="0.09" transform="rotate(-20 1100 600)" className="petal-drift-1" />
-
-        {/* Pollen dots */}
-        <circle cx="500" cy="180" r="1.5" fill="#E8CA7A" opacity="0.11" />
-        <circle cx="800" cy="350" r="1.2" fill="#E8CA7A" opacity="0.09" />
-        <circle cx="250" cy="550" r="1.3" fill="#E8CA7A" opacity="0.10" />
-      </svg>
-    </div>
-  );
-}
 
 /* ── Page content ── */
 

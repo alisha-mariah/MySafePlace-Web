@@ -2,68 +2,8 @@
 
 import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
-import ProtectedRoute from "@/src/components/ProtectedRoute";
 import { getResources, getYouTubeId, Resource } from "@/src/services/resourceService";
 
-/* ── Nature background ── */
-
-function ResourcesBg() {
-  return (
-    <div className="pointer-events-none fixed inset-0 z-0 overflow-hidden">
-      <svg viewBox="0 0 1400 900" fill="none" className="absolute inset-0 h-full w-full" preserveAspectRatio="xMidYMid slice">
-        <circle cx="1200" cy="100" r="250" fill="rgba(168,213,186,0.06)" />
-        <circle cx="100" cy="750" r="200" fill="rgba(245,208,216,0.05)" />
-        <circle cx="700" cy="450" r="300" fill="rgba(168,213,186,0.03)" />
-
-        {/* Contour lines */}
-        <path d="M0 120 Q350 90 700 115 Q1050 140 1400 105" stroke="rgba(168,213,186,0.06)" strokeWidth="1" />
-        <path d="M0 300 Q400 275 750 295 Q1100 320 1400 290" stroke="rgba(168,213,186,0.045)" strokeWidth="1" />
-        <path d="M0 550 Q300 530 650 545 Q1000 560 1400 540" stroke="rgba(168,213,186,0.035)" strokeWidth="1" />
-
-        {/* Top-right branch */}
-        <path d="M1400 0 C1330 80 1260 160 1180 250" stroke="#C8E6D0" strokeWidth="1.3" strokeLinecap="round" opacity="0.18" />
-        <g transform="translate(1300,90) rotate(30)">
-          <path d="M0,-13 C5,-7 5,7 0,13 C-5,7 -5,-7 0,-13 Z" fill="#C8E6D0" opacity="0.16" />
-        </g>
-        <g transform="translate(1250,160) rotate(15)">
-          <path d="M0,-10 C4,-6 4,6 0,10 C-4,6 -4,-6 0,-10 Z" fill="#C8E6D0" opacity="0.13" />
-        </g>
-
-        {/* Cherry blossoms */}
-        <g transform="translate(1340,50)">
-          <ellipse cx="0" cy="-4.5" rx="3.5" ry="5" fill="#F2C4CE" opacity="0.22" />
-          <ellipse cx="0" cy="4.5" rx="3.5" ry="5" fill="#F2C4CE" opacity="0.22" />
-          <ellipse cx="-5" cy="0" rx="5" ry="3.5" fill="#F2C4CE" opacity="0.20" />
-          <ellipse cx="5" cy="0" rx="5" ry="3.5" fill="#F2C4CE" opacity="0.20" />
-          <circle cx="0" cy="0" r="2.2" fill="#E8CA7A" opacity="0.28" />
-        </g>
-
-        {/* Bottom-left branch */}
-        <path d="M0 900 C80 810 170 720 270 630" stroke="#C8E6D0" strokeWidth="1.3" strokeLinecap="round" opacity="0.16" />
-        <g transform="translate(110,780) rotate(-35)">
-          <path d="M0,-12 C5,-7 5,7 0,12 C-5,7 -5,-7 0,-12 Z" fill="#C8E6D0" opacity="0.15" />
-        </g>
-        <g transform="translate(50,840)">
-          <ellipse cx="0" cy="-4" rx="3" ry="4.5" fill="#F2C4CE" opacity="0.18" />
-          <ellipse cx="0" cy="4" rx="3" ry="4.5" fill="#F2C4CE" opacity="0.18" />
-          <ellipse cx="-4.5" cy="0" rx="4.5" ry="3" fill="#F2C4CE" opacity="0.16" />
-          <ellipse cx="4.5" cy="0" rx="4.5" ry="3" fill="#F2C4CE" opacity="0.16" />
-          <circle cx="0" cy="0" r="1.8" fill="#E8CA7A" opacity="0.24" />
-        </g>
-
-        {/* Birds */}
-        <path d="M300 80 C310 65 325 65 335 80" stroke="#B8D8C4" strokeWidth="1.3" strokeLinecap="round" fill="none" opacity="0.15" />
-        <path d="M380 55 C387 47 396 47 403 55" stroke="#B8D8C4" strokeWidth="1" strokeLinecap="round" fill="none" opacity="0.10" />
-        <path d="M1000 700 C1008 690 1018 690 1026 700" stroke="#B8D8C4" strokeWidth="1.1" strokeLinecap="round" fill="none" opacity="0.10" />
-
-        {/* Floating petals */}
-        <ellipse cx="400" cy="300" rx="2.5" ry="4" fill="#F2C4CE" opacity="0.10" transform="rotate(25 400 300)" />
-        <ellipse cx="900" cy="200" rx="2" ry="3.5" fill="#F2C4CE" opacity="0.08" transform="rotate(-30 900 200)" />
-        <ellipse cx="600" cy="650" rx="2.5" ry="4" fill="#F2C4CE" opacity="0.07" transform="rotate(40 600 650)" />
-      </svg>
-    </div>
-  );
-}
 
 /* ── Category filter pills ── */
 

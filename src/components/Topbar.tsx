@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/src/context/AuthContext";
 import { useNatureSound } from "@/src/context/NatureSoundContext";
@@ -29,7 +29,6 @@ export default function Topbar() {
   const firstName = user?.displayName?.split(" ")[0] ?? null;
 
   const [query, setQuery] = useState("");
-  const [results, setResults] = useState<Resource[]>([]);
   const [allResources, setAllResources] = useState<Resource[]>([]);
   const [showResults, setShowResults] = useState(false);
   const searchRef = useRef<HTMLDivElement>(null);
@@ -39,22 +38,16 @@ export default function Topbar() {
     getResources().then(setAllResources).catch(() => {});
   }, []);
 
-  // Filter as user types
-  useEffect(() => {
-    if (!query.trim()) {
-      setResults([]);
-      setShowResults(false);
-      return;
-    }
+  // Filter as user types (derived state, no setState in effect)
+  const results = useMemo(() => {
+    if (!query.trim()) return [];
     const q = query.toLowerCase();
-    const filtered = allResources.filter(
+    return allResources.filter(
       (r) =>
         r.title.toLowerCase().includes(q) ||
         r.description.toLowerCase().includes(q) ||
         r.category.toLowerCase().includes(q)
-    );
-    setResults(filtered.slice(0, 5));
-    setShowResults(true);
+    ).slice(0, 5);
   }, [query, allResources]);
 
   // Close on click outside
