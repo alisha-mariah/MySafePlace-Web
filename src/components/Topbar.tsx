@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useMemo, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/src/context/AuthContext";
 import { useNatureSound } from "@/src/context/NatureSoundContext";
@@ -29,7 +29,6 @@ export default function Topbar() {
   const firstName = user?.displayName?.split(" ")[0] ?? null;
 
   const [query, setQuery] = useState("");
-  const [results, setResults] = useState<Resource[]>([]);
   const [allResources, setAllResources] = useState<Resource[]>([]);
   const [showResults, setShowResults] = useState(false);
   const searchRef = useRef<HTMLDivElement>(null);
@@ -39,22 +38,18 @@ export default function Topbar() {
     getResources().then(setAllResources).catch(() => {});
   }, []);
 
-  // Filter as user types
-  useEffect(() => {
-    if (!query.trim()) {
-      setResults([]);
-      setShowResults(false);
-      return;
-    }
+  // Derive filtered results from query (no effect needed)
+  const results = useMemo(() => {
+    if (!query.trim()) return [];
     const q = query.toLowerCase();
-    const filtered = allResources.filter(
-      (r) =>
-        r.title.toLowerCase().includes(q) ||
-        r.description.toLowerCase().includes(q) ||
-        r.category.toLowerCase().includes(q)
-    );
-    setResults(filtered.slice(0, 5));
-    setShowResults(true);
+    return allResources
+      .filter(
+        (r) =>
+          r.title.toLowerCase().includes(q) ||
+          r.description.toLowerCase().includes(q) ||
+          r.category.toLowerCase().includes(q)
+      )
+      .slice(0, 5);
   }, [query, allResources]);
 
   // Close on click outside
@@ -106,7 +101,7 @@ export default function Topbar() {
           <input
             type="text"
             value={query}
-            onChange={(e) => setQuery(e.target.value)}
+            onChange={(e) => { setQuery(e.target.value); setShowResults(e.target.value.trim().length > 0); }}
             onFocus={() => { if (query.trim()) setShowResults(true); }}
             placeholder="Search resources..."
             className="w-full rounded-full py-2 pl-10 pr-4 text-[13px] transition-all"

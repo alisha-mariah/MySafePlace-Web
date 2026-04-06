@@ -207,6 +207,7 @@ function ResourcesContent() {
 
   const categories = ["All", ...Array.from(new Set(resources.map((r) => r.category).filter(Boolean)))];
   const filtered = activeCategory === "All" ? resources : resources.filter((r) => r.category === activeCategory);
+  const featuredResources = filtered.filter((r) => r.featured);
 
   return (
     <div className="relative min-h-screen">
@@ -273,6 +274,62 @@ function ResourcesContent() {
                 onClick={() => setActiveCategory(cat)}
               />
             ))}
+          </div>
+        )}
+
+        {/* Featured Resources */}
+        {!loading && featuredResources.length > 0 && (
+          <div
+            className="animate-fade-in-up-1 mb-8 rounded-2xl p-5"
+            style={{
+              background: "linear-gradient(135deg, rgba(252,250,242,0.9) 0%, rgba(255,253,248,0.85) 50%, rgba(252,248,244,0.9) 100%)",
+              border: "1px solid rgba(232,202,122,0.22)",
+              boxShadow: "0 2px 12px rgba(232,202,122,0.06)",
+            }}
+          >
+            <div className="mb-4 flex items-center gap-3">
+              <div
+                className="flex h-8 w-8 items-center justify-center rounded-lg"
+                style={{ background: "rgba(232,202,122,0.18)" }}
+              >
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="#D4A017" stroke="none">
+                  <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+                </svg>
+              </div>
+              <div>
+                <span className="text-[14px] font-bold" style={{ color: "#1A3D2B" }}>
+                  Featured Resources
+                </span>
+                <p className="text-[11px]" style={{ color: "#B8941A" }}>
+                  Handpicked for your wellbeing
+                </p>
+              </div>
+              <span
+                className="ml-auto rounded-full px-2.5 py-0.5 text-[10px] font-semibold"
+                style={{ backgroundColor: "rgba(232,202,122,0.15)", color: "#B8941A" }}
+              >
+                {featuredResources.length}
+              </span>
+            </div>
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              {featuredResources.map((resource) => (
+                <div key={resource.id} className="relative">
+                  {/* Gold star badge */}
+                  <div
+                    className="absolute right-3 top-3 z-10 flex h-7 w-7 items-center justify-center rounded-full"
+                    style={{
+                      background: "linear-gradient(135deg, #F0D060 0%, #E8CA7A 100%)",
+                      boxShadow: "0 2px 8px rgba(212,160,23,0.30)",
+                    }}
+                  >
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="white" stroke="none">
+                      <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+                    </svg>
+                  </div>
+                  <ResourceCard resource={resource} />
+                </div>
+              ))}
+            </div>
           </div>
         )}
 

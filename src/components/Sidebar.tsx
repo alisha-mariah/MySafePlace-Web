@@ -2,6 +2,8 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useAuth } from "@/src/context/AuthContext";
+import { isAdminUser } from "@/src/lib/adminConfig";
 
 const navItems = [
   {
@@ -69,6 +71,8 @@ const navItems = [
 
 export default function Sidebar() {
   const pathname = usePathname();
+  const { user } = useAuth();
+  const showAdmin = isAdminUser(user?.email);
 
   function isActive(href: string) {
     if (href === "/dashboard") return pathname === "/dashboard";
@@ -319,6 +323,45 @@ export default function Sidebar() {
             </Link>
           );
         })}
+
+        {/* Admin link — only visible to admin users */}
+        {showAdmin && (
+          <>
+            <div className="mx-3 my-2" style={{ borderTop: "1px solid rgba(255,255,255,0.12)" }} />
+            <Link
+              href="/admin"
+              className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-[13px] font-semibold transition-all cursor-pointer"
+              style={{
+                backgroundColor: pathname.startsWith("/admin") ? "rgba(255,255,255,0.25)" : "rgba(255,255,255,0.08)",
+                color: "rgba(255,255,255,0.95)",
+                textShadow: "0 1px 2px rgba(0,0,0,0.15)",
+                border: pathname.startsWith("/admin") ? "1px solid rgba(255,255,255,0.25)" : "1px solid rgba(255,255,255,0.08)",
+                boxShadow: pathname.startsWith("/admin") ? "0 2px 8px rgba(0,0,0,0.10)" : "none",
+              }}
+              onMouseEnter={(e) => {
+                if (!pathname.startsWith("/admin")) {
+                  e.currentTarget.style.backgroundColor = "rgba(255,255,255,0.16)";
+                  e.currentTarget.style.borderColor = "rgba(255,255,255,0.18)";
+                  e.currentTarget.style.transform = "translateX(4px)";
+                }
+              }}
+              onMouseLeave={(e) => {
+                if (!pathname.startsWith("/admin")) {
+                  e.currentTarget.style.backgroundColor = "rgba(255,255,255,0.08)";
+                  e.currentTarget.style.borderColor = "rgba(255,255,255,0.08)";
+                  e.currentTarget.style.transform = "translateX(0)";
+                }
+              }}
+            >
+              <span className="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-md" style={{ backgroundColor: pathname.startsWith("/admin") ? "rgba(255,255,255,0.22)" : "rgba(255,255,255,0.12)" }}>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                </svg>
+              </span>
+              Admin Panel
+            </Link>
+          </>
+        )}
       </nav>
 
       {/* Bottom section */}

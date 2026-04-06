@@ -9,6 +9,7 @@ export interface Resource {
   subcategory: string;
   type: string;
   url: string;
+  featured: boolean;
 }
 
 const COLLECTION = "resources";
@@ -32,6 +33,7 @@ export async function getResources(): Promise<Resource[]> {
       subcategory: data.subcategory ?? "",
       type: data.type ?? "",
       url: data.url ?? "",
+      featured: data.featured ?? false,
     };
   });
 
