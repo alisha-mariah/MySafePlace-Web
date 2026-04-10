@@ -2,7 +2,6 @@
 
 import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
-import ProtectedRoute from "@/src/components/ProtectedRoute";
 import { useAuth } from "@/src/context/AuthContext";
 import {
   addMoodEntry,
@@ -128,85 +127,6 @@ function MoodFace({ mood, size = 28 }: { mood: string; size?: number }) {
 }
 
 /* ── Full-page nature background ── */
-
-function MoodNatureBg() {
-  return (
-    <div className="pointer-events-none fixed inset-0 z-0 overflow-hidden">
-      <svg viewBox="0 0 1200 900" fill="none" className="absolute inset-0 h-full w-full" preserveAspectRatio="xMidYMid slice">
-        {/* Warm glows */}
-        <circle cx="1000" cy="120" r="220" fill="rgba(242,196,206,0.06)" />
-        <circle cx="150" cy="700" r="180" fill="rgba(168,213,186,0.05)" />
-
-        {/* Contour lines */}
-        <path d="M0 150 Q300 120 600 145 Q900 170 1200 135" stroke="rgba(168,213,186,0.07)" strokeWidth="1" />
-        <path d="M0 320 Q350 295 650 315 Q950 340 1200 310" stroke="rgba(168,213,186,0.05)" strokeWidth="1" />
-        <path d="M0 500 Q280 480 560 495 Q840 510 1200 490" stroke="rgba(168,213,186,0.04)" strokeWidth="1" />
-        <path d="M0 680 Q320 660 640 675 Q960 690 1200 670" stroke="rgba(168,213,186,0.035)" strokeWidth="1" />
-
-        {/* Top-right branch with blossoms */}
-        <path d="M1200 0 C1140 70 1080 140 1010 220" stroke="#C8E6D0" strokeWidth="1.3" strokeLinecap="round" opacity="0.22" />
-        <g transform="translate(1100,80) rotate(30)">
-          <path d="M0,-12 C5,-7 5,7 0,12 C-5,7 -5,-7 0,-12 Z" fill="#C8E6D0" opacity="0.18" />
-          <line x1="0" y1="-8" x2="0" y2="8" stroke="#A8D5BA" strokeWidth="0.5" opacity="0.20" />
-        </g>
-        <g transform="translate(1060,150) rotate(15)">
-          <path d="M0,-10 C4,-6 4,6 0,10 C-4,6 -4,-6 0,-10 Z" fill="#C8E6D0" opacity="0.15" />
-        </g>
-        {/* Cherry blossoms */}
-        <g transform="translate(1130,45)">
-          <ellipse cx="0" cy="-4.5" rx="3.5" ry="5" fill="#F2C4CE" opacity="0.28" />
-          <ellipse cx="0" cy="4.5" rx="3.5" ry="5" fill="#F2C4CE" opacity="0.28" />
-          <ellipse cx="-5" cy="0" rx="5" ry="3.5" fill="#F2C4CE" opacity="0.25" />
-          <ellipse cx="5" cy="0" rx="5" ry="3.5" fill="#F2C4CE" opacity="0.25" />
-          <circle cx="0" cy="0" r="2.2" fill="#E8CA7A" opacity="0.32" />
-        </g>
-        <g transform="translate(1075,125)">
-          <ellipse cx="0" cy="-3.5" rx="2.8" ry="4" fill="#F2C4CE" opacity="0.20" />
-          <ellipse cx="0" cy="3.5" rx="2.8" ry="4" fill="#F2C4CE" opacity="0.20" />
-          <ellipse cx="-4" cy="0" rx="4" ry="2.8" fill="#F2C4CE" opacity="0.18" />
-          <ellipse cx="4" cy="0" rx="4" ry="2.8" fill="#F2C4CE" opacity="0.18" />
-          <circle cx="0" cy="0" r="1.8" fill="#E8CA7A" opacity="0.25" />
-        </g>
-
-        {/* Bottom-left branch */}
-        <path d="M0 900 C70 820 150 740 240 650" stroke="#C8E6D0" strokeWidth="1.3" strokeLinecap="round" opacity="0.20" />
-        <g transform="translate(100,790) rotate(-35)">
-          <path d="M0,-12 C5,-7 5,7 0,12 C-5,7 -5,-7 0,-12 Z" fill="#C8E6D0" opacity="0.18" />
-        </g>
-        <g transform="translate(40,845)">
-          <ellipse cx="0" cy="-4" rx="3" ry="4.5" fill="#F2C4CE" opacity="0.22" />
-          <ellipse cx="0" cy="4" rx="3" ry="4.5" fill="#F2C4CE" opacity="0.22" />
-          <ellipse cx="-4.5" cy="0" rx="4.5" ry="3" fill="#F2C4CE" opacity="0.20" />
-          <ellipse cx="4.5" cy="0" rx="4.5" ry="3" fill="#F2C4CE" opacity="0.20" />
-          <circle cx="0" cy="0" r="1.8" fill="#E8CA7A" opacity="0.28" />
-        </g>
-
-        {/* Birds */}
-        <path d="M250 90 C260 75 275 75 285 90" stroke="#B8D8C4" strokeWidth="1.3" strokeLinecap="round" fill="none" opacity="0.18" />
-        <path d="M320 65 C327 57 336 57 343 65" stroke="#B8D8C4" strokeWidth="1" strokeLinecap="round" fill="none" opacity="0.12" />
-        <path d="M870 700 C878 690 888 690 896 700" stroke="#B8D8C4" strokeWidth="1.1" strokeLinecap="round" fill="none" opacity="0.12" />
-
-        {/* Butterfly */}
-        <g transform="translate(400,180) rotate(-12)" className="butterfly-anim">
-          <path d="M0,0 C-5,-9 -11,-7 -8,0 C-11,7 -5,9 0,0" fill="#F2C4CE" opacity="0.20" />
-          <path d="M0,0 C5,-9 11,-7 8,0 C11,7 5,9 0,0" fill="#EDB8C8" opacity="0.16" />
-          <line x1="0" y1="-3" x2="0" y2="3" stroke="#D4A0B4" strokeWidth="0.5" opacity="0.18" />
-        </g>
-
-        {/* Floating petals */}
-        <ellipse cx="350" cy="350" rx="2.5" ry="4" fill="#F2C4CE" opacity="0.12" transform="rotate(25 350 350)" className="petal-drift" />
-        <ellipse cx="750" cy="250" rx="2" ry="3.5" fill="#F2C4CE" opacity="0.10" transform="rotate(-30 750 250)" className="petal-drift-1" />
-        <ellipse cx="550" cy="600" rx="2.5" ry="4" fill="#F2C4CE" opacity="0.09" transform="rotate(40 550 600)" className="petal-drift-2" />
-        <ellipse cx="950" cy="550" rx="2" ry="3" fill="#F2C4CE" opacity="0.10" transform="rotate(-20 950 550)" className="petal-drift" />
-
-        {/* Pollen dots */}
-        <circle cx="450" cy="200" r="1.3" fill="#E8CA7A" opacity="0.12" />
-        <circle cx="700" cy="380" r="1" fill="#E8CA7A" opacity="0.09" />
-        <circle cx="250" cy="500" r="1.2" fill="#E8CA7A" opacity="0.10" />
-      </svg>
-    </div>
-  );
-}
 
 /* ── Page content ── */
 
