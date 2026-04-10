@@ -1,10 +1,6 @@
 "use client";
 
-<<<<<<< HEAD
 import { useState, useEffect, useMemo, useRef } from "react";
-=======
-import { useState, useEffect, useRef, useMemo } from "react";
->>>>>>> feature/emergency-contacts
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/src/context/AuthContext";
 import { useNatureSound } from "@/src/context/NatureSoundContext";
@@ -42,7 +38,6 @@ export default function Topbar() {
     getResources().then(setAllResources).catch(() => {});
   }, []);
 
-
   // Derive filtered results from query (no effect needed)
   const results = useMemo(() => {
     if (!query.trim()) return [];
@@ -55,18 +50,6 @@ export default function Topbar() {
           r.category.toLowerCase().includes(q)
       )
       .slice(0, 5);
-
-  // Filter as user types (derived state, no setState in effect)
-  const results = useMemo(() => {
-    if (!query.trim()) return [];
-    const q = query.toLowerCase();
-    return allResources.filter(
-      (r) =>
-        r.title.toLowerCase().includes(q) ||
-        r.description.toLowerCase().includes(q) ||
-        r.category.toLowerCase().includes(q)
-    ).slice(0, 5);
- feature/emergency-contacts
   }, [query, allResources]);
 
   // Close on click outside
