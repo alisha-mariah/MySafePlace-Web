@@ -23,7 +23,9 @@ export function getYouTubeId(url: string): string | null {
 
 export async function getResources(): Promise<Resource[]> {
   const snapshot = await getDocs(collection(db, COLLECTION));
-  const all = snapshot.docs.map((d) => {
+  const all = snapshot.docs
+    .filter((d) => d.data().hidden !== true)
+    .map((d) => {
     const data = d.data();
     return {
       id: d.id,

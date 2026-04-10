@@ -18,9 +18,12 @@ export interface AdminResource {
   type: string;
   url: string;
   featured: boolean;
+  hidden: boolean;
+  createdAt: string | null;
+  updatedAt: string | null;
 }
 
-export type ResourceFormData = Omit<AdminResource, "id">;
+export type ResourceFormData = Omit<AdminResource, "id" | "createdAt" | "updatedAt">;
 
 const COLLECTION = "resources";
 
@@ -37,6 +40,9 @@ export async function getAllResources(): Promise<AdminResource[]> {
       type: data.type ?? "",
       url: data.url ?? "",
       featured: data.featured ?? false,
+      hidden: data.hidden ?? false,
+      createdAt: data.createdAt?.toDate?.()?.toISOString?.() ?? null,
+      updatedAt: data.updatedAt?.toDate?.()?.toISOString?.() ?? null,
     };
   });
 }

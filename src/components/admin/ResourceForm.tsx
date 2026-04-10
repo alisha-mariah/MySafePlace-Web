@@ -1,15 +1,35 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { AdminResource, ResourceFormData } from "@/src/services/adminResourceService";
+import { Category } from "@/src/services/adminCategoryService";
 
 interface ResourceFormProps {
   resource?: AdminResource | null;
+  categories: Category[];
   onSave: (data: ResourceFormData) => Promise<void>;
   onCancel: () => void;
 }
 
-export default function ResourceForm({ resource, onSave, onCancel }: ResourceFormProps) {
+interface FormErrors {
+  title?: string;
+  category?: string;
+  subcategory?: string;
+  type?: string;
+  url?: string;
+}
+
+const inputBase = "auth-input w-full rounded-xl px-4 py-2.5 text-[14px]";
+
+function fieldStyle(hasError: boolean) {
+  return {
+    border: `1.5px solid ${hasError ? "rgba(196,96,80,0.5)" : "rgba(200,230,208,0.6)"}`,
+    backgroundColor: "rgba(255,255,255,0.8)",
+    color: "#1A3D2B",
+  };
+}
+
+export default function ResourceForm({ resource, categories, onSave, onCancel }: ResourceFormProps) {
   const [title, setTitle] = useState("");
   const [category, setCategory] = useState("");
   const [subcategory, setSubcategory] = useState("");
@@ -17,7 +37,9 @@ export default function ResourceForm({ resource, onSave, onCancel }: ResourceFor
   const [url, setUrl] = useState("");
   const [type, setType] = useState("");
   const [featured, setFeatured] = useState(false);
+  const [hidden, setHidden] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [errors, setErrors] = useState<FormErrors>({});
 
   useEffect(() => {
     if (resource) {
@@ -28,14 +50,43 @@ export default function ResourceForm({ resource, onSave, onCancel }: ResourceFor
       setUrl(resource.url);
       setType(resource.type);
       setFeatured(resource.featured);
+      setHidden(resource.hidden);
     }
   }, [resource]);
 
+  const subcategoriesForCategory = useMemo(() => {
+    const cat = categories.find((c) => c.name === category);
+    return cat?.subcategories ?? [];
+  }, [category, categories]);
+
+  function validate(): FormErrors {
+    const e: FormErrors = {};
+    if (!title.trim()) e.title = "Title is required";
+    if (!category.trim()) e.category = "Category is required";
+    if (!subcategory.trim()) e.subcategory = "Subcategory is required";
+    if (!type.trim()) e.type = "Type is required";
+    if (!url.trim()) e.url = "URL is required";
+    else if (!/^https?:\/\/.+/.test(url.trim())) e.url = "Must be a valid URL (http:// or https://)";
+    return e;
+  }
+
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
+    const v = validate();
+    setErrors(v);
+    if (Object.keys(v).length > 0) return;
     setSaving(true);
     try {
-      await onSave({ title, category, subcategory, description, url, type, featured });
+      await onSave({
+        title: title.trim(),
+        category: category.trim(),
+        subcategory: subcategory.trim(),
+        description: description.trim(),
+        url: url.trim(),
+        type: type.trim(),
+        featured,
+        hidden,
+      });
     } finally {
       setSaving(false);
     }
@@ -66,7 +117,6 @@ export default function ResourceForm({ resource, onSave, onCancel }: ResourceFor
           </p>
         </div>
 
-        {/* Form */}
         <form onSubmit={handleSubmit} className="space-y-4 px-6 py-5">
           {/* Title */}
           <div>
@@ -77,15 +127,11 @@ export default function ResourceForm({ resource, onSave, onCancel }: ResourceFor
               type="text"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              required
-              className="auth-input w-full rounded-xl px-4 py-2.5 text-[14px]"
-              style={{
-                border: "1.5px solid rgba(200,230,208,0.6)",
-                backgroundColor: "rgba(255,255,255,0.8)",
-                color: "#1A3D2B",
-              }}
+              className={inputBase}
+              style={fieldStyle(!!errors.title)}
               placeholder="e.g. Morning Meditation Guide"
             />
+            {errors.title && <p className="mt-1 text-[11px]" style={{ color: "#C46050" }}>{errors.title}</p>}
           </div>
 
           {/* Category + Subcategory */}
@@ -94,36 +140,41 @@ export default function ResourceForm({ resource, onSave, onCancel }: ResourceFor
               <label className="mb-1 block text-[13px] font-semibold" style={{ color: "#1A3D2B" }}>
                 Category <span style={{ color: "#C46050" }}>*</span>
               </label>
-              <input
-                type="text"
+              <select
                 value={category}
-                onChange={(e) => setCategory(e.target.value)}
-                required
-                className="auth-input w-full rounded-xl px-4 py-2.5 text-[14px]"
-                style={{
-                  border: "1.5px solid rgba(200,230,208,0.6)",
-                  backgroundColor: "rgba(255,255,255,0.8)",
-                  color: "#1A3D2B",
-                }}
-                placeholder="e.g. Meditation"
-              />
+                onChange={(e) => { setCategory(e.target.value); setSubcategory(""); }}
+                className={inputBase + " appearance-none"}
+                style={fieldStyle(!!errors.category)}
+              >
+                <option value="">Select category...</option>
+                {categories.map((c) => (
+                  <option key={c.id} value={c.name}>{c.name}</option>
+                ))}
+              </select>
+              {errors.category && <p className="mt-1 text-[11px]" style={{ color: "#C46050" }}>{errors.category}</p>}
+              {categories.length === 0 && (
+                <p className="mt-1 text-[11px]" style={{ color: "#8DBFA5" }}>
+                  No categories yet — create them in Category Management.
+                </p>
+              )}
             </div>
             <div>
               <label className="mb-1 block text-[13px] font-semibold" style={{ color: "#1A3D2B" }}>
-                Subcategory
+                Subcategory <span style={{ color: "#C46050" }}>*</span>
               </label>
-              <input
-                type="text"
+              <select
                 value={subcategory}
                 onChange={(e) => setSubcategory(e.target.value)}
-                className="auth-input w-full rounded-xl px-4 py-2.5 text-[14px]"
-                style={{
-                  border: "1.5px solid rgba(200,230,208,0.6)",
-                  backgroundColor: "rgba(255,255,255,0.8)",
-                  color: "#1A3D2B",
-                }}
-                placeholder="e.g. Beginner Meditation"
-              />
+                className={inputBase + " appearance-none"}
+                style={fieldStyle(!!errors.subcategory)}
+                disabled={!category}
+              >
+                <option value="">Select subcategory...</option>
+                {subcategoriesForCategory.map((s) => (
+                  <option key={s} value={s}>{s}</option>
+                ))}
+              </select>
+              {errors.subcategory && <p className="mt-1 text-[11px]" style={{ color: "#C46050" }}>{errors.subcategory}</p>}
             </div>
           </div>
 
@@ -131,38 +182,31 @@ export default function ResourceForm({ resource, onSave, onCancel }: ResourceFor
           <div className="grid grid-cols-2 gap-3">
             <div>
               <label className="mb-1 block text-[13px] font-semibold" style={{ color: "#1A3D2B" }}>
-                Type
+                Type <span style={{ color: "#C46050" }}>*</span>
               </label>
               <input
                 type="text"
                 value={type}
                 onChange={(e) => setType(e.target.value)}
-                className="auth-input w-full rounded-xl px-4 py-2.5 text-[14px]"
-                style={{
-                  border: "1.5px solid rgba(200,230,208,0.6)",
-                  backgroundColor: "rgba(255,255,255,0.8)",
-                  color: "#1A3D2B",
-                }}
+                className={inputBase}
+                style={fieldStyle(!!errors.type)}
                 placeholder="e.g. Video"
               />
+              {errors.type && <p className="mt-1 text-[11px]" style={{ color: "#C46050" }}>{errors.type}</p>}
             </div>
             <div>
               <label className="mb-1 block text-[13px] font-semibold" style={{ color: "#1A3D2B" }}>
                 URL <span style={{ color: "#C46050" }}>*</span>
               </label>
               <input
-                type="url"
+                type="text"
                 value={url}
                 onChange={(e) => setUrl(e.target.value)}
-                required
-                className="auth-input w-full rounded-xl px-4 py-2.5 text-[14px]"
-                style={{
-                  border: "1.5px solid rgba(200,230,208,0.6)",
-                  backgroundColor: "rgba(255,255,255,0.8)",
-                  color: "#1A3D2B",
-                }}
+                className={inputBase}
+                style={fieldStyle(!!errors.url)}
                 placeholder="https://..."
               />
+              {errors.url && <p className="mt-1 text-[11px]" style={{ color: "#C46050" }}>{errors.url}</p>}
             </div>
           </div>
 
@@ -175,52 +219,64 @@ export default function ResourceForm({ resource, onSave, onCancel }: ResourceFor
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               rows={3}
-              className="auth-input w-full resize-none rounded-xl px-4 py-2.5 text-[14px]"
-              style={{
-                border: "1.5px solid rgba(200,230,208,0.6)",
-                backgroundColor: "rgba(255,255,255,0.8)",
-                color: "#1A3D2B",
-              }}
+              className={inputBase + " resize-none"}
+              style={fieldStyle(false)}
               placeholder="Brief description of this resource..."
             />
           </div>
 
-          {/* Featured toggle */}
-          <label
-            className="flex cursor-pointer items-center gap-3 rounded-xl px-4 py-3"
-            style={{
-              backgroundColor: featured ? "rgba(232,202,122,0.10)" : "rgba(200,230,208,0.12)",
-              border: `1px solid ${featured ? "rgba(232,202,122,0.30)" : "rgba(200,230,208,0.3)"}`,
-            }}
-          >
-            <input
-              type="checkbox"
-              checked={featured}
-              onChange={(e) => setFeatured(e.target.checked)}
-              className="sr-only"
-            />
-            <div
-              className="flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-md transition-all"
+          {/* Toggles */}
+          <div className="grid grid-cols-2 gap-3">
+            {/* Featured */}
+            <label
+              className="flex cursor-pointer items-center gap-3 rounded-xl px-4 py-3"
               style={{
-                border: featured ? "none" : "2px solid rgba(200,230,208,0.8)",
-                backgroundColor: featured ? "#5EA88A" : "white",
+                backgroundColor: featured ? "rgba(232,202,122,0.10)" : "rgba(200,230,208,0.12)",
+                border: `1px solid ${featured ? "rgba(232,202,122,0.30)" : "rgba(200,230,208,0.3)"}`,
               }}
             >
-              {featured && (
-                <svg width="14" height="14" viewBox="0 0 20 20" fill="none">
-                  <path d="M5 10l3 3 7-7" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
-                </svg>
-              )}
-            </div>
-            <div>
-              <span className="text-[13px] font-semibold" style={{ color: "#1A3D2B" }}>
-                Featured Resource
-              </span>
-              <p className="text-[11px]" style={{ color: "#6B9E85" }}>
-                Featured resources appear highlighted in the library
-              </p>
-            </div>
-          </label>
+              <input type="checkbox" checked={featured} onChange={(e) => setFeatured(e.target.checked)} className="sr-only" />
+              <div
+                className="flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-md transition-all"
+                style={{ border: featured ? "none" : "2px solid rgba(200,230,208,0.8)", backgroundColor: featured ? "#5EA88A" : "white" }}
+              >
+                {featured && (
+                  <svg width="14" height="14" viewBox="0 0 20 20" fill="none">
+                    <path d="M5 10l3 3 7-7" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                )}
+              </div>
+              <div>
+                <span className="text-[13px] font-semibold" style={{ color: "#1A3D2B" }}>Featured</span>
+                <p className="text-[10px]" style={{ color: "#6B9E85" }}>Highlighted in library</p>
+              </div>
+            </label>
+
+            {/* Hidden */}
+            <label
+              className="flex cursor-pointer items-center gap-3 rounded-xl px-4 py-3"
+              style={{
+                backgroundColor: hidden ? "rgba(196,96,80,0.06)" : "rgba(200,230,208,0.12)",
+                border: `1px solid ${hidden ? "rgba(196,96,80,0.20)" : "rgba(200,230,208,0.3)"}`,
+              }}
+            >
+              <input type="checkbox" checked={hidden} onChange={(e) => setHidden(e.target.checked)} className="sr-only" />
+              <div
+                className="flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-md transition-all"
+                style={{ border: hidden ? "none" : "2px solid rgba(200,230,208,0.8)", backgroundColor: hidden ? "#C46050" : "white" }}
+              >
+                {hidden && (
+                  <svg width="14" height="14" viewBox="0 0 20 20" fill="none">
+                    <path d="M5 10l3 3 7-7" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                )}
+              </div>
+              <div>
+                <span className="text-[13px] font-semibold" style={{ color: "#1A3D2B" }}>Hidden</span>
+                <p className="text-[10px]" style={{ color: "#6B9E85" }}>Not visible to users</p>
+              </div>
+            </label>
+          </div>
 
           {/* Actions */}
           <div className="flex items-center justify-end gap-3 pt-2">
@@ -228,11 +284,7 @@ export default function ResourceForm({ resource, onSave, onCancel }: ResourceFor
               type="button"
               onClick={onCancel}
               className="rounded-xl px-5 py-2.5 text-[13px] font-semibold transition-all"
-              style={{
-                color: "#6B9E85",
-                backgroundColor: "rgba(255,255,255,0.8)",
-                border: "1.5px solid rgba(200,230,208,0.5)",
-              }}
+              style={{ color: "#6B9E85", backgroundColor: "rgba(255,255,255,0.8)", border: "1.5px solid rgba(200,230,208,0.5)" }}
             >
               Cancel
             </button>
