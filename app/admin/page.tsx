@@ -29,19 +29,19 @@ export default function AdminPage() {
 
   const stats = [
     {
-      label: "Total Resources", value: totalResources, bg: "rgba(184,216,196,0.20)",
+      label: "Total Resources", sub: "Visible in app", value: totalResources, bg: "rgba(184,216,196,0.20)",
       icon: <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#4E9B78" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" /><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" /></svg>,
     },
     {
-      label: "Featured", value: featuredCount, bg: "rgba(232,202,122,0.15)",
+      label: "Featured", sub: "Highlighted to users", value: featuredCount, bg: "rgba(232,202,122,0.15)",
       icon: <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#D4A017" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" /></svg>,
     },
     {
-      label: "Hidden", value: hiddenCount, bg: "rgba(180,180,180,0.12)",
+      label: "Hidden", sub: "Currently hidden", value: hiddenCount, bg: "rgba(180,180,180,0.12)",
       icon: <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#999" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94" /><path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19" /><line x1="1" y1="1" x2="23" y2="23" /></svg>,
     },
     {
-      label: "Categories", value: categoryCount, bg: "rgba(242,196,206,0.15)",
+      label: "Categories", sub: "Organized groups", value: categoryCount, bg: "rgba(242,196,206,0.15)",
       icon: <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#A8607A" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><rect width="7" height="7" x="3" y="3" rx="1" /><rect width="7" height="7" x="14" y="3" rx="1" /><rect width="7" height="7" x="14" y="14" rx="1" /><rect width="7" height="7" x="3" y="14" rx="1" /></svg>,
     },
   ];
@@ -56,6 +56,11 @@ export default function AdminPage() {
       href: "/admin/categories", title: "Manage Categories",
       desc: "Create and organize categories and subcategories",
       icon: <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#4E9B78" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><rect width="7" height="7" x="3" y="3" rx="1" /><rect width="7" height="7" x="14" y="3" rx="1" /><rect width="7" height="7" x="14" y="14" rx="1" /><rect width="7" height="7" x="3" y="14" rx="1" /></svg>,
+    },
+    {
+      href: "/admin/crisis-contacts", title: "Crisis Contacts",
+      desc: "Manage crisis hotlines shown on the emergency page",
+      icon: <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#C07080" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" /></svg>,
     },
   ];
 
@@ -73,37 +78,47 @@ export default function AdminPage() {
             </div>
             <div>
               <h1 className="text-xl font-bold tracking-tight" style={{ color: "#1A3D2B" }}>Admin Panel</h1>
-              <p className="mt-0.5 text-sm" style={{ color: "#6B9E85" }}>Manage your resource library</p>
+              <p className="mt-0.5 text-sm" style={{ color: "#6B9E85" }}>Manage resources, categories, and crisis contacts</p>
             </div>
           </div>
+          <p className="mt-4 text-[13px] leading-relaxed" style={{ color: "#8DBFA5" }}>
+            Your central hub for managing MySafePlace. View stats at a glance, then use the quick actions below to manage your resource library, organize categories, or update the crisis contacts shown to all users.
+          </p>
         </div>
       </header>
 
       <div className="relative z-10 mx-auto max-w-5xl px-6 py-6">
+
         {/* Stats */}
-        <div className="animate-fade-in-up-1 mb-8 grid grid-cols-2 gap-4 sm:grid-cols-4">
+        <div className="animate-fade-in-up-1 mb-10 grid grid-cols-2 gap-3 sm:grid-cols-4 sm:gap-4">
           {stats.map((s) => (
-            <div key={s.label} className="rounded-2xl px-5 py-5" style={{ background: "linear-gradient(145deg, #FFFFFF 0%, #F8FCF9 100%)", border: "1px solid rgba(200,230,208,0.4)", boxShadow: "0 2px 8px rgba(45,106,79,0.04)" }}>
-              <div className="flex items-center gap-3">
-                <div className="flex h-10 w-10 items-center justify-center rounded-xl" style={{ backgroundColor: s.bg }}>{s.icon}</div>
-                <div>
-                  <p className="text-[12px] font-semibold uppercase tracking-wider" style={{ color: "#8DBFA5" }}>{s.label}</p>
-                  <p className="text-2xl font-bold" style={{ color: "#1A3D2B" }}>{loading ? "\u2014" : s.value}</p>
-                </div>
-              </div>
+            <div
+              key={s.label}
+              className="rounded-2xl px-4 py-4 transition-all duration-200 hover:shadow-md sm:px-5 sm:py-5"
+              style={{ background: "linear-gradient(145deg, #FFFFFF 0%, #F8FCF9 100%)", border: "1px solid rgba(200,230,208,0.4)", boxShadow: "0 2px 8px rgba(45,106,79,0.04)" }}
+            >
+              <div className="flex h-9 w-9 items-center justify-center rounded-xl sm:h-10 sm:w-10" style={{ backgroundColor: s.bg }}>{s.icon}</div>
+              <p className="mt-3 text-2xl font-bold leading-none" style={{ color: "#1A3D2B" }}>{loading ? "\u2014" : s.value}</p>
+              <p className="mt-1 text-[11px] font-semibold" style={{ color: "#8DBFA5" }}>{s.label}</p>
+              <p className="mt-0.5 text-[10px]" style={{ color: "#A8C4B4" }}>{s.sub}</p>
             </div>
           ))}
         </div>
 
         {/* Quick Actions */}
         <div className="animate-fade-in-up-2">
-          <h2 className="mb-4 text-[14px] font-bold uppercase tracking-wider" style={{ color: "#8DBFA5" }}>Quick Actions</h2>
+          <h2 className="mb-5 text-[13px] font-bold uppercase tracking-wider" style={{ color: "#8DBFA5" }}>Quick Actions</h2>
           <div className="space-y-3">
             {actions.map((a) => (
-              <Link key={a.href} href={a.href} className="group block rounded-2xl px-6 py-5 transition-all" style={{ background: "linear-gradient(145deg, #FFFFFF 0%, #F2FAF5 100%)", border: "1px solid rgba(200,230,208,0.4)", boxShadow: "0 2px 8px rgba(45,106,79,0.04)" }}>
+              <Link
+                key={a.href}
+                href={a.href}
+                className="group block cursor-pointer rounded-2xl px-6 py-5 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg"
+                style={{ background: "linear-gradient(145deg, #FFFFFF 0%, #F2FAF5 100%)", border: "1px solid rgba(200,230,208,0.4)", boxShadow: "0 2px 8px rgba(45,106,79,0.04)" }}
+              >
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-4">
-                    <div className="flex h-12 w-12 items-center justify-center rounded-xl transition-transform group-hover:scale-105" style={{ background: "linear-gradient(135deg, rgba(94,168,138,0.15) 0%, rgba(74,152,116,0.10) 100%)" }}>
+                    <div className="flex h-12 w-12 items-center justify-center rounded-xl transition-transform duration-200 group-hover:scale-105" style={{ background: "linear-gradient(135deg, rgba(94,168,138,0.15) 0%, rgba(74,152,116,0.10) 100%)" }}>
                       {a.icon}
                     </div>
                     <div>
@@ -111,7 +126,12 @@ export default function AdminPage() {
                       <p className="mt-0.5 text-[13px]" style={{ color: "#6B9E85" }}>{a.desc}</p>
                     </div>
                   </div>
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#A8D5BA" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="transition-transform group-hover:translate-x-1"><path d="M9 18l6-6-6-6" /></svg>
+                  <div
+                    className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg transition-all duration-200 group-hover:translate-x-1"
+                    style={{ backgroundColor: "rgba(200,230,208,0.15)" }}
+                  >
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#6B9E85" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M9 18l6-6-6-6" /></svg>
+                  </div>
                 </div>
               </Link>
             ))}

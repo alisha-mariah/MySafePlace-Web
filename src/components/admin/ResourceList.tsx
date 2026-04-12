@@ -56,38 +56,16 @@ export default function ResourceList({
             animation: `fadeInUp 0.3s ease-out ${index * 0.03}s both`,
           }}
         >
-          {/* Toggle buttons */}
-          <div className="flex flex-shrink-0 flex-col items-center gap-1.5 pt-0.5">
-            {/* Featured star */}
-            <button
-              onClick={() => onToggleFeatured(resource)}
-              className="transition-transform hover:scale-110"
-              title={resource.featured ? "Remove from featured" : "Mark as featured"}
-            >
-              <svg width="17" height="17" viewBox="0 0 24 24" fill={resource.featured ? "#E8CA7A" : "none"} stroke={resource.featured ? "#D4A017" : "#C8E6D0"} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
-              </svg>
-            </button>
-            {/* Hidden eye */}
-            <button
-              onClick={() => onToggleHidden(resource)}
-              className="transition-transform hover:scale-110"
-              title={resource.hidden ? "Make visible" : "Hide from users"}
-            >
-              {resource.hidden ? (
-                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#B0B0B0" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94" />
-                  <path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19" />
-                  <line x1="1" y1="1" x2="23" y2="23" />
-                </svg>
-              ) : (
-                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#A8D5BA" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
-                  <circle cx="12" cy="12" r="3" />
-                </svg>
-              )}
-            </button>
-          </div>
+          {/* Featured star */}
+          <button
+            onClick={() => onToggleFeatured(resource)}
+            className="cursor-pointer flex-shrink-0 rounded-lg p-1 transition-all duration-150 hover:scale-110 hover:bg-[rgba(232,202,122,0.12)]"
+            title={resource.featured ? "Remove from featured" : "Mark as featured"}
+          >
+            <svg width="17" height="17" viewBox="0 0 24 24" fill={resource.featured ? "#E8CA7A" : "none"} stroke={resource.featured ? "#D4A017" : "#C8E6D0"} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+              <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+            </svg>
+          </button>
 
           {/* Info */}
           <div className="min-w-0 flex-1">
@@ -135,12 +113,34 @@ export default function ResourceList({
             )}
           </div>
 
-          {/* Actions */}
-          <div className="flex flex-shrink-0 items-center gap-1.5 opacity-0 transition-opacity group-hover:opacity-100">
+          {/* Visibility toggle + Actions */}
+          <div className="flex flex-shrink-0 items-center gap-3">
+            {/* Toggle with label */}
+            <div className="flex flex-col items-center gap-1">
+              <button
+                onClick={() => onToggleHidden(resource)}
+                className="relative cursor-pointer flex-shrink-0 rounded-full transition-colors"
+                title={resource.hidden ? "Click to make visible" : "Click to hide from users"}
+                style={{
+                  width: 40,
+                  height: 24,
+                  backgroundColor: resource.hidden ? "#D1D5DB" : "#5EA88A",
+                }}
+              >
+                <span
+                  className="absolute top-[2px] block h-[20px] w-[20px] rounded-full bg-white transition-all"
+                  style={{ left: resource.hidden ? 2 : 18, boxShadow: "0 1px 3px rgba(0,0,0,0.15)" }}
+                />
+              </button>
+              <span className="text-[9px] font-semibold" style={{ color: resource.hidden ? "#999" : "#4E9B78" }}>
+                {resource.hidden ? "Hidden" : "Visible"}
+              </span>
+            </div>
+
             {/* Open link */}
             <button
               onClick={() => window.open(resource.url, "_blank", "noopener")}
-              className="rounded-lg p-1.5 transition-all"
+              className="cursor-pointer rounded-lg p-1.5 transition-all duration-150 hover:brightness-90"
               style={{ backgroundColor: "rgba(200,230,208,0.12)", border: "1px solid rgba(200,230,208,0.2)" }}
               title="Open link in new tab"
             >
@@ -152,14 +152,14 @@ export default function ResourceList({
             </button>
             <button
               onClick={() => onEdit(resource)}
-              className="rounded-lg px-3 py-1.5 text-[12px] font-semibold transition-all"
+              className="cursor-pointer rounded-lg px-3 py-1.5 text-[12px] font-semibold transition-all duration-150 hover:brightness-90"
               style={{ backgroundColor: "rgba(168,213,186,0.15)", color: "#4E9B78", border: "1px solid rgba(168,213,186,0.3)" }}
             >
               Edit
             </button>
             <button
               onClick={() => onDelete(resource)}
-              className="rounded-lg px-3 py-1.5 text-[12px] font-semibold transition-all"
+              className="cursor-pointer rounded-lg px-3 py-1.5 text-[12px] font-semibold transition-all duration-150 hover:brightness-90"
               style={{ backgroundColor: "rgba(254,242,242,0.6)", color: "#C46050", border: "1px solid rgba(252,202,202,0.5)" }}
             >
               Delete

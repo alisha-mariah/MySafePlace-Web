@@ -140,11 +140,15 @@ export default function AdminResourcesPage() {
   }
 
   async function handleToggleHidden(r: AdminResource) {
+    const newHidden = !r.hidden;
+    setResources((prev) => prev.map((x) => (x.id === r.id ? { ...x, hidden: newHidden } : x)));
     try {
-      await updateResource(r.id, { hidden: !r.hidden });
-      setMessage({ text: r.hidden ? "Resource is now visible." : "Resource is now hidden.", type: "success" });
-      await loadData();
-    } catch { setMessage({ text: "Failed to update.", type: "error" }); }
+      await updateResource(r.id, { hidden: newHidden });
+      setMessage({ text: newHidden ? "Resource is now hidden." : "Resource is now visible.", type: "success" });
+    } catch {
+      setResources((prev) => prev.map((x) => (x.id === r.id ? { ...x, hidden: r.hidden } : x)));
+      setMessage({ text: "Failed to update.", type: "error" });
+    }
   }
 
   return (

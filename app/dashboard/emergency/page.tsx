@@ -12,25 +12,7 @@ import {
   deleteContact,
   PersonalContact,
 } from "@/src/services/contactService";
-
-/* ── Static crisis contacts ── */
-
-const PRIMARY_CONTACT = {
-  name: "988 Suicide & Crisis Lifeline",
-  description: "Free, confidential support available 24/7 for anyone in emotional distress or suicidal crisis. You don't have to go through this alone.",
-  phone: "988",
-  sms: "988",
-  chatUrl: "https://988lifeline.org/chat/",
-};
-
-const CONTACTS = [
-  { name: "Crisis Text Line", description: "Free crisis counseling via text message, 24/7.", sms: "741741", chatUrl: "https://www.crisistextline.org/" },
-  { name: "SAMHSA National Helpline", description: "Free referral service for substance abuse and mental health. 24/7.", phone: "1-800-662-4357" },
-  { name: "Veterans Crisis Line", description: "Support for veterans and their loved ones. Call, text, or chat.", phone: "988", sms: "838255", chatUrl: "https://www.veteranscrisisline.net/get-help-now/chat/" },
-  { name: "National Domestic Violence Hotline", description: "Confidential support for anyone affected by domestic violence. 24/7.", phone: "1-800-799-7233", sms: "22233", chatUrl: "https://www.thehotline.org/" },
-  { name: "Trevor Project (LGBTQ+ Youth)", description: "Crisis intervention and suicide prevention for LGBTQ+ young people under 25.", phone: "1-866-488-7386", sms: "678-678", chatUrl: "https://www.thetrevorproject.org/get-help/" },
-  { name: "NAMI Helpline", description: "Information and support for mental health conditions. Mon–Fri, 10am–10pm ET.", phone: "1-800-950-6264", sms: "62640" },
-];
+import { getActiveCrisisContacts, CrisisContact } from "@/src/services/crisisContactService";
 
 /* ── Personal contact card ── */
 
@@ -90,6 +72,20 @@ function EmergencyContent() {
   const { user } = useAuth();
   const [contacts, setContacts] = useState<PersonalContact[]>([]);
   const [loading, setLoading] = useState(true);
+
+  // Crisis contacts from Firestore
+  const [crisisContacts, setCrisisContacts] = useState<CrisisContact[]>([]);
+  const [crisisLoading, setCrisisLoading] = useState(true);
+
+  useEffect(() => {
+    getActiveCrisisContacts()
+      .then(setCrisisContacts)
+      .catch(() => {})
+      .finally(() => setCrisisLoading(false));
+  }, []);
+
+  const primaryContact = crisisContacts.find((c) => c.category === "primary") ?? null;
+  const additionalContacts = crisisContacts.filter((c) => c.category !== "primary");
 
   // Form state
   const [showForm, setShowForm] = useState(false);
@@ -187,9 +183,17 @@ function EmergencyContent() {
 
       <div className="mx-auto max-w-5xl px-6 py-6 space-y-6">
         {/* Primary contact */}
-        <div className="card-drop-1">
-          <EmergencyPrimaryCard {...PRIMARY_CONTACT} />
-        </div>
+        {!crisisLoading && primaryContact && (
+          <div className="card-drop-1">
+            <EmergencyPrimaryCard
+              name={primaryContact.name}
+              description={primaryContact.description}
+              phone={primaryContact.phone || undefined}
+              sms={primaryContact.sms || undefined}
+              chatUrl={primaryContact.chatUrl || undefined}
+            />
+          </div>
+        )}
 
         {/* ── My People section ── */}
         <div className="card-drop-2">
@@ -302,19 +306,28 @@ function EmergencyContent() {
         </div>
 
         {/* Additional resources */}
-        <div className="card-drop-3">
-          <div
-            className="rounded-2xl border p-5"
-            style={{ backgroundColor: "white", borderColor: "rgba(200,230,208,0.5)", boxShadow: "0 1px 4px rgba(45,106,79,0.04)" }}
-          >
-            <h2 className="mb-4 text-[14px] font-bold" style={{ color: "#1A3D2B" }}>More resources</h2>
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-              {CONTACTS.map((c) => (
-                <EmergencyCard key={c.name} {...c} />
-              ))}
+        {!crisisLoading && additionalContacts.length > 0 && (
+          <div className="card-drop-3">
+            <div
+              className="rounded-2xl border p-5"
+              style={{ backgroundColor: "white", borderColor: "rgba(200,230,208,0.5)", boxShadow: "0 1px 4px rgba(45,106,79,0.04)" }}
+            >
+              <h2 className="mb-4 text-[14px] font-bold" style={{ color: "#1A3D2B" }}>More resources</h2>
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                {additionalContacts.map((c) => (
+                  <EmergencyCard
+                    key={c.id}
+                    name={c.name}
+                    description={c.description}
+                    phone={c.phone || undefined}
+                    sms={c.sms || undefined}
+                    chatUrl={c.chatUrl || undefined}
+                  />
+                ))}
+              </div>
             </div>
           </div>
-        </div>
+        )}
 
         {/* Supportive footer */}
         <div className="card-drop-4 pt-4 pb-8 text-center">

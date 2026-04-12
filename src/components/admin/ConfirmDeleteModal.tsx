@@ -17,11 +17,11 @@ export default function ConfirmDeleteModal({
 }: ConfirmDeleteModalProps) {
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-4"
+      className="fixed top-0 right-0 bottom-0 left-56 z-50 flex items-center justify-center p-3"
       style={{ backgroundColor: "rgba(26,61,43,0.3)", backdropFilter: "blur(4px)" }}
     >
       <div
-        className="animate-fade-in-up w-full max-w-sm rounded-2xl p-6"
+        className="animate-fade-in-up w-full max-w-[92vw] rounded-2xl p-5 sm:max-w-sm sm:p-6"
         style={{
           background: "linear-gradient(145deg, #FFFFFF 0%, #FFF8F8 100%)",
           border: "1px solid rgba(252,202,202,0.5)",

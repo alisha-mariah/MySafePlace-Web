@@ -23,7 +23,11 @@ export default function AdminCategoriesPage() {
   const [loading, setLoading] = useState(true);
   const [message, setMessage] = useState<Msg | null>(null);
 
+  // Expand/collapse
+  const [expandedIds, setExpandedIds] = useState<Set<string>>(new Set());
+
   // Add category
+  const [showAddCat, setShowAddCat] = useState(false);
   const [newCatName, setNewCatName] = useState("");
   const [addingCat, setAddingCat] = useState(false);
 
@@ -46,12 +50,31 @@ export default function AdminCategoriesPage() {
   const load = useCallback(async () => {
     try {
       await syncCategoriesFromResources();
-      setCategories(await getCategories());
-    } catch { setMessage({ text: "Failed to load categories.", type: "error" }); }
-    finally { setLoading(false); }
+      const cats = await getCategories();
+      setCategories(cats);
+      // Auto-expand all on first load
+      if (expandedIds.size === 0 && cats.length > 0) {
+        setExpandedIds(new Set(cats.map((c) => c.id)));
+      }
+    } catch {
+      setMessage({ text: "Failed to load categories.", type: "error" });
+    } finally {
+      setLoading(false);
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => { load(); }, [load]);
+
+  const totalSubs = categories.reduce((sum, c) => sum + c.subcategories.length, 0);
+
+  function toggleExpand(id: string) {
+    setExpandedIds((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id); else next.add(id);
+      return next;
+    });
+  }
 
   // ── Category CRUD ──
 
@@ -61,10 +84,14 @@ export default function AdminCategoriesPage() {
     try {
       await addCategory(newCatName.trim());
       setNewCatName("");
+      setShowAddCat(false);
       setMessage({ text: "Category added.", type: "success" });
       await load();
-    } catch { setMessage({ text: "Failed to add category.", type: "error" }); }
-    finally { setAddingCat(false); }
+    } catch {
+      setMessage({ text: "Failed to add category.", type: "error" });
+    } finally {
+      setAddingCat(false);
+    }
   }
 
   async function handleSaveCategoryName() {
@@ -74,7 +101,9 @@ export default function AdminCategoriesPage() {
       setEditingCatId(null);
       setMessage({ text: "Category renamed.", type: "success" });
       await load();
-    } catch { setMessage({ text: "Failed to rename category.", type: "error" }); }
+    } catch {
+      setMessage({ text: "Failed to rename.", type: "error" });
+    }
   }
 
   // ── Subcategory CRUD ──
@@ -87,7 +116,9 @@ export default function AdminCategoriesPage() {
       setAddingSubTo(null);
       setMessage({ text: "Subcategory added.", type: "success" });
       await load();
-    } catch { setMessage({ text: "Failed to add subcategory.", type: "error" }); }
+    } catch {
+      setMessage({ text: "Failed to add subcategory.", type: "error" });
+    }
   }
 
   async function handleSaveSubName() {
@@ -97,7 +128,9 @@ export default function AdminCategoriesPage() {
       setEditingSub(null);
       setMessage({ text: "Subcategory renamed.", type: "success" });
       await load();
-    } catch { setMessage({ text: "Failed to rename subcategory.", type: "error" }); }
+    } catch {
+      setMessage({ text: "Failed to rename.", type: "error" });
+    }
   }
 
   // ── Delete ──
@@ -115,8 +148,11 @@ export default function AdminCategoriesPage() {
       }
       setDeletingItem(null);
       await load();
-    } catch { setMessage({ text: "Failed to delete.", type: "error" }); }
-    finally { setDeleting(false); }
+    } catch {
+      setMessage({ text: "Failed to delete.", type: "error" });
+    } finally {
+      setDeleting(false);
+    }
   }
 
   const inputStyle = {
@@ -128,51 +164,86 @@ export default function AdminCategoriesPage() {
   return (
     <div className="relative min-h-screen">
       {/* Header */}
-      <header className="relative z-10 mx-auto max-w-3xl px-6 pt-8 pb-2">
-        <Link href="/admin" className="mb-5 inline-flex items-center gap-1.5 rounded-full px-3.5 py-2 text-xs font-medium transition-all" style={{ color: "#6B9E85", backgroundColor: "rgba(255,255,255,0.7)", border: "1px solid rgba(200,230,208,0.5)", backdropFilter: "blur(8px)" }}>
+      <header className="relative z-10 mx-auto max-w-5xl px-6 pt-8 pb-2">
+        <Link
+          href="/admin"
+          className="mb-5 inline-flex items-center gap-1.5 rounded-full px-3.5 py-2 text-xs font-medium transition-all"
+          style={{ color: "#6B9E85", backgroundColor: "rgba(255,255,255,0.7)", border: "1px solid rgba(200,230,208,0.5)", backdropFilter: "blur(8px)" }}
+        >
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M15 18l-6-6 6-6" /></svg>
           Admin Panel
         </Link>
 
-        <div className="animate-fade-in-up rounded-2xl px-7 py-6" style={{ background: "linear-gradient(135deg, rgba(255,255,255,0.75) 0%, rgba(255,255,255,0.55) 100%)", border: "1px solid rgba(200,230,208,0.45)", boxShadow: "0 8px 32px rgba(45,106,79,0.06), 0 2px 8px rgba(45,106,79,0.03)", backdropFilter: "blur(12px)" }}>
-          <div className="flex items-center gap-3.5">
-            <div className="flex h-11 w-11 items-center justify-center rounded-xl" style={{ background: "linear-gradient(135deg, rgba(184,216,196,0.35) 0%, rgba(200,230,208,0.25) 100%)" }}>
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#4E9B78" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><rect width="7" height="7" x="3" y="3" rx="1" /><rect width="7" height="7" x="14" y="3" rx="1" /><rect width="7" height="7" x="14" y="14" rx="1" /><rect width="7" height="7" x="3" y="14" rx="1" /></svg>
+        <div
+          className="animate-fade-in-up rounded-2xl px-7 py-6"
+          style={{ background: "linear-gradient(135deg, rgba(255,255,255,0.75) 0%, rgba(255,255,255,0.55) 100%)", border: "1px solid rgba(200,230,208,0.45)", boxShadow: "0 8px 32px rgba(45,106,79,0.06), 0 2px 8px rgba(45,106,79,0.03)", backdropFilter: "blur(12px)" }}
+        >
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3.5">
+              <div className="flex h-11 w-11 items-center justify-center rounded-xl" style={{ background: "linear-gradient(135deg, rgba(184,216,196,0.35) 0%, rgba(200,230,208,0.25) 100%)" }}>
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#4E9B78" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><rect width="7" height="7" x="3" y="3" rx="1" /><rect width="7" height="7" x="14" y="3" rx="1" /><rect width="7" height="7" x="14" y="14" rx="1" /><rect width="7" height="7" x="3" y="14" rx="1" /></svg>
+              </div>
+              <div>
+                <h1 className="text-xl font-bold tracking-tight" style={{ color: "#1A3D2B" }}>Category Management</h1>
+                <p className="mt-0.5 text-sm" style={{ color: "#6B9E85" }}>
+                  {loading ? "Loading..." : `${categories.length} categor${categories.length !== 1 ? "ies" : "y"} \u00B7 ${totalSubs} subcategor${totalSubs !== 1 ? "ies" : "y"}`}
+                </p>
+              </div>
             </div>
-            <div>
-              <h1 className="text-xl font-bold tracking-tight" style={{ color: "#1A3D2B" }}>Category Management</h1>
-              <p className="mt-0.5 text-sm" style={{ color: "#6B9E85" }}>
-                {loading ? "Loading..." : `${categories.length} categor${categories.length !== 1 ? "ies" : "y"}`}
-              </p>
-            </div>
+            <button
+              onClick={() => { setShowAddCat(true); setTimeout(() => document.getElementById("new-cat-input")?.focus(), 50); }}
+              className="nature-btn flex cursor-pointer items-center gap-2 rounded-xl px-5 py-2.5 text-[13px] font-bold text-white"
+              style={{ background: "linear-gradient(135deg, #5EA88A 0%, #4A9874 100%)", boxShadow: "0 4px 14px rgba(93,168,138,0.25)" }}
+            >
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><line x1="12" y1="5" x2="12" y2="19" /><line x1="5" y1="12" x2="19" y2="12" /></svg>
+              Add Category
+            </button>
           </div>
+          <p className="mt-4 text-[13px] leading-relaxed" style={{ color: "#8DBFA5" }}>
+            Categories and subcategories organize your resource library. When adding or editing a resource, the admin selects from these options. Create a category first, then add subcategories within it.
+          </p>
         </div>
       </header>
 
-      <div className="relative z-10 mx-auto max-w-3xl px-6 py-6">
+      <div className="relative z-10 mx-auto max-w-5xl px-6 py-6">
         {message && <AdminMessage message={message.text} type={message.type} onDismiss={() => setMessage(null)} />}
 
-        {/* Add category */}
-        <div className="animate-fade-in-up-1 mb-6 flex gap-2">
-          <input
-            type="text"
-            value={newCatName}
-            onChange={(e) => setNewCatName(e.target.value)}
-            onKeyDown={(e) => { if (e.key === "Enter") handleAddCategory(); }}
-            placeholder="New category name..."
-            className="auth-input flex-1 rounded-xl px-4 py-2.5 text-[14px]"
-            style={inputStyle}
-          />
-          <button
-            onClick={handleAddCategory}
-            disabled={addingCat || !newCatName.trim()}
-            className="nature-btn flex items-center gap-2 rounded-xl px-5 py-2.5 text-[13px] font-bold text-white"
-            style={{ background: "linear-gradient(135deg, #5EA88A 0%, #4A9874 100%)", boxShadow: "0 4px 14px rgba(93,168,138,0.25)", opacity: addingCat || !newCatName.trim() ? 0.6 : 1 }}
+        {/* Add category — inline reveal */}
+        {showAddCat && (
+          <div
+            className="animate-fade-in-up mb-6 rounded-2xl px-5 py-4"
+            style={{ background: "linear-gradient(145deg, #FFFFFF 0%, #F2FAF5 100%)", border: "1px solid rgba(200,230,208,0.4)", boxShadow: "0 2px 8px rgba(45,106,79,0.04)" }}
           >
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><line x1="12" y1="5" x2="12" y2="19" /><line x1="5" y1="12" x2="19" y2="12" /></svg>
-            Add
-          </button>
-        </div>
+            <p className="mb-2.5 text-[12px] font-semibold uppercase tracking-wider" style={{ color: "#8DBFA5" }}>New category</p>
+            <div className="flex gap-2">
+              <input
+                id="new-cat-input"
+                type="text"
+                value={newCatName}
+                onChange={(e) => setNewCatName(e.target.value)}
+                onKeyDown={(e) => { if (e.key === "Enter") handleAddCategory(); if (e.key === "Escape") { setShowAddCat(false); setNewCatName(""); } }}
+                placeholder="e.g. Meditation, Yoga, Breathing..."
+                className="auth-input flex-1 rounded-xl px-4 py-2.5 text-[14px]"
+                style={inputStyle}
+              />
+              <button
+                onClick={handleAddCategory}
+                disabled={addingCat || !newCatName.trim()}
+                className="nature-btn cursor-pointer rounded-xl px-5 py-2.5 text-[13px] font-bold text-white"
+                style={{ background: "linear-gradient(135deg, #5EA88A 0%, #4A9874 100%)", opacity: addingCat || !newCatName.trim() ? 0.5 : 1 }}
+              >
+                {addingCat ? "Adding..." : "Create"}
+              </button>
+              <button
+                onClick={() => { setShowAddCat(false); setNewCatName(""); }}
+                className="cursor-pointer rounded-xl px-4 py-2.5 text-[13px] font-semibold transition-all duration-150 hover:opacity-70"
+                style={{ color: "#6B9E85" }}
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        )}
 
         {/* Loading */}
         {loading ? (
@@ -184,139 +255,197 @@ export default function AdminCategoriesPage() {
         ) : categories.length === 0 ? (
           <div className="animate-fade-in-up-2 rounded-2xl border border-dashed py-16 text-center" style={{ borderColor: "rgba(200,230,208,0.5)", background: "rgba(255,255,255,0.4)" }}>
             <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#A8D5BA" strokeWidth="1.5" strokeLinecap="round" className="mx-auto mb-3"><rect width="7" height="7" x="3" y="3" rx="1" /><rect width="7" height="7" x="14" y="3" rx="1" /><rect width="7" height="7" x="14" y="14" rx="1" /><rect width="7" height="7" x="3" y="14" rx="1" /></svg>
-            <p className="text-sm" style={{ color: "#8DBFA5" }}>No categories yet. Create your first category above.</p>
+            <p className="text-[14px] font-semibold" style={{ color: "#6B9E85" }}>No categories yet</p>
+            <p className="mt-1 text-[12px]" style={{ color: "#8DBFA5" }}>Click &ldquo;Add Category&rdquo; above to get started.</p>
           </div>
         ) : (
-          <div className="animate-fade-in-up-2 space-y-4">
-            {categories.map((cat) => (
-              <div
-                key={cat.id}
-                className="rounded-2xl"
-                style={{ background: "linear-gradient(145deg, #FFFFFF 0%, #F8FCF9 100%)", border: "1px solid rgba(200,230,208,0.4)", boxShadow: "0 2px 8px rgba(45,106,79,0.04)" }}
-              >
-                {/* Category header */}
-                <div className="flex items-center gap-3 px-5 py-4" style={{ borderBottom: "1px solid rgba(200,230,208,0.25)" }}>
-                  {editingCatId === cat.id ? (
-                    <div className="flex flex-1 items-center gap-2">
-                      <input
-                        type="text"
-                        value={editingCatName}
-                        onChange={(e) => setEditingCatName(e.target.value)}
-                        onKeyDown={(e) => { if (e.key === "Enter") handleSaveCategoryName(); if (e.key === "Escape") setEditingCatId(null); }}
-                        autoFocus
-                        className="auth-input flex-1 rounded-lg px-3 py-1.5 text-[14px]"
-                        style={inputStyle}
-                      />
-                      <button onClick={handleSaveCategoryName} className="rounded-lg px-3 py-1.5 text-[12px] font-semibold" style={{ backgroundColor: "rgba(168,213,186,0.15)", color: "#4E9B78", border: "1px solid rgba(168,213,186,0.3)" }}>Save</button>
-                      <button onClick={() => setEditingCatId(null)} className="rounded-lg px-3 py-1.5 text-[12px] font-semibold" style={{ color: "#6B9E85" }}>Cancel</button>
-                    </div>
-                  ) : (
-                    <>
-                      <div className="flex h-8 w-8 items-center justify-center rounded-lg" style={{ backgroundColor: "rgba(168,213,186,0.15)" }}>
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#4E9B78" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z" /></svg>
+          <div className="animate-fade-in-up-2 space-y-3">
+            {categories.map((cat, i) => {
+              const isExpanded = expandedIds.has(cat.id);
+              const isEditingThis = editingCatId === cat.id;
+
+              return (
+                <div
+                  key={cat.id}
+                  className="overflow-hidden rounded-2xl transition-all duration-200 hover:shadow-md"
+                  style={{ background: "linear-gradient(145deg, #FFFFFF 0%, #F8FCF9 100%)", border: "1px solid rgba(200,230,208,0.4)", boxShadow: "0 2px 8px rgba(45,106,79,0.04)", animation: `fadeInUp 0.3s ease-out ${i * 0.04}s both` }}
+                >
+                  {/* ── Category header ── */}
+                  <div
+                    className="flex items-center gap-3 px-5 py-4"
+                    style={{ borderBottom: isExpanded ? "1px solid rgba(200,230,208,0.25)" : "none" }}
+                  >
+                    {isEditingThis ? (
+                      <div className="flex flex-1 items-center gap-2">
+                        <input
+                          type="text"
+                          value={editingCatName}
+                          onChange={(e) => setEditingCatName(e.target.value)}
+                          onKeyDown={(e) => { if (e.key === "Enter") handleSaveCategoryName(); if (e.key === "Escape") setEditingCatId(null); }}
+                          autoFocus
+                          className="auth-input flex-1 rounded-lg px-3 py-1.5 text-[14px]"
+                          style={inputStyle}
+                        />
+                        <button onClick={handleSaveCategoryName} className="cursor-pointer rounded-lg px-3 py-1.5 text-[12px] font-semibold transition-all duration-150 hover:brightness-90" style={{ backgroundColor: "rgba(168,213,186,0.15)", color: "#4E9B78", border: "1px solid rgba(168,213,186,0.3)" }}>Save</button>
+                        <button onClick={() => setEditingCatId(null)} className="cursor-pointer rounded-lg px-3 py-1.5 text-[12px] font-semibold transition-all duration-150 hover:opacity-70" style={{ color: "#6B9E85" }}>Cancel</button>
                       </div>
-                      <h3 className="flex-1 text-[15px] font-bold" style={{ color: "#1A3D2B" }}>{cat.name}</h3>
-                      <span className="rounded-full px-2 py-0.5 text-[10px] font-semibold" style={{ backgroundColor: "rgba(200,230,208,0.25)", color: "#6B9E85" }}>
-                        {cat.subcategories.length} sub
-                      </span>
-                      <button
-                        onClick={() => { setEditingCatId(cat.id); setEditingCatName(cat.name); }}
-                        className="rounded-lg px-2.5 py-1 text-[11px] font-semibold transition-all"
-                        style={{ backgroundColor: "rgba(168,213,186,0.12)", color: "#4E9B78", border: "1px solid rgba(168,213,186,0.25)" }}
-                      >
-                        Rename
-                      </button>
-                      <button
-                        onClick={() => setDeletingItem({ type: "category", catId: cat.id, name: cat.name })}
-                        className="rounded-lg px-2.5 py-1 text-[11px] font-semibold transition-all"
-                        style={{ backgroundColor: "rgba(254,242,242,0.5)", color: "#C46050", border: "1px solid rgba(252,202,202,0.4)" }}
-                      >
-                        Delete
-                      </button>
-                    </>
-                  )}
-                </div>
+                    ) : (
+                      <>
+                        {/* Expand toggle */}
+                        <button
+                          onClick={() => toggleExpand(cat.id)}
+                          className="flex h-9 w-9 flex-shrink-0 cursor-pointer items-center justify-center rounded-lg transition-all duration-200 hover:bg-[rgba(168,213,186,0.25)]"
+                          style={{ backgroundColor: "rgba(168,213,186,0.12)" }}
+                        >
+                          <svg
+                            width="16"
+                            height="16"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="#4E9B78"
+                            strokeWidth="2"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            className="transition-transform duration-200"
+                            style={{ transform: isExpanded ? "rotate(90deg)" : "rotate(0deg)" }}
+                          >
+                            <path d="M9 18l6-6-6-6" />
+                          </svg>
+                        </button>
 
-                {/* Subcategories */}
-                <div className="px-5 py-3 space-y-1.5">
-                  {cat.subcategories.length === 0 && addingSubTo !== cat.id && (
-                    <p className="py-2 text-[12px]" style={{ color: "#A8C4B4" }}>No subcategories yet.</p>
-                  )}
+                        {/* Name + count */}
+                        <button
+                          onClick={() => toggleExpand(cat.id)}
+                          className="flex flex-1 cursor-pointer items-center gap-3 text-left"
+                        >
+                          <h3 className="text-[15px] font-bold" style={{ color: "#1A3D2B" }}>{cat.name}</h3>
+                          <span className="rounded-full px-2.5 py-0.5 text-[10px] font-semibold" style={{ backgroundColor: "rgba(200,230,208,0.25)", color: "#6B9E85" }}>
+                            {cat.subcategories.length} subcategor{cat.subcategories.length !== 1 ? "ies" : "y"}
+                          </span>
+                        </button>
 
-                  {cat.subcategories.map((sub) => (
-                    <div key={sub} className="group flex items-center gap-2 rounded-lg px-3 py-2 transition-all" style={{ backgroundColor: "rgba(200,230,208,0.06)" }}>
-                      {editingSub?.catId === cat.id && editingSub?.oldName === sub ? (
-                        <div className="flex flex-1 items-center gap-2">
+                        {/* Actions */}
+                        <button
+                          onClick={() => { setEditingCatId(cat.id); setEditingCatName(cat.name); }}
+                          className="cursor-pointer rounded-lg px-3 py-1.5 text-[11px] font-semibold transition-all duration-200 hover:brightness-90"
+                          style={{ backgroundColor: "rgba(168,213,186,0.10)", color: "#4E9B78", border: "1px solid rgba(168,213,186,0.25)" }}
+                        >
+                          Rename
+                        </button>
+                        <button
+                          onClick={() => setDeletingItem({ type: "category", catId: cat.id, name: cat.name })}
+                          className="cursor-pointer rounded-lg px-3 py-1.5 text-[11px] font-semibold transition-all duration-200 hover:brightness-90"
+                          style={{ backgroundColor: "rgba(254,242,242,0.5)", color: "#C46050", border: "1px solid rgba(252,202,202,0.4)" }}
+                        >
+                          Delete
+                        </button>
+                      </>
+                    )}
+                  </div>
+
+                  {/* ── Subcategories (collapsible) ── */}
+                  <div
+                    className="transition-all duration-200 ease-in-out"
+                    style={{
+                      maxHeight: isExpanded ? "1000px" : "0px",
+                      opacity: isExpanded ? 1 : 0,
+                      overflow: "hidden",
+                    }}
+                  >
+                    <div className="px-5 pb-4 pt-2">
+                      {cat.subcategories.length === 0 && addingSubTo !== cat.id && (
+                        <p className="py-3 text-center text-[12px]" style={{ color: "#A8C4B4" }}>No subcategories yet. Add one below.</p>
+                      )}
+
+                      <div className="space-y-1">
+                        {cat.subcategories.map((sub) => (
+                          <div
+                            key={sub}
+                            className="flex items-center gap-3 rounded-xl px-4 py-2.5 transition-all duration-150"
+                            style={{ backgroundColor: "rgba(200,230,208,0.04)" }}
+                            onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = "rgba(200,230,208,0.10)"; }}
+                            onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = "rgba(200,230,208,0.04)"; }}
+                          >
+                            {editingSub?.catId === cat.id && editingSub?.oldName === sub ? (
+                              <div className="flex flex-1 items-center gap-2">
+                                <input
+                                  type="text"
+                                  value={editingSubName}
+                                  onChange={(e) => setEditingSubName(e.target.value)}
+                                  onKeyDown={(e) => { if (e.key === "Enter") handleSaveSubName(); if (e.key === "Escape") setEditingSub(null); }}
+                                  autoFocus
+                                  className="auth-input flex-1 rounded-lg px-3 py-1 text-[13px]"
+                                  style={inputStyle}
+                                />
+                                <button onClick={handleSaveSubName} className="cursor-pointer rounded-lg px-2.5 py-1 text-[11px] font-semibold transition-all duration-150 hover:brightness-90" style={{ backgroundColor: "rgba(168,213,186,0.15)", color: "#4E9B78", border: "1px solid rgba(168,213,186,0.3)" }}>Save</button>
+                                <button onClick={() => setEditingSub(null)} className="cursor-pointer text-[11px] font-semibold transition-all duration-150 hover:opacity-70" style={{ color: "#6B9E85" }}>Cancel</button>
+                              </div>
+                            ) : (
+                              <>
+                                <div className="h-1.5 w-1.5 flex-shrink-0 rounded-full" style={{ backgroundColor: "#B8D8C4" }} />
+                                <span className="flex-1 text-[13px] font-medium" style={{ color: "#1A3D2B" }}>{sub}</span>
+                                <button
+                                  onClick={() => { setEditingSub({ catId: cat.id, oldName: sub }); setEditingSubName(sub); }}
+                                  className="cursor-pointer rounded-lg p-1.5 transition-all duration-150 hover:bg-[rgba(168,213,186,0.15)]"
+                                  style={{ color: "#4E9B78" }}
+                                  title="Rename"
+                                >
+                                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M17 3a2.83 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z" /></svg>
+                                </button>
+                                <button
+                                  onClick={() => setDeletingItem({ type: "subcategory", catId: cat.id, name: sub })}
+                                  className="cursor-pointer rounded-lg p-1.5 transition-all duration-150 hover:bg-[rgba(254,242,242,0.5)]"
+                                  style={{ color: "#C46050" }}
+                                  title="Remove"
+                                >
+                                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 6h18" /><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6" /><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" /></svg>
+                                </button>
+                              </>
+                            )}
+                          </div>
+                        ))}
+                      </div>
+
+                      {/* Add subcategory */}
+                      {addingSubTo === cat.id ? (
+                        <div className="mt-2 flex items-center gap-2">
                           <input
                             type="text"
-                            value={editingSubName}
-                            onChange={(e) => setEditingSubName(e.target.value)}
-                            onKeyDown={(e) => { if (e.key === "Enter") handleSaveSubName(); if (e.key === "Escape") setEditingSub(null); }}
+                            value={newSubName}
+                            onChange={(e) => setNewSubName(e.target.value)}
+                            onKeyDown={(e) => { if (e.key === "Enter") handleAddSub(cat.id); if (e.key === "Escape") { setAddingSubTo(null); setNewSubName(""); } }}
                             autoFocus
-                            className="auth-input flex-1 rounded-lg px-3 py-1 text-[13px]"
+                            placeholder="Subcategory name..."
+                            className="auth-input flex-1 rounded-lg px-3 py-1.5 text-[13px]"
                             style={inputStyle}
                           />
-                          <button onClick={handleSaveSubName} className="text-[11px] font-semibold" style={{ color: "#4E9B78" }}>Save</button>
-                          <button onClick={() => setEditingSub(null)} className="text-[11px] font-semibold" style={{ color: "#6B9E85" }}>Cancel</button>
+                          <button
+                            onClick={() => handleAddSub(cat.id)}
+                            disabled={!newSubName.trim()}
+                            className="cursor-pointer rounded-lg px-3 py-1.5 text-[12px] font-semibold transition-all duration-150 hover:brightness-90"
+                            style={{ backgroundColor: "rgba(168,213,186,0.15)", color: "#4E9B78", border: "1px solid rgba(168,213,186,0.3)", opacity: newSubName.trim() ? 1 : 0.5 }}
+                          >
+                            Add
+                          </button>
+                          <button onClick={() => { setAddingSubTo(null); setNewSubName(""); }} className="cursor-pointer text-[12px] font-semibold transition-all duration-150 hover:opacity-70" style={{ color: "#6B9E85" }}>Cancel</button>
                         </div>
                       ) : (
-                        <>
-                          <span className="flex-1 text-[13px]" style={{ color: "#1A3D2B" }}>{sub}</span>
-                          <div className="flex items-center gap-1.5 opacity-0 transition-opacity group-hover:opacity-100">
-                            <button
-                              onClick={() => { setEditingSub({ catId: cat.id, oldName: sub }); setEditingSubName(sub); }}
-                              className="text-[11px] font-semibold" style={{ color: "#4E9B78" }}
-                            >
-                              Rename
-                            </button>
-                            <button
-                              onClick={() => setDeletingItem({ type: "subcategory", catId: cat.id, name: sub })}
-                              className="text-[11px] font-semibold" style={{ color: "#C46050" }}
-                            >
-                              Remove
-                            </button>
-                          </div>
-                        </>
+                        <button
+                          onClick={() => { setAddingSubTo(cat.id); setNewSubName(""); }}
+                          className="mt-2 flex w-full cursor-pointer items-center justify-center gap-1.5 rounded-xl py-2.5 text-[12px] font-semibold transition-all duration-200"
+                          style={{ color: "#5EA88A", backgroundColor: "rgba(94,168,138,0.04)", border: "1px dashed rgba(94,168,138,0.25)" }}
+                          onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = "rgba(94,168,138,0.10)"; }}
+                          onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = "rgba(94,168,138,0.04)"; }}
+                        >
+                          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><line x1="12" y1="5" x2="12" y2="19" /><line x1="5" y1="12" x2="19" y2="12" /></svg>
+                          Add subcategory
+                        </button>
                       )}
                     </div>
-                  ))}
-
-                  {/* Add subcategory inline */}
-                  {addingSubTo === cat.id ? (
-                    <div className="flex items-center gap-2 pt-1">
-                      <input
-                        type="text"
-                        value={newSubName}
-                        onChange={(e) => setNewSubName(e.target.value)}
-                        onKeyDown={(e) => { if (e.key === "Enter") handleAddSub(cat.id); if (e.key === "Escape") { setAddingSubTo(null); setNewSubName(""); } }}
-                        autoFocus
-                        placeholder="Subcategory name..."
-                        className="auth-input flex-1 rounded-lg px-3 py-1.5 text-[13px]"
-                        style={inputStyle}
-                      />
-                      <button
-                        onClick={() => handleAddSub(cat.id)}
-                        disabled={!newSubName.trim()}
-                        className="rounded-lg px-3 py-1.5 text-[12px] font-semibold"
-                        style={{ backgroundColor: "rgba(168,213,186,0.15)", color: "#4E9B78", border: "1px solid rgba(168,213,186,0.3)", opacity: newSubName.trim() ? 1 : 0.5 }}
-                      >
-                        Add
-                      </button>
-                      <button onClick={() => { setAddingSubTo(null); setNewSubName(""); }} className="text-[12px] font-semibold" style={{ color: "#6B9E85" }}>Cancel</button>
-                    </div>
-                  ) : (
-                    <button
-                      onClick={() => { setAddingSubTo(cat.id); setNewSubName(""); }}
-                      className="mt-1 flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-[12px] font-semibold transition-all"
-                      style={{ color: "#5EA88A", backgroundColor: "rgba(94,168,138,0.06)", border: "1px dashed rgba(94,168,138,0.25)" }}
-                    >
-                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><line x1="12" y1="5" x2="12" y2="19" /><line x1="5" y1="12" x2="19" y2="12" /></svg>
-                      Add subcategory
-                    </button>
-                  )}
+                  </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         )}
       </div>
