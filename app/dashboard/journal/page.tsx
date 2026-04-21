@@ -9,7 +9,28 @@ import {
   updateJournalEntry,
   deleteJournalEntry,
   JournalEntry,
+  JournalMoodData,
 } from "@/src/services/journalService";
+
+/* ── Mood list (matches MoodTracker) ── */
+
+const MOODS = [
+  { name: "happy",       color: "#D4A017" },
+  { name: "calm",        color: "#5EA88A" },
+  { name: "relaxed",     color: "#9B8EC4" },
+  { name: "grateful",    color: "#D4789A" },
+  { name: "motivated",   color: "#2E9E6A" },
+  { name: "sad",         color: "#5B8DB8" },
+  { name: "anxious",     color: "#CC8C35" },
+  { name: "stressed",    color: "#C46050" },
+  { name: "angry",       color: "#C04848" },
+  { name: "lonely",      color: "#8A6AAE" },
+  { name: "overwhelmed", color: "#4A8A8A" },
+  { name: "tired",       color: "#708898" },
+  { name: "insecure",    color: "#A87890" },
+  { name: "frustrated",  color: "#B87A3E" },
+  { name: "bored",       color: "#7A946A" },
+];
 
 /* ── Date helpers ── */
 
@@ -48,7 +69,119 @@ function groupEntries(entries: JournalEntry[]): { label: string; entries: Journa
   return groups;
 }
 
-/* ── Nature background ── */
+/* ── Mood selector ── */
+
+function MoodSelector({
+  selected,
+  onChange,
+}: {
+  selected: string | null;
+  onChange: (name: string | null) => void;
+}) {
+  const [open, setOpen] = useState(false);
+  const current = MOODS.find((m) => m.name === selected);
+
+  return (
+    <div className="relative">
+      <button
+        type="button"
+        onClick={() => setOpen((v) => !v)}
+        className="flex items-center gap-2 rounded-xl px-3.5 py-2 text-[12px] font-semibold transition-all duration-150 hover:brightness-95"
+        style={{
+          backgroundColor: selected
+            ? current!.color + "18"
+            : "rgba(200,230,208,0.10)",
+          border: `1.5px solid ${selected ? current!.color + "40" : "rgba(200,230,208,0.4)"}`,
+          color: selected ? current!.color : "#8DBFA5",
+        }}
+      >
+        {selected ? (
+          <>
+            <span
+              className="inline-block h-2.5 w-2.5 rounded-full"
+              style={{ backgroundColor: current!.color }}
+            />
+            <span className="capitalize">{selected}</span>
+          </>
+        ) : (
+          <>
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <circle cx="12" cy="12" r="10" />
+              <path d="M8 14s1.5 2 4 2 4-2 4-2" />
+              <line x1="9" y1="9" x2="9.01" y2="9" />
+              <line x1="15" y1="9" x2="15.01" y2="9" />
+            </svg>
+            Add mood
+          </>
+        )}
+      </button>
+
+      {open && (
+        <div
+          className="absolute bottom-full left-0 z-30 mb-2 rounded-2xl p-3"
+          style={{
+            background: "linear-gradient(145deg, #FFFFFF 0%, #F2FAF5 100%)",
+            border: "1px solid rgba(200,230,208,0.5)",
+            boxShadow: "0 8px 24px rgba(45,106,79,0.10)",
+            width: 280,
+          }}
+        >
+          <div className="mb-2 flex items-center justify-between">
+            <p className="text-[11px] font-bold uppercase tracking-wider" style={{ color: "#8DBFA5" }}>
+              How are you feeling?
+            </p>
+            {selected && (
+              <button
+                type="button"
+                onClick={() => { onChange(null); setOpen(false); }}
+                className="text-[10px] font-semibold transition-opacity hover:opacity-70"
+                style={{ color: "#C46050" }}
+              >
+                Remove
+              </button>
+            )}
+          </div>
+          <div className="grid grid-cols-5 gap-1.5">
+            {MOODS.map((m) => (
+              <button
+                key={m.name}
+                type="button"
+                onClick={() => { onChange(m.name); setOpen(false); }}
+                className="flex flex-col items-center gap-1 rounded-xl py-2 text-[9px] font-semibold capitalize transition-all duration-150 hover:scale-105"
+                style={{
+                  backgroundColor:
+                    selected === m.name ? m.color + "20" : "rgba(200,230,208,0.06)",
+                  border: `1px solid ${selected === m.name ? m.color + "50" : "rgba(200,230,208,0.25)"}`,
+                  color: selected === m.name ? m.color : "#8DBFA5",
+                }}
+              >
+                <span
+                  className="inline-block h-3 w-3 rounded-full"
+                  style={{ backgroundColor: m.color }}
+                />
+                {m.name}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+/* ── Mood badge (for past entries) ── */
+
+function MoodBadge({ label, color }: { label: string; color: string }) {
+  return (
+    <span
+      className="inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-[10px] font-semibold capitalize"
+      style={{ backgroundColor: color + "18", color }}
+    >
+      <span className="inline-block h-1.5 w-1.5 rounded-full" style={{ backgroundColor: color }} />
+      {label}
+    </span>
+  );
+}
 
 /* ── Page content ── */
 
@@ -57,6 +190,7 @@ function JournalContent() {
 
   const [entries, setEntries] = useState<JournalEntry[]>([]);
   const [content, setContent] = useState("");
+  const [selectedMood, setSelectedMood] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
@@ -80,17 +214,28 @@ function JournalContent() {
 
   useEffect(() => { fetchEntries(); }, [fetchEntries]);
 
+  function buildMoodData(): JournalMoodData | undefined {
+    if (!selectedMood) return undefined;
+    const m = MOODS.find((x) => x.name === selectedMood);
+    if (!m) return undefined;
+    return { moodLabel: m.name, moodColor: m.color };
+  }
+
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (!content.trim() || !user) return;
     setSubmitting(true);
     try {
       if (editingId) {
-        await updateJournalEntry(editingId, content.trim());
+        const mood = selectedMood
+          ? buildMoodData()
+          : null; // null = explicitly clear mood
+        await updateJournalEntry(editingId, content.trim(), mood ?? null);
       } else {
-        await addJournalEntry(user.uid, content.trim());
+        await addJournalEntry(user.uid, content.trim(), buildMoodData());
       }
       setContent("");
+      setSelectedMood(null);
       setEditingId(null);
       await fetchEntries();
     } catch (err) {
@@ -102,12 +247,14 @@ function JournalContent() {
 
   function handleEdit(entry: JournalEntry) {
     setContent(entry.content);
+    setSelectedMood(entry.moodLabel ?? null);
     setEditingId(entry.id);
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
   function handleCancelEdit() {
     setContent("");
+    setSelectedMood(null);
     setEditingId(null);
   }
 
@@ -196,7 +343,13 @@ function JournalContent() {
               }}
             />
 
-            {/* Word count + actions */}
+            {/* Mood selector row */}
+            <div className="mt-3 flex items-center gap-2">
+              <MoodSelector selected={selectedMood} onChange={setSelectedMood} />
+              <span className="text-[11px]" style={{ color: "#A8C4B4" }}>optional</span>
+            </div>
+
+            {/* Actions row */}
             <div className="mt-4 flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <button
@@ -309,7 +462,12 @@ function JournalContent() {
                             <p className="whitespace-pre-wrap text-sm leading-relaxed" style={{ color: "#1A3D2B" }}>
                               {entry.content}
                             </p>
-                            <p className="mt-2 text-[11px]" style={{ color: "#8DBFA5" }}>{formatTime(entry.createdAt)}</p>
+                            <div className="mt-2 flex flex-wrap items-center gap-2">
+                              <p className="text-[11px]" style={{ color: "#8DBFA5" }}>{formatTime(entry.createdAt)}</p>
+                              {entry.moodLabel && entry.moodColor && (
+                                <MoodBadge label={entry.moodLabel} color={entry.moodColor} />
+                              )}
+                            </div>
                           </div>
                           <div className="flex flex-shrink-0 items-center gap-1 opacity-40 transition-opacity group-hover:opacity-100">
                             <button onClick={() => handleEdit(entry)} className="rounded-lg p-2 transition-all hover:bg-white/60 hover:scale-110 active:scale-95" aria-label="Edit entry">

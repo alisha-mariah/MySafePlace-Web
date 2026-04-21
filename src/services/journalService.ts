@@ -19,6 +19,13 @@ export interface JournalEntry {
   content: string;
   createdAt: Date;
   updatedAt: Date;
+  moodLabel?: string;
+  moodColor?: string;
+}
+
+export interface JournalMoodData {
+  moodLabel: string;
+  moodColor: string;
 }
 
 const COLLECTION = "journalEntries";
@@ -26,11 +33,13 @@ const COLLECTION = "journalEntries";
 // ── Create ─────────────────────────────────────────────
 export async function addJournalEntry(
   userId: string,
-  content: string
+  content: string,
+  mood?: JournalMoodData
 ): Promise<string> {
   const docRef = await addDoc(collection(db, COLLECTION), {
     userId,
     content,
+    ...(mood ? { moodLabel: mood.moodLabel, moodColor: mood.moodColor } : {}),
     createdAt: serverTimestamp(),
     updatedAt: serverTimestamp(),
   });
@@ -54,6 +63,8 @@ export async function getJournalEntries(userId: string): Promise<JournalEntry[]>
       content: data.content ?? "",
       createdAt: (data.createdAt as Timestamp)?.toDate() ?? new Date(),
       updatedAt: (data.updatedAt as Timestamp)?.toDate() ?? new Date(),
+      moodLabel: data.moodLabel ?? undefined,
+      moodColor: data.moodColor ?? undefined,
     };
   });
 
@@ -63,10 +74,17 @@ export async function getJournalEntries(userId: string): Promise<JournalEntry[]>
 // ── Update ─────────────────────────────────────────────
 export async function updateJournalEntry(
   entryId: string,
-  content: string
+  content: string,
+  mood?: JournalMoodData | null
 ): Promise<void> {
   await updateDoc(doc(db, COLLECTION, entryId), {
     content,
+    // null clears the mood; undefined means "don't touch it"
+    ...(mood === null
+      ? { moodLabel: null, moodColor: null }
+      : mood
+      ? { moodLabel: mood.moodLabel, moodColor: mood.moodColor }
+      : {}),
     updatedAt: serverTimestamp(),
   });
 }
