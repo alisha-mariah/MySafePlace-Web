@@ -14,16 +14,22 @@ import { Category, getCategories, syncCategoriesFromResources } from "@/src/serv
 import ResourceForm from "@/src/components/admin/ResourceForm";
 import ResourceList from "@/src/components/admin/ResourceList";
 import AdminMessage from "@/src/components/admin/AdminMessage";
-import ConfirmDeleteModal from "@/src/components/admin/ConfirmDeleteModal";
+import ConfirmDeleteModal from "@/src/components/ui/ConfirmDeleteModal";
 
 type Msg = { text: string; type: "success" | "error" };
 
-const selectClass = "rounded-lg px-3 py-2 text-[12px] font-semibold appearance-none transition-all";
-const selectStyle = {
+const selectClass = "auth-input cursor-pointer rounded-lg pl-3 pr-8 py-2 text-[12px] font-semibold appearance-none";
+const selectStyle: React.CSSProperties = {
   backgroundColor: "rgba(255,255,255,0.7)",
   border: "1.5px solid rgba(200,230,208,0.5)",
   color: "#1A3D2B",
   backdropFilter: "blur(8px)",
+  minHeight: 0,
+  backgroundImage:
+    "url(\"data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236B9E85' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3e%3cpath d='M6 9l6 6 6-6'/%3e%3c/svg%3e\")",
+  backgroundRepeat: "no-repeat",
+  backgroundPosition: "right 0.6rem center",
+  backgroundSize: "12px",
 };
 
 export default function AdminResourcesPage() {
@@ -155,7 +161,7 @@ export default function AdminResourcesPage() {
     <div className="relative min-h-screen">
       {/* Header */}
       <header className="relative z-10 mx-auto max-w-5xl px-6 pt-8 pb-2">
-        <Link href="/admin" className="mb-5 inline-flex items-center gap-1.5 rounded-full px-3.5 py-2 text-xs font-medium transition-all" style={{ color: "#6B9E85", backgroundColor: "rgba(255,255,255,0.7)", border: "1px solid rgba(200,230,208,0.5)", backdropFilter: "blur(8px)" }}>
+        <Link href="/admin" className="pill-btn mb-5 inline-flex items-center gap-1.5 rounded-full px-3.5 py-2 text-xs font-medium" style={{ color: "#6B9E85", backgroundColor: "rgba(255,255,255,0.7)", border: "1px solid rgba(200,230,208,0.5)", backdropFilter: "blur(8px)" }}>
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M15 18l-6-6 6-6" /></svg>
           Admin Panel
         </Link>
@@ -173,7 +179,7 @@ export default function AdminResourcesPage() {
                 </p>
               </div>
             </div>
-            <button onClick={handleAdd} className="nature-btn flex items-center gap-2 rounded-xl px-5 py-2.5 text-[13px] font-bold text-white" style={{ background: "linear-gradient(135deg, #5EA88A 0%, #4A9874 100%)", boxShadow: "0 4px 14px rgba(93,168,138,0.25)" }}>
+            <button onClick={handleAdd} className="nature-btn flex items-center gap-2 rounded-xl px-5 py-2.5 text-[13px] font-bold text-white" style={{ background: "linear-gradient(135deg, #3D8B6A 0%, #2D6A4F 100%)", boxShadow: "0 4px 14px rgba(45,106,79,0.28)" }}>
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><line x1="12" y1="5" x2="12" y2="19" /><line x1="5" y1="12" x2="19" y2="12" /></svg>
               Add Resource
             </button>
@@ -197,8 +203,8 @@ export default function AdminResourcesPage() {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search resources by title..."
-              className="w-full rounded-xl py-2.5 pl-10 pr-4 text-[13px] transition-all"
-              style={{ backgroundColor: "rgba(255,255,255,0.8)", border: "1.5px solid rgba(200,230,208,0.5)", color: "#1A3D2B", outline: "none" }}
+              className="auth-input w-full rounded-xl py-2.5 pl-10 pr-4 text-[13px]"
+              style={{ backgroundColor: "rgba(255,255,255,0.8)", border: "1.5px solid rgba(200,230,208,0.5)", color: "#1A3D2B", outline: "none", minHeight: 0 }}
             />
           </div>
         </div>

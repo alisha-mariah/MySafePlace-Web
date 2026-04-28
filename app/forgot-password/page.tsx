@@ -122,7 +122,7 @@ export default function ForgotPasswordPage() {
               <span className="font-semibold" style={{ color: "#2D6A4F" }}>{email}</span>.
               Check your spam folder if you don&apos;t see it.
             </p>
-            <Link href="/login" className="nature-btn mt-2 inline-block rounded-lg px-6 py-2.5 text-sm font-semibold text-white" style={{ background: "linear-gradient(135deg, #7DB892 0%, #5EA88A 50%, #4A9474 100%)" }}>
+            <Link href="/login" className="nature-btn mt-2 inline-block rounded-lg px-6 py-2.5 text-sm font-semibold text-white" style={{ background: "linear-gradient(135deg, #4A9B7A 0%, #3D8B6A 50%, #2D6A4F 100%)" }}>
               Back to sign in
             </Link>
           </div>
@@ -147,7 +147,7 @@ export default function ForgotPasswordPage() {
                 </div>
               )}
 
-              <button type="submit" disabled={loading} className="nature-btn w-full rounded-lg px-4 py-3 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:opacity-60" style={{ background: "linear-gradient(135deg, #7DB892 0%, #5EA88A 50%, #4A9474 100%)", boxShadow: "0 4px 14px rgba(93,168,138,0.25)" }}>
+              <button type="submit" disabled={loading} className="nature-btn w-full rounded-lg px-4 py-3 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:opacity-60" style={{ background: "linear-gradient(135deg, #4A9B7A 0%, #3D8B6A 50%, #2D6A4F 100%)", boxShadow: "0 4px 14px rgba(45,106,79,0.28)" }}>
                 {loading ? "Sending..." : "Send reset link"}
               </button>
             </form>

@@ -72,47 +72,22 @@ export default function MoodTracker() {
   const [selectedMood, setSelectedMood] = useState<string | null>(null);
   const [note, setNote] = useState("");
   const [submitting, setSubmitting] = useState(false);
-  const [saved, setSaved] = useState(false);
+  const [savedMsg, setSavedMsg] = useState<string | null>(null);
 
   async function handleSave() {
     if (!selectedMood || !user) return;
     setSubmitting(true);
     try {
       await addMoodEntry(user.uid, selectedMood, note);
-      setSaved(true);
       setSelectedMood(null);
       setNote("");
+      setSavedMsg("Check-in saved!");
+      setTimeout(() => setSavedMsg(null), 2500);
     } catch (err) {
       console.error("Failed to save mood:", err);
     } finally {
       setSubmitting(false);
     }
-  }
-
-  if (saved) {
-    return (
-      <div
-        className="rounded-2xl border p-6 text-center"
-        style={{
-          backgroundColor: "white",
-          borderColor: "rgba(200,230,208,0.5)",
-          boxShadow: "0 1px 4px rgba(45,106,79,0.04)",
-        }}
-      >
-        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#4A9474" strokeWidth="2" strokeLinecap="round" className="mx-auto mb-3">
-          <path d="M20 6L9 17l-5-5" />
-        </svg>
-        <p className="text-[15px] font-semibold" style={{ color: "#1A3D2B" }}>Check-in saved!</p>
-        <p className="mt-1 text-[13px]" style={{ color: "#6B9E85" }}>Thanks for checking in today.</p>
-        <button
-          onClick={() => setSaved(false)}
-          className="mt-4 text-[12px] font-medium underline"
-          style={{ color: "#8DBFA5" }}
-        >
-          Log another
-        </button>
-      </div>
-    );
   }
 
   return (
@@ -168,18 +143,28 @@ export default function MoodTracker() {
         />
       </div>
 
-      {/* Save */}
-      <button
-        onClick={handleSave}
-        disabled={!selectedMood || submitting}
-        className="cta-glow nature-btn mt-4 flex items-center justify-center gap-2 rounded-xl px-6 py-3 text-[13px] font-bold text-white disabled:cursor-not-allowed disabled:opacity-50"
-        style={{
-          background: "linear-gradient(135deg, #6DC09A 0%, #5EA88A 40%, #4A9474 100%)",
-          boxShadow: "0 4px 14px rgba(93,168,138,0.25)",
-        }}
-      >
-        {submitting ? "Saving..." : "Save check-in"}
-      </button>
+      {/* Save + confirmation */}
+      <div className="mt-4 flex items-center gap-3">
+        <button
+          onClick={handleSave}
+          disabled={!selectedMood || submitting}
+          className="cta-glow nature-btn flex items-center justify-center gap-2 rounded-xl px-6 py-3 text-[13px] font-bold text-white disabled:cursor-not-allowed disabled:opacity-50"
+          style={{
+            background: "linear-gradient(135deg, #4A9B7A 0%, #3D8B6A 40%, #2D6A4F 100%)",
+            boxShadow: "0 4px 14px rgba(45,106,79,0.28)",
+          }}
+        >
+          {submitting ? "Saving..." : "Save check-in"}
+        </button>
+        {savedMsg && (
+          <span className="animate-fade-in-up flex items-center gap-1.5 text-[13px] font-semibold" style={{ color: "#4A9474" }}>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
+              <path d="M20 6L9 17l-5-5" />
+            </svg>
+            {savedMsg}
+          </span>
+        )}
+      </div>
     </div>
   );
 }

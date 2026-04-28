@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
+import Link from "next/link";
 import ProtectedRoute from "@/src/components/ProtectedRoute";
 import { useAuth } from "@/src/context/AuthContext";
 import EmergencyPrimaryCard from "@/src/components/EmergencyPrimaryCard";
@@ -163,6 +164,14 @@ function EmergencyContent() {
     <div className="relative min-h-screen">
       {/* Header */}
       <header className="mx-auto max-w-5xl px-6 pt-8 pb-2">
+        <Link
+          href="/dashboard"
+          className="pill-btn mb-5 inline-flex items-center gap-1.5 rounded-full px-3.5 py-2 text-xs font-medium"
+          style={{ color: "#6B9E85", backgroundColor: "rgba(255,255,255,0.7)", border: "1px solid rgba(200,230,208,0.5)", backdropFilter: "blur(8px)" }}
+        >
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M15 18l-6-6 6-6" /></svg>
+          Homepage
+        </Link>
         <div
           className="card-drop rounded-2xl border p-6"
           style={{ backgroundColor: "white", borderColor: "rgba(200,230,208,0.5)", boxShadow: "0 1px 4px rgba(45,106,79,0.04)" }}
@@ -263,7 +272,7 @@ function EmergencyContent() {
                     onClick={handleSave}
                     disabled={!firstName.trim() || !lastName.trim() || !phone.trim() || saving}
                     className="rounded-lg px-4 py-2 text-[12px] font-bold text-white disabled:opacity-50"
-                    style={{ background: "linear-gradient(135deg, #6DC09A 0%, #4A9474 100%)" }}
+                    style={{ background: "linear-gradient(135deg, #4A9B7A 0%, #3D8B6A 50%, #2D6A4F 100%)" }}
                   >
                     {saving ? "Saving..." : editingId ? "Save changes" : "Add contact"}
                   </button>

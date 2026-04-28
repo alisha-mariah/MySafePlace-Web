@@ -13,7 +13,7 @@ import {
 } from "@/src/services/adminCrisisContactService";
 import CrisisContactForm from "@/src/components/admin/CrisisContactForm";
 import AdminMessage from "@/src/components/admin/AdminMessage";
-import ConfirmDeleteModal from "@/src/components/admin/ConfirmDeleteModal";
+import ConfirmDeleteModal from "@/src/components/ui/ConfirmDeleteModal";
 
 type Msg = { text: string; type: "success" | "error" };
 
@@ -96,7 +96,7 @@ export default function AdminCrisisContactsPage() {
       <header className="relative z-10 mx-auto max-w-5xl px-6 pt-8 pb-2">
         <Link
           href="/admin"
-          className="mb-5 inline-flex items-center gap-1.5 rounded-full px-3.5 py-2 text-xs font-medium transition-all"
+          className="pill-btn mb-5 inline-flex items-center gap-1.5 rounded-full px-3.5 py-2 text-xs font-medium"
           style={{ color: "#6B9E85", backgroundColor: "rgba(255,255,255,0.7)", border: "1px solid rgba(200,230,208,0.5)", backdropFilter: "blur(8px)" }}
         >
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M15 18l-6-6 6-6" /></svg>
@@ -122,7 +122,7 @@ export default function AdminCrisisContactsPage() {
             <button
               onClick={() => { setEditing(null); setFormOpen(true); }}
               className="nature-btn flex items-center gap-2 rounded-xl px-5 py-2.5 text-[13px] font-bold text-white"
-              style={{ background: "linear-gradient(135deg, #5EA88A 0%, #4A9874 100%)", boxShadow: "0 4px 14px rgba(93,168,138,0.25)" }}
+              style={{ background: "linear-gradient(135deg, #3D8B6A 0%, #2D6A4F 100%)", boxShadow: "0 4px 14px rgba(45,106,79,0.28)" }}
             >
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><line x1="12" y1="5" x2="12" y2="19" /><line x1="5" y1="12" x2="19" y2="12" /></svg>
               Add Contact
@@ -142,7 +142,7 @@ export default function AdminCrisisContactsPage() {
           <div className="mb-4">
             <button
               onClick={() => setShowPreview(!showPreview)}
-              className="inline-flex items-center gap-2 rounded-lg px-3.5 py-2 text-[12px] font-semibold transition-all"
+              className="inline-flex cursor-pointer items-center gap-2 rounded-lg px-3.5 py-2 text-[12px] font-semibold transition-all duration-150 hover:-translate-y-0.5 hover:border-[rgba(125,184,146,0.6)] hover:bg-white hover:text-[#2D6A4F] hover:shadow-[0_4px_12px_rgba(45,106,79,0.12)]"
               style={{ color: "#6B9E85", backgroundColor: "rgba(255,255,255,0.7)", border: "1.5px solid rgba(200,230,208,0.4)" }}
             >
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -177,7 +177,7 @@ export default function AdminCrisisContactsPage() {
                 <div className="mt-2 flex flex-wrap gap-2">
                   {primaryContact.phone && <span className="rounded-lg px-2.5 py-1 text-[11px] font-semibold" style={{ backgroundColor: "rgba(94,172,134,0.08)", color: "#2D6A4F" }}>Call {primaryContact.phone}</span>}
                   {primaryContact.sms && <span className="rounded-lg px-2.5 py-1 text-[11px] font-semibold" style={{ backgroundColor: "rgba(242,196,206,0.12)", color: "#A8607A" }}>Text {primaryContact.sms}</span>}
-                  {primaryContact.chatUrl && <span className="rounded-lg px-2.5 py-1 text-[11px] font-semibold text-white" style={{ background: "linear-gradient(135deg, #6DC09A 0%, #4A9474 100%)" }}>Chat</span>}
+                  {primaryContact.chatUrl && <span className="rounded-lg px-2.5 py-1 text-[11px] font-semibold text-white" style={{ background: "linear-gradient(135deg, #4A9B7A 0%, #3D8B6A 50%, #2D6A4F 100%)" }}>Chat</span>}
                 </div>
               </div>
             )}
@@ -322,14 +322,14 @@ export default function AdminCrisisContactsPage() {
                     <div className="flex items-center gap-1.5">
                       <button
                         onClick={() => { setEditing(c); setFormOpen(true); }}
-                        className="rounded-lg px-3 py-1.5 text-[12px] font-semibold transition-all"
+                        className="cursor-pointer rounded-lg px-3 py-1.5 text-[12px] font-semibold transition-all duration-150 hover:-translate-y-0.5 hover:bg-[rgba(168,213,186,0.30)] hover:text-[#2D6A4F] hover:shadow-[0_4px_10px_rgba(45,106,79,0.15)]"
                         style={{ backgroundColor: "rgba(168,213,186,0.15)", color: "#4E9B78", border: "1px solid rgba(168,213,186,0.3)" }}
                       >
                         Edit
                       </button>
                       <button
                         onClick={() => setDeletingContact(c)}
-                        className="rounded-lg px-3 py-1.5 text-[12px] font-semibold transition-all"
+                        className="cursor-pointer rounded-lg px-3 py-1.5 text-[12px] font-semibold transition-all duration-150 hover:-translate-y-0.5 hover:bg-[rgba(254,226,226,0.9)] hover:text-[#A83A2A] hover:shadow-[0_4px_10px_rgba(196,96,80,0.18)]"
                         style={{ backgroundColor: "rgba(254,242,242,0.6)", color: "#C46050", border: "1px solid rgba(252,202,202,0.5)" }}
                       >
                         Delete

@@ -1,9 +1,9 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef, Suspense } from "react";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import { getResources, getYouTubeId, Resource } from "@/src/services/resourceService";
-
 
 /* ── Category filter pills ── */
 
@@ -11,7 +11,7 @@ function CategoryPill({ label, active, onClick }: { label: string; active: boole
   return (
     <button
       onClick={onClick}
-      className="rounded-full px-4 py-2 text-[13px] font-semibold transition-all"
+      className="rounded-full px-4 py-2 text-[13px] font-semibold transition-all cursor-pointer hover:brightness-95"
       style={{
         backgroundColor: active ? "rgba(82,171,132,0.15)" : "rgba(255,255,255,0.7)",
         border: `1.5px solid ${active ? "#52AB84" : "rgba(200,230,208,0.5)"}`,
@@ -26,18 +26,32 @@ function CategoryPill({ label, active, onClick }: { label: string; active: boole
 
 /* ── Video card ── */
 
-function ResourceCard({ resource }: { resource: Resource }) {
+function ResourceCard({ resource, autoPlay }: { resource: Resource; autoPlay?: boolean }) {
   const [playing, setPlaying] = useState(false);
+  const cardRef = useRef<HTMLDivElement>(null);
   const videoId = getYouTubeId(resource.url);
   const thumbnail = videoId ? `https://img.youtube.com/vi/${videoId}/mqdefault.jpg` : null;
 
+  // Auto-play + scroll into view when highlighted from search
+  useEffect(() => {
+    if (autoPlay && videoId) {
+      setPlaying(true);
+      setTimeout(() => {
+        cardRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
+      }, 300);
+    }
+  }, [autoPlay, videoId]);
+
   return (
     <div
+      ref={cardRef}
       className="nature-card group overflow-hidden rounded-2xl"
       style={{
         background: "linear-gradient(145deg, #FFFFFF 0%, #F2FAF5 100%)",
-        border: "1px solid #D4EDDC",
-        boxShadow: "0 2px 8px rgba(45,106,79,0.07)",
+        border: autoPlay ? "2px solid rgba(82,171,132,0.5)" : "1px solid #D4EDDC",
+        boxShadow: autoPlay
+          ? "0 4px 20px rgba(45,106,79,0.12)"
+          : "0 2px 8px rgba(45,106,79,0.07)",
       }}
     >
       {/* Video / Thumbnail area */}
@@ -53,7 +67,7 @@ function ResourceCard({ resource }: { resource: Resource }) {
         ) : thumbnail ? (
           <button
             onClick={() => setPlaying(true)}
-            className="group/play relative block h-full w-full"
+            className="group/play relative block h-full w-full cursor-pointer"
             aria-label={`Play ${resource.title}`}
           >
             <img
@@ -125,6 +139,9 @@ function ResourceCard({ resource }: { resource: Resource }) {
 /* ── Page content ── */
 
 function ResourcesContent() {
+  const searchParams = useSearchParams();
+  const autoPlayId = searchParams.get("play") ?? null;
+
   const [resources, setResources] = useState<Resource[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -145,6 +162,11 @@ function ResourcesContent() {
 
   useEffect(() => { fetchResources(); }, [fetchResources]);
 
+  // When coming from search, show all categories so the resource is visible
+  useEffect(() => {
+    if (autoPlayId) setActiveCategory("All");
+  }, [autoPlayId]);
+
   const categories = ["All", ...Array.from(new Set(resources.map((r) => r.category).filter(Boolean)))];
   const filtered = activeCategory === "All" ? resources : resources.filter((r) => r.category === activeCategory);
   const featuredResources = filtered.filter((r) => r.featured);
@@ -156,7 +178,7 @@ function ResourcesContent() {
       <header className="relative z-10 mx-auto max-w-5xl px-6 pt-8 pb-2">
         <Link
           href="/dashboard"
-          className="mb-5 inline-flex items-center gap-1.5 rounded-full px-3.5 py-2 text-xs font-medium transition-all"
+          className="pill-btn mb-5 inline-flex items-center gap-1.5 rounded-full px-3.5 py-2 text-xs font-medium"
           style={{
             color: "#6B9E85",
             backgroundColor: "rgba(255,255,255,0.7)",
@@ -167,7 +189,7 @@ function ResourcesContent() {
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
             <path d="M15 18l-6-6 6-6" />
           </svg>
-          Dashboard
+          Homepage
         </Link>
 
         <div
@@ -254,7 +276,6 @@ function ResourcesContent() {
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
               {featuredResources.map((resource) => (
                 <div key={resource.id} className="relative">
-                  {/* Gold star badge */}
                   <div
                     className="absolute right-3 top-3 z-10 flex h-7 w-7 items-center justify-center rounded-full"
                     style={{
@@ -266,7 +287,7 @@ function ResourcesContent() {
                       <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
                     </svg>
                   </div>
-                  <ResourceCard resource={resource} />
+                  <ResourceCard resource={resource} autoPlay={resource.id === autoPlayId} />
                 </div>
               ))}
             </div>
@@ -302,10 +323,8 @@ function ResourcesContent() {
             </p>
           </div>
         ) : (
-          /* Resources grouped by subcategory */
           <div className="animate-fade-in-up-2 space-y-8">
             {(() => {
-              // Group filtered resources by subcategory
               const groups: { label: string; items: Resource[] }[] = [];
               const seen = new Set<string>();
               for (const r of filtered) {
@@ -333,7 +352,7 @@ function ResourcesContent() {
                   </div>
                   <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
                     {group.items.map((resource) => (
-                      <ResourceCard key={resource.id} resource={resource} />
+                      <ResourceCard key={resource.id} resource={resource} autoPlay={resource.id === autoPlayId} />
                     ))}
                   </div>
                 </div>
@@ -363,5 +382,9 @@ function ResourcesContent() {
 }
 
 export default function ResourcesPage() {
-  return <ResourcesContent />;
+  return (
+    <Suspense>
+      <ResourcesContent />
+    </Suspense>
+  );
 }

@@ -14,7 +14,7 @@ import {
   syncCategoriesFromResources,
 } from "@/src/services/adminCategoryService";
 import AdminMessage from "@/src/components/admin/AdminMessage";
-import ConfirmDeleteModal from "@/src/components/admin/ConfirmDeleteModal";
+import ConfirmDeleteModal from "@/src/components/ui/ConfirmDeleteModal";
 
 type Msg = { text: string; type: "success" | "error" };
 
@@ -167,7 +167,7 @@ export default function AdminCategoriesPage() {
       <header className="relative z-10 mx-auto max-w-5xl px-6 pt-8 pb-2">
         <Link
           href="/admin"
-          className="mb-5 inline-flex items-center gap-1.5 rounded-full px-3.5 py-2 text-xs font-medium transition-all"
+          className="pill-btn mb-5 inline-flex items-center gap-1.5 rounded-full px-3.5 py-2 text-xs font-medium"
           style={{ color: "#6B9E85", backgroundColor: "rgba(255,255,255,0.7)", border: "1px solid rgba(200,230,208,0.5)", backdropFilter: "blur(8px)" }}
         >
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M15 18l-6-6 6-6" /></svg>
@@ -193,7 +193,7 @@ export default function AdminCategoriesPage() {
             <button
               onClick={() => { setShowAddCat(true); setTimeout(() => document.getElementById("new-cat-input")?.focus(), 50); }}
               className="nature-btn flex cursor-pointer items-center gap-2 rounded-xl px-5 py-2.5 text-[13px] font-bold text-white"
-              style={{ background: "linear-gradient(135deg, #5EA88A 0%, #4A9874 100%)", boxShadow: "0 4px 14px rgba(93,168,138,0.25)" }}
+              style={{ background: "linear-gradient(135deg, #3D8B6A 0%, #2D6A4F 100%)", boxShadow: "0 4px 14px rgba(45,106,79,0.28)" }}
             >
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><line x1="12" y1="5" x2="12" y2="19" /><line x1="5" y1="12" x2="19" y2="12" /></svg>
               Add Category
@@ -230,7 +230,7 @@ export default function AdminCategoriesPage() {
                 onClick={handleAddCategory}
                 disabled={addingCat || !newCatName.trim()}
                 className="nature-btn cursor-pointer rounded-xl px-5 py-2.5 text-[13px] font-bold text-white"
-                style={{ background: "linear-gradient(135deg, #5EA88A 0%, #4A9874 100%)", opacity: addingCat || !newCatName.trim() ? 0.5 : 1 }}
+                style={{ background: "linear-gradient(135deg, #3D8B6A 0%, #2D6A4F 100%)", opacity: addingCat || !newCatName.trim() ? 0.5 : 1 }}
               >
                 {addingCat ? "Adding..." : "Create"}
               </button>

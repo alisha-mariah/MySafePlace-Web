@@ -206,7 +206,7 @@ export default function RegisterPage() {
               </div>
             )}
 
-            <button type="submit" disabled={loading} className="nature-btn mt-1 w-full rounded-lg px-4 py-3 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:opacity-60" style={{ background: "linear-gradient(135deg, #7DB892 0%, #5EA88A 50%, #4A9474 100%)", boxShadow: "0 4px 14px rgba(93,168,138,0.25)" }}>
+            <button type="submit" disabled={loading} className="nature-btn mt-1 w-full rounded-lg px-4 py-3 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:opacity-60" style={{ background: "linear-gradient(135deg, #4A9B7A 0%, #3D8B6A 50%, #2D6A4F 100%)", boxShadow: "0 4px 14px rgba(45,106,79,0.28)" }}>
               {loading ? "Creating account..." : "Create account"}
             </button>
           </form>

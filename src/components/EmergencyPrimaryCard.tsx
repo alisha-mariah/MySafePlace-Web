@@ -67,7 +67,7 @@ export default function EmergencyPrimaryCard({ name, description, phone, sms, ch
             target="_blank"
             rel="noopener noreferrer"
             className="flex items-center gap-3 rounded-xl px-5 py-3.5 transition-all hover:brightness-95"
-            style={{ color: "white", background: "linear-gradient(135deg, #6DC09A 0%, #4A9474 100%)", boxShadow: "0 4px 14px rgba(93,168,138,0.30)" }}
+            style={{ color: "white", background: "linear-gradient(135deg, #4A9B7A 0%, #3D8B6A 50%, #2D6A4F 100%)", boxShadow: "0 4px 14px rgba(45,106,79,0.30)" }}
           >
             <div className="flex h-9 w-9 items-center justify-center rounded-lg" style={{ backgroundColor: "rgba(255,255,255,0.20)" }}>
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">

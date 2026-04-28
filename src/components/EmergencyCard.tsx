@@ -54,7 +54,7 @@ export default function EmergencyCard({ name, description, phone, sms, chatUrl }
             target="_blank"
             rel="noopener noreferrer"
             className="flex items-center gap-2 rounded-lg px-3 py-2 text-white transition-all hover:brightness-110"
-            style={{ background: "linear-gradient(135deg, #6DC09A 0%, #4A9474 100%)", boxShadow: "0 2px 8px rgba(93,168,138,0.20)" }}
+            style={{ background: "linear-gradient(135deg, #4A9B7A 0%, #3D8B6A 50%, #2D6A4F 100%)", boxShadow: "0 2px 8px rgba(45,106,79,0.22)" }}
           >
             <div className="flex h-6 w-6 items-center justify-center rounded-md" style={{ backgroundColor: "rgba(255,255,255,0.20)" }}>
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">

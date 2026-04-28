@@ -322,8 +322,8 @@ export default function CrisisContactForm({ contact, onSave, onCancel }: Props) 
             disabled={saving}
             className="nature-btn rounded-xl px-7 py-2.5 text-[13px] font-bold text-white"
             style={{
-              background: "linear-gradient(135deg, #5EA88A 0%, #4A9874 100%)",
-              boxShadow: "0 4px 14px rgba(93,168,138,0.25)",
+              background: "linear-gradient(135deg, #3D8B6A 0%, #2D6A4F 100%)",
+              boxShadow: "0 4px 14px rgba(45,106,79,0.28)",
               opacity: saving ? 0.7 : 1,
             }}
           >

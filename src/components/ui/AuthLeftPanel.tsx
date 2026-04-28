@@ -5,7 +5,7 @@ export default function AuthLeftPanel() {
     <div
       className="relative flex min-h-[320px] flex-col justify-between overflow-hidden px-9 py-9 md:min-h-screen md:px-12 md:py-12"
       style={{
-        background: "linear-gradient(165deg, #A0D4B4 0%, #7EC09C 35%, #5EAC86 65%, #4A9874 100%)",
+        background: "linear-gradient(165deg, #2D6A4F 0%, #1F4D38 35%, #1A3D2B 65%, #163025 100%)",
       }}
     >
       {/* Illustration layer */}
@@ -87,7 +87,7 @@ export default function AuthLeftPanel() {
 
           {/* ═══ FLOWERS (vivid pink) ═══ */}
 
-          {/* Hero bloom — upper right */}
+          {/* Hero bloom — top of right vine */}
           <g transform="translate(388,190)">
             <ellipse cx="0" cy="-12" rx="8" ry="12" fill="rgba(242,175,200,0.62)" stroke="rgba(255,255,255,0.30)" strokeWidth="0.7" />
             <ellipse cx="0" cy="12" rx="8" ry="12" fill="rgba(242,175,200,0.62)" stroke="rgba(255,255,255,0.30)" strokeWidth="0.7" />
@@ -100,24 +100,6 @@ export default function AuthLeftPanel() {
             <circle cx="1.5" cy="0.5" r="0.8" fill="rgba(255,255,255,0.30)" />
           </g>
 
-          {/* Left bloom */}
-          <g transform="translate(100,300)">
-            <ellipse cx="0" cy="-10" rx="7" ry="10" fill="rgba(242,175,200,0.55)" stroke="rgba(255,255,255,0.26)" strokeWidth="0.7" />
-            <ellipse cx="0" cy="10" rx="7" ry="10" fill="rgba(242,175,200,0.55)" stroke="rgba(255,255,255,0.26)" strokeWidth="0.7" />
-            <ellipse cx="-10" cy="0" rx="10" ry="7" fill="rgba(242,175,200,0.52)" stroke="rgba(255,255,255,0.24)" strokeWidth="0.7" />
-            <ellipse cx="10" cy="0" rx="10" ry="7" fill="rgba(242,175,200,0.52)" stroke="rgba(255,255,255,0.24)" strokeWidth="0.7" />
-            <circle cx="0" cy="0" r="4.5" fill="rgba(232,195,100,0.65)" stroke="rgba(255,255,255,0.28)" strokeWidth="0.6" />
-          </g>
-
-          {/* Mid bloom */}
-          <g transform="translate(270,430)">
-            <ellipse cx="0" cy="-8.5" rx="6" ry="8.5" fill="rgba(242,175,200,0.50)" stroke="rgba(255,255,255,0.22)" strokeWidth="0.6" />
-            <ellipse cx="0" cy="8.5" rx="6" ry="8.5" fill="rgba(242,175,200,0.50)" stroke="rgba(255,255,255,0.22)" strokeWidth="0.6" />
-            <ellipse cx="-8.5" cy="0" rx="8.5" ry="6" fill="rgba(242,175,200,0.48)" stroke="rgba(255,255,255,0.20)" strokeWidth="0.6" />
-            <ellipse cx="8.5" cy="0" rx="8.5" ry="6" fill="rgba(242,175,200,0.48)" stroke="rgba(255,255,255,0.20)" strokeWidth="0.6" />
-            <circle cx="0" cy="0" r="3.5" fill="rgba(232,195,100,0.55)" stroke="rgba(255,255,255,0.22)" strokeWidth="0.6" />
-          </g>
-
           {/* Small bloom — lower right */}
           <g transform="translate(430,565)">
             <ellipse cx="0" cy="-7" rx="5" ry="7" fill="rgba(242,175,200,0.45)" stroke="rgba(255,255,255,0.18)" strokeWidth="0.6" />
@@ -125,6 +107,15 @@ export default function AuthLeftPanel() {
             <ellipse cx="-7" cy="0" rx="7" ry="5" fill="rgba(242,175,200,0.42)" stroke="rgba(255,255,255,0.16)" strokeWidth="0.6" />
             <ellipse cx="7" cy="0" rx="7" ry="5" fill="rgba(242,175,200,0.42)" stroke="rgba(255,255,255,0.16)" strokeWidth="0.6" />
             <circle cx="0" cy="0" r="3" fill="rgba(232,195,100,0.50)" strokeWidth="0.5" />
+          </g>
+
+          {/* Left vine bloom — top of left stem */}
+          <g transform="translate(92,270)">
+            <ellipse cx="0" cy="-10" rx="7" ry="10" fill="rgba(242,175,200,0.55)" stroke="rgba(255,255,255,0.26)" strokeWidth="0.7" />
+            <ellipse cx="0" cy="10" rx="7" ry="10" fill="rgba(242,175,200,0.55)" stroke="rgba(255,255,255,0.26)" strokeWidth="0.7" />
+            <ellipse cx="-10" cy="0" rx="10" ry="7" fill="rgba(242,175,200,0.52)" stroke="rgba(255,255,255,0.24)" strokeWidth="0.7" />
+            <ellipse cx="10" cy="0" rx="10" ry="7" fill="rgba(242,175,200,0.52)" stroke="rgba(255,255,255,0.24)" strokeWidth="0.7" />
+            <circle cx="0" cy="0" r="4.5" fill="rgba(232,195,100,0.65)" stroke="rgba(255,255,255,0.28)" strokeWidth="0.6" />
           </g>
 
           {/* Tiny bloom — left vine */}
@@ -250,20 +241,23 @@ export default function AuthLeftPanel() {
 
       {/* Main content */}
       <div className="relative z-10">
-        <h1 className="font-bold leading-[1.12] tracking-tight text-white" style={{ fontSize: "clamp(2rem, 4.5vw, 3rem)" }}>
-          A space that&apos;s
-          <br />
-          just yours.
+        <h1 className="font-bold leading-[1.10] tracking-tight text-white" style={{ fontSize: "clamp(2.4rem, 5vw, 3.4rem)" }}>
+          MySafePlace
         </h1>
-        <p className="mt-5 max-w-[280px] text-[14px] leading-[1.75]" style={{ color: "rgba(255,255,255,0.65)" }}>
-          Track how you feel, write what&apos;s on your mind, and find what helps you grow — at your own pace.
+        <p className="mt-4 whitespace-nowrap text-[14px] leading-[1.70]" style={{ color: "rgba(255,255,255,0.68)" }}>
+          Your personal wellness companion, anytime, anywhere.
         </p>
         <div className="mt-8 flex flex-wrap gap-2">
-          {["Mood tracking", "Journaling", "Resources"].map((f) => (
+          {[
+            "yoga", "meditation", "journaling", "mood tracking",
+            "hypnosis", "relaxing sounds", "positive affirmations",
+            "podcasts", "mindful videos", "breathwork",
+            "articles", "emotional release tools", "habit building",
+          ].map((f) => (
             <span
               key={f}
-              className="rounded-full px-3.5 py-1.5 text-[11px] font-medium"
-              style={{ color: "rgba(255,255,255,0.65)", backgroundColor: "rgba(255,255,255,0.12)", border: "1px solid rgba(255,255,255,0.18)" }}
+              className="rounded-full px-3 py-1 text-[10px] font-medium capitalize"
+              style={{ color: "rgba(255,255,255,0.62)", backgroundColor: "rgba(255,255,255,0.10)", border: "1px solid rgba(255,255,255,0.16)" }}
             >
               {f}
             </span>

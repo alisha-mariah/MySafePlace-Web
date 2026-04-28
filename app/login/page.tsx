@@ -251,8 +251,8 @@ export default function LoginPage() {
                 disabled={loading}
                 className="nature-btn mt-1 w-full rounded-xl py-3 text-[14px] font-semibold text-white disabled:cursor-not-allowed disabled:opacity-50"
                 style={{
-                  background: "linear-gradient(135deg, #7DB892 0%, #5EA88A 50%, #4A9474 100%)",
-                  boxShadow: "0 4px 14px rgba(93,168,138,0.25)",
+                  background: "linear-gradient(135deg, #4A9B7A 0%, #3D8B6A 50%, #2D6A4F 100%)",
+                  boxShadow: "0 4px 14px rgba(45,106,79,0.28)",
                 }}
               >
                 {loading ? "Signing in..." : "Sign in"}

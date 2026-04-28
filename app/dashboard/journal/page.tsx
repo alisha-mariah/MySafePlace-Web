@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import Link from "next/link";
 import { useAuth } from "@/src/context/AuthContext";
 import {
@@ -11,6 +11,7 @@ import {
   JournalEntry,
   JournalMoodData,
 } from "@/src/services/journalService";
+import ConfirmDeleteModal from "@/src/components/ui/ConfirmDeleteModal";
 
 /* ── Mood list (matches MoodTracker) ── */
 
@@ -80,40 +81,70 @@ function MoodSelector({
 }) {
   const [open, setOpen] = useState(false);
   const current = MOODS.find((m) => m.name === selected);
+  const wrapperRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!open) return;
+    function handleClick(e: MouseEvent) {
+      if (wrapperRef.current && !wrapperRef.current.contains(e.target as Node)) {
+        setOpen(false);
+      }
+    }
+    function handleKey(e: KeyboardEvent) {
+      if (e.key === "Escape") setOpen(false);
+    }
+    document.addEventListener("mousedown", handleClick);
+    document.addEventListener("keydown", handleKey);
+    return () => {
+      document.removeEventListener("mousedown", handleClick);
+      document.removeEventListener("keydown", handleKey);
+    };
+  }, [open]);
 
   return (
-    <div className="relative">
+    <div ref={wrapperRef} className="relative">
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
-        className="flex items-center gap-2 rounded-xl px-3.5 py-2 text-[12px] font-semibold transition-all duration-150 hover:brightness-95"
+        className="flex cursor-pointer items-center justify-between gap-2 rounded-xl px-3.5 py-2 text-[12px] font-semibold transition-all duration-150 hover:-translate-y-0.5 hover:brightness-[1.02]"
         style={{
+          width: 160,
           backgroundColor: selected
             ? current!.color + "18"
-            : "rgba(200,230,208,0.10)",
-          border: `1.5px solid ${selected ? current!.color + "40" : "rgba(200,230,208,0.4)"}`,
-          color: selected ? current!.color : "#8DBFA5",
+            : open
+              ? "rgba(125,184,146,0.22)"
+              : "rgba(255,255,255,0.75)",
+          border: selected
+            ? `1.5px solid ${current!.color}55`
+            : `1.5px ${open ? "solid" : "dashed"} rgba(74,155,122,0.55)`,
+          color: selected ? current!.color : "#2D6A4F",
+          boxShadow: open
+            ? "0 4px 12px rgba(45,106,79,0.15)"
+            : "0 2px 6px rgba(45,106,79,0.06)",
         }}
       >
         {selected ? (
           <>
             <span
-              className="inline-block h-2.5 w-2.5 rounded-full"
+              className="inline-block h-3 w-3 flex-shrink-0 rounded-full"
               style={{ backgroundColor: current!.color }}
             />
-            <span className="capitalize">{selected}</span>
+            <span className="flex-1 text-center capitalize">{selected}</span>
           </>
         ) : (
           <>
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.3" strokeLinecap="round" strokeLinejoin="round" className="flex-shrink-0">
               <circle cx="12" cy="12" r="10" />
               <path d="M8 14s1.5 2 4 2 4-2 4-2" />
               <line x1="9" y1="9" x2="9.01" y2="9" />
               <line x1="15" y1="9" x2="15.01" y2="9" />
             </svg>
-            Add mood
+            <span className="flex-1 text-center">Add mood</span>
           </>
         )}
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="flex-shrink-0" style={{ transform: open ? "rotate(180deg)" : "rotate(0)", transition: "transform 0.15s ease", opacity: 0.7 }}>
+          <path d="M6 9l6 6 6-6" />
+        </svg>
       </button>
 
       {open && (
@@ -193,8 +224,11 @@ function JournalContent() {
   const [selectedMood, setSelectedMood] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
+  const [savedMsg, setSavedMsg] = useState<string | null>(null);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [deletingEntry, setDeletingEntry] = useState<JournalEntry | null>(null);
+  const [deleting, setDeleting] = useState(false);
 
   const wordCount = content.trim() ? content.trim().split(/\s+/).length : 0;
 
@@ -234,10 +268,13 @@ function JournalContent() {
       } else {
         await addJournalEntry(user.uid, content.trim(), buildMoodData());
       }
+      const msg = editingId ? "Changes saved!" : "Entry saved!";
       setContent("");
       setSelectedMood(null);
       setEditingId(null);
       await fetchEntries();
+      setSavedMsg(msg);
+      setTimeout(() => setSavedMsg(null), 2500);
     } catch (err) {
       console.error("Failed to save journal entry:", err);
     } finally {
@@ -258,14 +295,24 @@ function JournalContent() {
     setEditingId(null);
   }
 
-  async function handleDelete(entryId: string) {
-    if (!confirm("Delete this entry?")) return;
+  async function confirmDelete() {
+    if (!deletingEntry) return;
+    setDeleting(true);
     try {
-      await deleteJournalEntry(entryId);
+      await deleteJournalEntry(deletingEntry.id);
+      if (editingId === deletingEntry.id) handleCancelEdit();
+      setDeletingEntry(null);
       await fetchEntries();
     } catch (err) {
       console.error("Failed to delete journal entry:", err);
+    } finally {
+      setDeleting(false);
     }
+  }
+
+  function previewOf(text: string, max = 50) {
+    const clean = text.trim().replace(/\s+/g, " ");
+    return clean.length > max ? clean.slice(0, max).trimEnd() + "…" : clean;
   }
 
   return (
@@ -275,11 +322,11 @@ function JournalContent() {
       <header className="relative z-10 mx-auto max-w-5xl px-6 pt-8 pb-2">
         <Link
           href="/dashboard"
-          className="mb-5 inline-flex items-center gap-1.5 rounded-full px-3.5 py-2 text-xs font-medium transition-all"
+          className="pill-btn mb-5 inline-flex items-center gap-1.5 rounded-full px-3.5 py-2 text-xs font-medium"
           style={{ color: "#6B9E85", backgroundColor: "rgba(255,255,255,0.7)", border: "1px solid rgba(200,230,208,0.5)", backdropFilter: "blur(8px)" }}
         >
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M15 18l-6-6 6-6" /></svg>
-          Dashboard
+          Homepage
         </Link>
 
         <div
@@ -344,22 +391,22 @@ function JournalContent() {
             />
 
             {/* Mood selector row */}
-            <div className="mt-3 flex items-center gap-2">
+            <div className="mt-4 flex items-center gap-2">
               <MoodSelector selected={selectedMood} onChange={setSelectedMood} />
               <span className="text-[11px]" style={{ color: "#A8C4B4" }}>optional</span>
             </div>
 
             {/* Actions row */}
-            <div className="mt-4 flex items-center justify-between">
-              <div className="flex items-center gap-3">
+            <div className="mt-3 flex flex-wrap items-center justify-between gap-3">
+              <div className="flex flex-wrap items-center gap-3">
                 <button
                   type="submit"
                   disabled={!content.trim() || submitting}
                   className="cta-glow nature-btn flex items-center justify-center gap-2 rounded-xl px-7 py-3 text-sm font-bold text-white tracking-wide disabled:cursor-not-allowed disabled:opacity-50"
                   style={{
-                    background: "linear-gradient(135deg, #6DC09A 0%, #5EA88A 40%, #4A9474 100%)",
-                    boxShadow: "0 4px 14px rgba(93,168,138,0.25)",
-                    minWidth: 160,
+                    background: "linear-gradient(135deg, #4A9B7A 0%, #3D8B6A 40%, #2D6A4F 100%)",
+                    boxShadow: "0 4px 14px rgba(45,106,79,0.28)",
+                    width: 160,
                   }}
                 >
                   {submitting ? "Saving..." : editingId ? (
@@ -378,6 +425,14 @@ function JournalContent() {
                   <button type="button" onClick={handleCancelEdit} className="text-sm font-medium transition-opacity hover:opacity-70" style={{ color: "#6B8B78" }}>
                     Cancel
                   </button>
+                )}
+                {savedMsg && (
+                  <span className="animate-fade-in-up flex items-center gap-1.5 text-[13px] font-semibold" style={{ color: "#4A9474" }}>
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
+                      <path d="M20 6L9 17l-5-5" />
+                    </svg>
+                    {savedMsg}
+                  </span>
                 )}
               </div>
 
@@ -473,7 +528,7 @@ function JournalContent() {
                             <button onClick={() => handleEdit(entry)} className="rounded-lg p-2 transition-all hover:bg-white/60 hover:scale-110 active:scale-95" aria-label="Edit entry">
                               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#6B8B78" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M17 3a2.83 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z" /></svg>
                             </button>
-                            <button onClick={() => handleDelete(entry.id)} className="rounded-lg p-2 transition-all hover:bg-red-50/60 hover:scale-110 active:scale-95" aria-label="Delete entry">
+                            <button onClick={() => setDeletingEntry(entry)} className="rounded-lg p-2 transition-all hover:bg-red-50/60 hover:scale-110 active:scale-95" aria-label="Delete entry">
                               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#C07070" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 6h18" /><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6" /><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" /></svg>
                             </button>
                           </div>
@@ -503,6 +558,16 @@ function JournalContent() {
           <p className="text-[11px]" style={{ color: "#A8C4B4" }}>Your thoughts matter. Keep writing.</p>
         </div>
       </div>
+
+      {deletingEntry && (
+        <ConfirmDeleteModal
+          title="Delete journal entry"
+          itemName={previewOf(deletingEntry.content)}
+          confirming={deleting}
+          onConfirm={confirmDelete}
+          onCancel={() => { if (!deleting) setDeletingEntry(null); }}
+        />
+      )}
     </div>
   );
 }

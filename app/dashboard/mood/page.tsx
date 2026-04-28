@@ -10,6 +10,7 @@ import {
   deleteMoodEntry,
   MoodEntry,
 } from "@/src/services/moodService";
+import ConfirmDeleteModal from "@/src/components/ui/ConfirmDeleteModal";
 
 const MOODS = [
   { name: "happy",       color: "#D4A017" },
@@ -138,8 +139,11 @@ function MoodContent() {
   const [note, setNote] = useState("");
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
+  const [savedMsg, setSavedMsg] = useState<string | null>(null);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [deletingEntry, setDeletingEntry] = useState<MoodEntry | null>(null);
+  const [deleting, setDeleting] = useState(false);
 
   const fetchEntries = useCallback(async () => {
     if (!user) return;
@@ -162,12 +166,15 @@ function MoodContent() {
     if (!selectedMood || !user) return;
     setSubmitting(true);
     try {
+      const msg = editingId ? "Changes saved!" : "Check-in saved!";
       if (editingId) { await updateMoodEntry(editingId, selectedMood, note); }
       else { await addMoodEntry(user.uid, selectedMood, note); }
       setSelectedMood(null);
       setNote("");
       setEditingId(null);
       await fetchEntries();
+      setSavedMsg(msg);
+      setTimeout(() => setSavedMsg(null), 2500);
     } catch (err) { console.error("Failed to save mood entry:", err); }
     finally { setSubmitting(false); }
   }
@@ -185,10 +192,19 @@ function MoodContent() {
     setEditingId(null);
   }
 
-  async function handleDelete(entryId: string) {
-    if (!confirm("Delete this entry?")) return;
-    try { await deleteMoodEntry(entryId); await fetchEntries(); }
-    catch (err) { console.error("Failed to delete mood entry:", err); }
+  async function confirmDelete() {
+    if (!deletingEntry) return;
+    setDeleting(true);
+    try {
+      await deleteMoodEntry(deletingEntry.id);
+      if (editingId === deletingEntry.id) handleCancelEdit();
+      setDeletingEntry(null);
+      await fetchEntries();
+    } catch (err) {
+      console.error("Failed to delete mood entry:", err);
+    } finally {
+      setDeleting(false);
+    }
   }
 
   return (
@@ -198,7 +214,7 @@ function MoodContent() {
       <header className="relative z-10 mx-auto max-w-5xl px-6 pt-8 pb-2">
         <Link href="/dashboard" className="pill-btn mb-5 inline-flex items-center gap-1.5 rounded-full px-3.5 py-2 text-xs font-medium" style={{ color: "#6B9E85", backgroundColor: "rgba(255,255,255,0.7)", border: "1px solid rgba(200,230,208,0.5)", backdropFilter: "blur(8px)" }}>
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M15 18l-6-6 6-6" /></svg>
-          Dashboard
+          Homepage
         </Link>
 
         <div className="animate-fade-in-up rounded-2xl px-7 py-6" style={{ background: "linear-gradient(135deg, rgba(255,255,255,0.75) 0%, rgba(255,255,255,0.55) 100%)", border: "1px solid rgba(200,230,208,0.45)", boxShadow: "0 8px 32px rgba(45,106,79,0.06), 0 2px 8px rgba(45,106,79,0.03)", backdropFilter: "blur(12px)" }}>
@@ -247,7 +263,7 @@ function MoodContent() {
             </div>
 
             <div className="mt-5 flex items-center gap-3">
-              <button type="submit" disabled={!selectedMood || submitting} className="cta-glow nature-btn flex items-center justify-center gap-2 rounded-xl px-8 py-3.5 text-[15px] font-bold text-white tracking-wide disabled:cursor-not-allowed disabled:opacity-50" style={{ background: "linear-gradient(135deg, #6DC09A 0%, #5EA88A 40%, #4A9474 100%)", boxShadow: "0 4px 14px rgba(93,168,138,0.25)", minWidth: 170 }}>
+              <button type="submit" disabled={!selectedMood || submitting} className="cta-glow nature-btn flex items-center justify-center gap-2 rounded-xl px-8 py-3.5 text-[15px] font-bold text-white tracking-wide disabled:cursor-not-allowed disabled:opacity-50" style={{ background: "linear-gradient(135deg, #4A9B7A 0%, #3D8B6A 40%, #2D6A4F 100%)", boxShadow: "0 4px 14px rgba(45,106,79,0.28)", minWidth: 170 }}>
                 {submitting ? "Saving..." : editingId ? "Save changes" : (
                   <>
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><path d="M12 5v14M5 12h14" /></svg>
@@ -257,6 +273,14 @@ function MoodContent() {
               </button>
               {editingId && (
                 <button type="button" onClick={handleCancelEdit} className="text-sm font-medium transition-opacity hover:opacity-70" style={{ color: "#6B8B78" }}>Cancel</button>
+              )}
+              {savedMsg && (
+                <span className="animate-fade-in-up flex items-center gap-1.5 text-[13px] font-semibold" style={{ color: "#4A9474" }}>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
+                    <path d="M20 6L9 17l-5-5" />
+                  </svg>
+                  {savedMsg}
+                </span>
               )}
             </div>
           </div>
@@ -304,7 +328,7 @@ function MoodContent() {
                             <button onClick={() => handleEdit(entry)} className="rounded-lg p-2 transition-all hover:bg-white/60 hover:scale-110 active:scale-95" aria-label="Edit entry">
                               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#6B8B78" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M17 3a2.83 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z" /></svg>
                             </button>
-                            <button onClick={() => handleDelete(entry.id)} className="rounded-lg p-2 transition-all hover:bg-red-50/60 hover:scale-110 active:scale-95" aria-label="Delete entry">
+                            <button onClick={() => setDeletingEntry(entry)} className="rounded-lg p-2 transition-all hover:bg-red-50/60 hover:scale-110 active:scale-95" aria-label="Delete entry">
                               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#C07070" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 6h18" /><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6" /><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" /></svg>
                             </button>
                           </div>
@@ -337,6 +361,16 @@ function MoodContent() {
           <p className="text-[11px]" style={{ color: "#A8C4B4" }}>Every feeling is valid.</p>
         </div>
       </div>
+
+      {deletingEntry && (
+        <ConfirmDeleteModal
+          title="Delete mood entry"
+          itemName={`${deletingEntry.mood} at ${formatTime(deletingEntry.createdAt)}`}
+          confirming={deleting}
+          onConfirm={confirmDelete}
+          onCancel={() => { if (!deleting) setDeletingEntry(null); }}
+        />
+      )}
     </div>
   );
 }

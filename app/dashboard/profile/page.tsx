@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { useAuth } from "@/src/context/AuthContext";
 import {
   reauthenticate,
@@ -132,7 +133,7 @@ function ReauthModal({ onSuccess, onCancel }: { onSuccess: () => void; onCancel:
           {error && <p className="text-[12px]" style={{ color: "#C46050" }}>{error}</p>}
           <div className="flex justify-end gap-2 pt-1">
             <button type="button" onClick={onCancel} className="cursor-pointer rounded-xl px-4 py-2 text-[13px] font-semibold transition-all duration-150 hover:opacity-70" style={{ color: "#6B9E85" }}>Cancel</button>
-            <button type="submit" disabled={loading || !password.trim()} className="nature-btn cursor-pointer rounded-xl px-5 py-2 text-[13px] font-bold text-white" style={{ background: "linear-gradient(135deg, #5EA88A 0%, #4A9874 100%)", opacity: loading ? 0.7 : 1 }}>
+            <button type="submit" disabled={loading || !password.trim()} className="nature-btn cursor-pointer rounded-xl px-5 py-2 text-[13px] font-bold text-white" style={{ background: "linear-gradient(135deg, #3D8B6A 0%, #2D6A4F 100%)", opacity: loading ? 0.7 : 1 }}>
               {loading ? "Verifying..." : "Continue"}
             </button>
           </div>
@@ -271,7 +272,15 @@ export default function ProfilePage() {
   return (
     <div className="relative min-h-screen">
       {/* Header */}
-      <header className="mx-auto max-w-2xl px-6 pt-8 pb-2">
+      <header className="mx-auto max-w-5xl px-6 pt-8 pb-2">
+        <Link
+          href="/dashboard"
+          className="pill-btn mb-5 inline-flex items-center gap-1.5 rounded-full px-3.5 py-2 text-xs font-medium"
+          style={{ color: "#6B9E85", backgroundColor: "rgba(255,255,255,0.7)", border: "1px solid rgba(200,230,208,0.5)", backdropFilter: "blur(8px)" }}
+        >
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M15 18l-6-6 6-6" /></svg>
+          Homepage
+        </Link>
         <div
           className="animate-fade-in-up rounded-2xl px-7 py-6"
           style={{ background: "linear-gradient(135deg, rgba(255,255,255,0.75) 0%, rgba(255,255,255,0.55) 100%)", border: "1px solid rgba(200,230,208,0.45)", boxShadow: "0 8px 32px rgba(45,106,79,0.06), 0 2px 8px rgba(45,106,79,0.03)", backdropFilter: "blur(12px)" }}
@@ -288,7 +297,7 @@ export default function ProfilePage() {
         </div>
       </header>
 
-      <div className="mx-auto max-w-2xl space-y-6 px-6 py-6">
+      <div className="mx-auto max-w-5xl space-y-6 px-6 py-6">
 
         {/* ═══ Profile Information ═══ */}
         <div className="animate-fade-in-up-1 rounded-2xl px-6 py-5" style={cardStyle}>
@@ -314,7 +323,7 @@ export default function ProfilePage() {
                   onClick={handleSaveName}
                   disabled={nameSaving || !displayName.trim() || displayName.trim() === user.displayName}
                   className="nature-btn cursor-pointer rounded-xl py-2.5 text-center text-[13px] font-bold text-white"
-                  style={{ background: "linear-gradient(135deg, #5EA88A 0%, #4A9874 100%)", opacity: nameSaving || !displayName.trim() || displayName.trim() === user.displayName ? 0.5 : 1, minWidth: 130 }}
+                  style={{ background: "linear-gradient(135deg, #3D8B6A 0%, #2D6A4F 100%)", opacity: nameSaving || !displayName.trim() || displayName.trim() === user.displayName ? 0.5 : 1, minWidth: 130 }}
                 >
                   {nameSaving ? "Saving..." : "Save"}
                 </button>
@@ -345,7 +354,7 @@ export default function ProfilePage() {
                   onClick={handleSaveEmail}
                   disabled={emailSaving || !newEmail.trim()}
                   className="nature-btn cursor-pointer rounded-xl py-2.5 text-center text-[13px] font-bold text-white"
-                  style={{ background: "linear-gradient(135deg, #5EA88A 0%, #4A9874 100%)", opacity: emailSaving || !newEmail.trim() ? 0.5 : 1, minWidth: 130 }}
+                  style={{ background: "linear-gradient(135deg, #3D8B6A 0%, #2D6A4F 100%)", opacity: emailSaving || !newEmail.trim() ? 0.5 : 1, minWidth: 130 }}
                 >
                   {emailSaving ? "Sending..." : "Update"}
                 </button>
@@ -415,7 +424,7 @@ export default function ProfilePage() {
                   onClick={handleChangePassword}
                   disabled={pwSaving || !currentPw.trim() || !newPw.trim() || !confirmPw.trim()}
                   className="nature-btn cursor-pointer rounded-xl py-2.5 text-center text-[13px] font-bold text-white"
-                  style={{ background: "linear-gradient(135deg, #5EA88A 0%, #4A9874 100%)", opacity: pwSaving || !currentPw.trim() || !newPw.trim() || !confirmPw.trim() ? 0.5 : 1, minWidth: 130 }}
+                  style={{ background: "linear-gradient(135deg, #3D8B6A 0%, #2D6A4F 100%)", opacity: pwSaving || !currentPw.trim() || !newPw.trim() || !confirmPw.trim() ? 0.5 : 1, minWidth: 130 }}
                 >
                   {pwSaving ? "Changing..." : "Update"}
                 </button>

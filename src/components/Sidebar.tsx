@@ -7,7 +7,7 @@ import { isAdminUser } from "@/src/lib/adminConfig";
 
 const navItems = [
   {
-    label: "Home",
+    label: "Homepage",
     href: "/dashboard",
     icon: (
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
@@ -83,7 +83,7 @@ export default function Sidebar() {
     <aside
       className="fixed left-0 top-0 z-40 flex h-screen w-56 flex-col overflow-hidden"
       style={{
-        background: "linear-gradient(165deg, #A0D4B4 0%, #7EC09C 35%, #5EAC86 65%, #4A9874 100%)",
+        background: "linear-gradient(165deg, #2D6A4F 0%, #1F4D38 35%, #1A3D2B 65%, #163025 100%)",
       }}
     >
       {/* ── Nature illustration layer ── */}
@@ -263,25 +263,24 @@ export default function Sidebar() {
       <div
         className="pointer-events-none absolute inset-0"
         style={{
-          background: "linear-gradient(180deg, rgba(20,45,30,0.18) 0%, rgba(20,45,30,0.28) 60%, rgba(20,45,30,0.38) 100%)",
+          background: "linear-gradient(180deg, rgba(10,25,18,0.08) 0%, rgba(10,25,18,0.12) 60%, rgba(10,25,18,0.18) 100%)",
         }}
       />
 
       {/* ── Content ── */}
 
       {/* Logo */}
-      <div className="relative z-10 flex items-center gap-2.5 px-5 pt-6 pb-5">
-        <div className="flex h-7 w-7 items-center justify-center rounded-md" style={{ backgroundColor: "rgba(255,255,255,0.20)" }}>
-          <svg width="14" height="14" viewBox="0 0 20 20" fill="none">
-            <ellipse cx="10" cy="6" rx="3" ry="4" fill="rgba(255,255,255,0.8)" />
-            <ellipse cx="10" cy="14" rx="3" ry="4" fill="rgba(255,255,255,0.8)" />
-            <ellipse cx="6" cy="10" rx="4" ry="3" fill="rgba(255,255,255,0.75)" />
-            <ellipse cx="14" cy="10" rx="4" ry="3" fill="rgba(255,255,255,0.75)" />
-            <circle cx="10" cy="10" r="2.5" fill="rgba(232,195,100,0.9)" />
-          </svg>
-        </div>
-        <span className="text-[14px] font-bold tracking-tight text-white">
-          mysafeplace
+      <div className="relative z-10 flex items-center gap-2.5 px-4 pt-5 pb-4">
+        <img
+          src="/mysafeplace-logo.png"
+          alt="MySafePlace"
+          className="h-10 w-10 flex-shrink-0 rounded-full object-cover"
+          style={{
+            boxShadow: "0 2px 8px rgba(0,0,0,0.25), 0 0 0 1.5px rgba(255,255,255,0.18)",
+          }}
+        />
+        <span className="text-[13px] font-bold tracking-tight text-white leading-tight">
+          MySafePlace
         </span>
       </div>
 
