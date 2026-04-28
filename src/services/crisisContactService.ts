@@ -30,6 +30,7 @@ export async function getActiveCrisisContacts(): Promise<CrisisContact[]> {
   try {
     const snapshot = await getDocs(collection(db, COLLECTION));
     const contacts = snapshot.docs
+      .filter((d) => d.data().active !== false)
       .map((d) => {
         const data = d.data();
         return {
@@ -43,10 +44,6 @@ export async function getActiveCrisisContacts(): Promise<CrisisContact[]> {
           availability: data.availability ?? "",
           sortOrder: data.sortOrder ?? 0,
         };
-      })
-      .filter((_, i, arr) => {
-        const src = snapshot.docs[i].data();
-        return src.active !== false;
       })
       .sort((a, b) => a.sortOrder - b.sortOrder);
 

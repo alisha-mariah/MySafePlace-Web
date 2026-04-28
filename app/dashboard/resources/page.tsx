@@ -27,18 +27,18 @@ function CategoryPill({ label, active, onClick }: { label: string; active: boole
 /* ── Video card ── */
 
 function ResourceCard({ resource, autoPlay }: { resource: Resource; autoPlay?: boolean }) {
-  const [playing, setPlaying] = useState(false);
-  const cardRef = useRef<HTMLDivElement>(null);
   const videoId = getYouTubeId(resource.url);
   const thumbnail = videoId ? `https://img.youtube.com/vi/${videoId}/mqdefault.jpg` : null;
+  const [playing, setPlaying] = useState(() => Boolean(autoPlay && videoId));
+  const cardRef = useRef<HTMLDivElement>(null);
 
-  // Auto-play + scroll into view when highlighted from search
+  // Scroll into view when highlighted from search
   useEffect(() => {
     if (autoPlay && videoId) {
-      setPlaying(true);
-      setTimeout(() => {
+      const t = setTimeout(() => {
         cardRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
       }, 300);
+      return () => clearTimeout(t);
     }
   }, [autoPlay, videoId]);
 
