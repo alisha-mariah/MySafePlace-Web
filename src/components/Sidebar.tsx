@@ -263,59 +263,58 @@ export default function Sidebar() {
       <div
         className="pointer-events-none absolute inset-0"
         style={{
-          background: "linear-gradient(180deg, rgba(10,25,18,0.08) 0%, rgba(10,25,18,0.12) 60%, rgba(10,25,18,0.18) 100%)",
+          background: "linear-gradient(180deg, rgba(10,25,18,0.18) 0%, rgba(10,25,18,0.22) 50%, rgba(10,25,18,0.28) 100%)",
         }}
       />
 
       {/* ── Content ── */}
 
-      {/* Logo */}
-      <div className="relative z-10 flex items-center gap-2.5 px-4 pt-5 pb-4">
-        <img
-          src="/mysafeplace-logo.png"
-          alt="MySafePlace"
-          className="h-10 w-10 flex-shrink-0 rounded-full object-cover"
-          style={{
-            boxShadow: "0 2px 8px rgba(0,0,0,0.25), 0 0 0 1.5px rgba(255,255,255,0.18)",
-          }}
-        />
-        <span className="text-[13px] font-bold tracking-tight text-white leading-tight">
-          MySafePlace
-        </span>
+      {/* Brand */}
+      <div className="relative z-10 px-4 pt-7 pb-6">
+        <div className="flex items-center gap-3 px-1 py-1">
+          <img
+            src="/mysafeplace-logo-2.png"
+            alt="MySafePlace"
+            className="h-[52px] w-[52px] flex-shrink-0 rounded-full object-cover"
+            style={{ boxShadow: "0 4px 14px rgba(0,0,0,0.30)" }}
+          />
+          <p className="text-[15px] font-bold tracking-tight text-white">MySafePlace</p>
+        </div>
       </div>
 
       {/* Nav links */}
-      <nav className="relative z-10 flex-1 space-y-1.5 px-2.5">
+      <nav className="relative z-10 flex-1 space-y-1 px-3">
+        <p className="mb-2.5 px-3 text-[10px] font-bold uppercase tracking-[0.16em]" style={{ color: "rgba(255,255,255,0.42)" }}>
+          Menu
+        </p>
         {navItems.map((item) => {
           const active = isActive(item.href);
           return (
             <Link
               key={item.href}
               href={item.href}
-              className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-[13px] font-semibold transition-all cursor-pointer"
-              style={{
-                backgroundColor: active ? "rgba(255,255,255,0.25)" : "rgba(255,255,255,0.08)",
-                color: "rgba(255,255,255,0.95)",
-                textShadow: "0 1px 2px rgba(0,0,0,0.15)",
-                border: active ? "1px solid rgba(255,255,255,0.25)" : "1px solid rgba(255,255,255,0.08)",
-                boxShadow: active ? "0 2px 8px rgba(0,0,0,0.10)" : "none",
-              }}
-              onMouseEnter={(e) => {
-                if (!active) {
-                  e.currentTarget.style.backgroundColor = "rgba(255,255,255,0.16)";
-                  e.currentTarget.style.borderColor = "rgba(255,255,255,0.18)";
-                  e.currentTarget.style.transform = "translateX(4px)";
-                }
-              }}
-              onMouseLeave={(e) => {
-                if (!active) {
-                  e.currentTarget.style.backgroundColor = "rgba(255,255,255,0.08)";
-                  e.currentTarget.style.borderColor = "rgba(255,255,255,0.08)";
-                  e.currentTarget.style.transform = "translateX(0)";
-                }
-              }}
+              className={`group relative flex items-center gap-3 rounded-xl px-3 py-2.5 text-[13px] font-semibold transition-all duration-200 ${
+                active
+                  ? "text-white"
+                  : "text-white/65 hover:-translate-y-px hover:bg-white/[0.08] hover:text-white hover:shadow-[0_4px_12px_rgba(0,0,0,0.18)]"
+              }`}
+              style={
+                active
+                  ? {
+                      backgroundColor: "rgba(255,255,255,0.14)",
+                      border: "1px solid rgba(255,255,255,0.18)",
+                      boxShadow: "0 2px 10px rgba(0,0,0,0.14)",
+                    }
+                  : { border: "1px solid transparent" }
+              }
             >
-              <span className="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-md" style={{ backgroundColor: active ? "rgba(255,255,255,0.22)" : "rgba(255,255,255,0.12)" }}>
+              {active && (
+                <span
+                  className="absolute left-0 top-1/2 h-5 w-[3px] -translate-y-1/2 rounded-r-full"
+                  style={{ backgroundColor: "#A8D5BA" }}
+                />
+              )}
+              <span className={`flex-shrink-0 transition-opacity ${active ? "opacity-100" : "opacity-70 group-hover:opacity-100"}`}>
                 {item.icon}
               </span>
               {item.label}
@@ -326,46 +325,53 @@ export default function Sidebar() {
         {/* Admin link — only visible to admin users */}
         {showAdmin && (
           <>
-            <div className="mx-3 my-2" style={{ borderTop: "1px solid rgba(255,255,255,0.12)" }} />
-            <Link
-              href="/admin"
-              className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-[13px] font-semibold transition-all cursor-pointer"
-              style={{
-                backgroundColor: pathname.startsWith("/admin") ? "rgba(255,255,255,0.25)" : "rgba(255,255,255,0.08)",
-                color: "rgba(255,255,255,0.95)",
-                textShadow: "0 1px 2px rgba(0,0,0,0.15)",
-                border: pathname.startsWith("/admin") ? "1px solid rgba(255,255,255,0.25)" : "1px solid rgba(255,255,255,0.08)",
-                boxShadow: pathname.startsWith("/admin") ? "0 2px 8px rgba(0,0,0,0.10)" : "none",
-              }}
-              onMouseEnter={(e) => {
-                if (!pathname.startsWith("/admin")) {
-                  e.currentTarget.style.backgroundColor = "rgba(255,255,255,0.16)";
-                  e.currentTarget.style.borderColor = "rgba(255,255,255,0.18)";
-                  e.currentTarget.style.transform = "translateX(4px)";
-                }
-              }}
-              onMouseLeave={(e) => {
-                if (!pathname.startsWith("/admin")) {
-                  e.currentTarget.style.backgroundColor = "rgba(255,255,255,0.08)";
-                  e.currentTarget.style.borderColor = "rgba(255,255,255,0.08)";
-                  e.currentTarget.style.transform = "translateX(0)";
-                }
-              }}
-            >
-              <span className="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-md" style={{ backgroundColor: pathname.startsWith("/admin") ? "rgba(255,255,255,0.22)" : "rgba(255,255,255,0.12)" }}>
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-                </svg>
-              </span>
-              Admin Panel
-            </Link>
+            <div className="mx-3 mt-5 mb-3 h-px" style={{ background: "linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.16) 50%, transparent 100%)" }} />
+            <p className="mb-2.5 px-3 text-[10px] font-bold uppercase tracking-[0.16em]" style={{ color: "rgba(255,255,255,0.42)" }}>
+              Admin
+            </p>
+            {(() => {
+              const adminActive = pathname.startsWith("/admin");
+              return (
+                <Link
+                  href="/admin"
+                  className={`group relative flex items-center gap-3 rounded-xl px-3 py-2.5 text-[13px] font-semibold transition-all duration-200 ${
+                    adminActive
+                      ? "text-white"
+                      : "text-white/65 hover:-translate-y-px hover:bg-white/[0.08] hover:text-white hover:shadow-[0_4px_12px_rgba(0,0,0,0.18)]"
+                  }`}
+                  style={
+                    adminActive
+                      ? {
+                          backgroundColor: "rgba(255,255,255,0.14)",
+                          border: "1px solid rgba(255,255,255,0.18)",
+                          boxShadow: "0 2px 10px rgba(0,0,0,0.14)",
+                        }
+                      : { border: "1px solid transparent" }
+                  }
+                >
+                  {adminActive && (
+                    <span
+                      className="absolute left-0 top-1/2 h-5 w-[3px] -translate-y-1/2 rounded-r-full"
+                      style={{ backgroundColor: "#A8D5BA" }}
+                    />
+                  )}
+                  <span className={`flex-shrink-0 transition-opacity ${adminActive ? "opacity-100" : "opacity-70 group-hover:opacity-100"}`}>
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                    </svg>
+                  </span>
+                  Admin Panel
+                </Link>
+              );
+            })()}
           </>
         )}
       </nav>
 
-      {/* Bottom section */}
-      <div className="relative z-10 border-t px-5 py-4" style={{ borderColor: "rgba(255,255,255,0.15)" }}>
-        <p className="text-[10px] font-semibold uppercase tracking-wider" style={{ color: "rgba(255,255,255,0.50)" }}>
+      {/* Bottom tagline */}
+      <div className="relative z-10 px-5 pb-5 pt-4">
+        <div className="mb-3 h-px" style={{ background: "linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.16) 50%, transparent 100%)" }} />
+        <p className="text-[10px] font-semibold uppercase tracking-[0.18em]" style={{ color: "rgba(255,255,255,0.48)" }}>
           Your safe space
         </p>
       </div>
